@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { data } = await useFetch('/api/noclegi')
+const [{ data }, { data: content }] = await Promise.all([
+  useFetch('/api/noclegi'),
+  useFetch('/api/content'),
+])
 
 const nav = {
   links: [
@@ -12,7 +15,7 @@ const nav = {
 </script>
 
 <template>
-  <main v-if="data" class="bg-forest min-h-screen">
+  <main v-if="data && content" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" />
 
     <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
@@ -27,16 +30,6 @@ const nav = {
       </div>
     </div>
 
-    <ContactCta :cta="data.cta" />
-
-    <div class="py-8 px-8 border-t border-white/10 text-center">
-      <NuxtLink
-        to="/"
-        class="inline-flex items-center gap-3 text-white/30 hover:text-gold text-[11px] tracking-[0.2em] uppercase font-sans transition-colors duration-200 group"
-      >
-        <span class="w-8 h-px bg-white/20 group-hover:bg-gold transition-colors duration-300" />
-        Strona główna
-      </NuxtLink>
-    </div>
+    <KontaktSection v-if="content" :data="content.kontakt" />
   </main>
 </template>
