@@ -33,10 +33,10 @@ defineProps<{
           :class="i < data.body.length - 1 ? 'mb-4' : 'mb-10'"
         >{{ paragraph }}</p>
 
-        <a :href="data.cta.href" class="inline-flex items-center gap-3 text-gold text-[11px] tracking-[0.2em] uppercase font-sans group w-fit">
+        <NuxtLink :to="data.cta.href" class="inline-flex items-center gap-3 text-gold text-[11px] tracking-[0.2em] uppercase font-sans group w-fit">
           <span>{{ data.cta.label }}</span>
           <span class="w-8 h-px bg-gold transition-all duration-300 group-hover:w-14" />
-        </a>
+        </NuxtLink>
       </div>
 
       <div class="relative overflow-hidden min-h-[50vh] lg:min-h-0">

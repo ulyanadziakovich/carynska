@@ -1,0 +1,42 @@
+<script setup lang="ts">
+const { data } = await useFetch('/api/noclegi')
+
+const nav = {
+  links: [
+    { label: 'Home', href: '/' },
+    { label: 'Noclegi', href: '/noclegi' },
+    { label: 'Contact', href: '/#contact' },
+  ],
+  cta: { label: 'Booking now', href: '/#booking' },
+}
+</script>
+
+<template>
+  <main v-if="data" class="bg-forest min-h-screen">
+    <TheNavbar :nav="nav" />
+
+    <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
+
+    <div class="max-w-3xl mx-auto px-8 py-14 text-center">
+      <p class="text-white/55 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gold/10">
+        <RoomCard v-for="room in data.rooms" :key="room.slug" :room="room" />
+      </div>
+    </div>
+
+    <ContactCta :cta="data.cta" />
+
+    <div class="py-8 px-8 border-t border-white/10 text-center">
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center gap-3 text-white/30 hover:text-gold text-[11px] tracking-[0.2em] uppercase font-sans transition-colors duration-200 group"
+      >
+        <span class="w-8 h-px bg-white/20 group-hover:bg-gold transition-colors duration-300" />
+        Strona główna
+      </NuxtLink>
+    </div>
+  </main>
+</template>

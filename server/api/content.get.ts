@@ -24,7 +24,7 @@ export default defineEventHandler(() => {
         'Oferujemy 57 miejsc noclegowych w komfortowych pokojach i apartamentach z widokiem na jezioro Solina. Każde wnętrze zostało zaprojektowane z dbałością o detal — naturalne drewno, stonowane kolory, cisza Bieszczad.',
         'Do dyspozycji gości: balkon lub taras, łazienka z prysznicem, bezpłatne WiFi oraz prywatny parking przy obiekcie.',
       ],
-      cta: { label: 'Sprawdź dostępność', href: '#' },
+      cta: { label: 'Sprawdź dostępność', href: '/noclegi' },
       image: { src: '/images/hotel.png', alt: 'Hotel Przystań Caryńska' },
     },
 
