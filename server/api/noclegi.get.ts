@@ -69,6 +69,28 @@ export default defineEventHandler(() => {
         image: '/images/hotel.png',
       },
     ],
+    pricing: {
+      note: 'Ceny za dobę. Doba hotelowa: check-in 15:00, check-out 10:00. W sezonie i długie weekendy obowiązuje min. pobyt 3 noce.',
+      rows: [
+        { type: 'Pokój 1-osobowy Standard',    p1: '—',    p2: '260 zł', p3: '—',      p4: '—',      apt: '—' },
+        { type: 'Pokój 2-osobowy Standard',    p1: '—',    p2: '260 zł', p3: '390 zł', p4: '520 zł', apt: '—' },
+        { type: 'Pokój 2-osobowy Standard+',   p1: '150 zł', p2: '280 zł', p3: '420 zł', p4: '—',  apt: '—' },
+        { type: 'Studio 3-osobowe Standard',   p1: '—',    p2: '260 zł', p3: '390 zł', p4: '520 zł', apt: '—' },
+        { type: 'Studio 3-osobowe Standard+',  p1: '—',    p2: '280 zł', p3: '420 zł', p4: '—',      apt: '—' },
+        { type: 'Apartament 5-osobowy',        p1: '—',    p2: '—',      p3: '—',      p4: '—',      apt: '700 zł' },
+      ],
+      extras: [
+        { label: 'Śniadanie',                       price: '38 zł / os.' },
+        { label: 'Śniadanie (dzieci do 10 lat)',     price: '28 zł / os.' },
+        { label: 'Kolacja',                          price: '45 zł / os.' },
+        { label: 'Kolacja (dzieci do 10 lat)',       price: '35 zł / os.' },
+        { label: 'Prowiant',                         price: '25 zł / szt.' },
+        { label: 'Dostawka / rozkładana sofa',       price: '110 zł / dobę' },
+        { label: 'Dziecko 2–10 lat (łóżko rodzica)', price: '90 zł / dobę' },
+        { label: 'Zwierzę domowe',                   price: '50 zł / dobę' },
+        { label: 'Opłata klimatyczna',               price: '3 zł / os. / dobę' },
+      ],
+    },
     cta: {
       phone: '+48 691 944 266',
       email: 'przystan@carynska.pl',
