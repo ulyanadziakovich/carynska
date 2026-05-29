@@ -22,14 +22,25 @@ export default defineEventHandler(() => {
     marina: {
       tag: 'Bosmanat',
       title: 'Usługi przystani',
+      body: 'Pomost przyjmuje duże żaglówki i jachty. Wjazd na teren przystani jest bezpłatny i ogólnodostępny.',
       items: [
         { label: 'Bezpłatne cumowanie do 3h' },
         { label: 'Slip mechaniczny do wodowania jachtów' },
-        { label: 'Prysznice i pralnia' },
-        { label: 'WiFi + dostęp do prądu' },
-        { label: 'Kamera online na pomost' },
+        { label: 'Prysznice i pralnia dla żeglarzy' },
+        { label: 'Dostęp do prądu przy pomoście' },
+        { label: 'Bezprzewodowy internet' },
+        { label: 'Kamera online monitorująca pomost' },
+        { label: 'Zaplecze sanitarne na miejscu' },
+        { label: 'Dwa baseny rekreacyjne (głęb. 0,5m) ze zjeżdżalniami i jacuzzi' },
+        { label: 'Trawiasta plaża z widokiem na jezioro i góry' },
+        { label: 'Letnie koncerty plenerowe — wstęp wolny' },
       ],
       phone: '+48 536 700 537',
+      images: [
+        { src: '/images/solina1.avif', alt: 'Jezioro Solina z lotu ptaka' },
+        { src: '/images/solina3.avif', alt: 'Żaglówki na Solinie' },
+        { src: '/images/solina4.avif', alt: 'Widok na Bieszczady' },
+      ],
     },
 
     land: {

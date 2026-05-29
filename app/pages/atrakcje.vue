@@ -26,72 +26,100 @@ const nav = {
       <p class="text-white/55 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
     </div>
 
-    <!-- Water activities -->
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-6">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-3">{{ data.water.tag }}</p>
-      <h2 class="font-display text-white text-3xl font-light mb-2">{{ data.water.title }}</h2>
-      <p class="text-white/45 font-sans text-sm max-w-lg leading-relaxed mb-10">{{ data.water.body }}</p>
+    <!-- Water activities: text + collage -->
+    <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div>
+        <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-4">{{ data.water.tag }}</p>
+        <h2 class="font-display text-white text-3xl font-light mb-4">{{ data.water.title }}</h2>
+        <p class="text-white/45 font-sans text-sm leading-relaxed mb-10">{{ data.water.body }}</p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gold/10">
-        <div v-for="item in data.water.items" :key="item.label" class="bg-forest flex flex-col group">
-          <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
-            <img :src="item.image" :alt="item.label" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div class="absolute inset-0 bg-gradient-to-t from-forest/60 to-transparent" />
-          </div>
-          <div class="p-6 flex flex-col gap-3">
-            <div class="text-gold opacity-75">
+        <div class="flex flex-col gap-6">
+          <div
+            v-for="item in data.water.items"
+            :key="item.label"
+            class="flex items-start gap-5 group"
+          >
+            <div class="text-gold opacity-70 shrink-0 mt-0.5">
               <ActivityIcon :name="item.icon" />
             </div>
-            <h3 class="font-display text-white text-lg font-light">{{ item.label }}</h3>
-            <p class="text-white/45 font-sans text-xs leading-relaxed">{{ item.desc }}</p>
+            <div>
+              <p class="font-display text-white text-lg font-light mb-1">{{ item.label }}</p>
+              <p class="text-white/40 font-sans text-xs leading-relaxed">{{ item.desc }}</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div class="lg:pt-8">
+        <PhotoCollage :images="[
+          { src: '/images/solina2.avif', alt: 'Żaglówki' },
+          { src: '/images/solina3.avif', alt: 'Jezioro Solina' },
+          { src: '/images/solina4.avif', alt: 'Bieszczady' },
+        ]" />
       </div>
     </div>
 
-    <!-- Marina services — text only, no image -->
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 py-16 border-t border-gold/15">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        <div>
-          <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-4">{{ data.marina.tag }}</p>
-          <h2 class="font-display text-white text-3xl font-light mb-8">{{ data.marina.title }}</h2>
-          <ul class="flex flex-col gap-3">
-            <li v-for="item in data.marina.items" :key="item.label" class="flex items-center gap-3 text-white/55 font-sans text-sm">
-              <span class="w-5 h-px bg-gold/50 shrink-0" />
-              {{ item.label }}
-            </li>
-          </ul>
-        </div>
-        <div class="flex flex-col gap-4 lg:pt-16">
-          <p class="text-white/30 text-[10px] tracking-[0.3em] uppercase font-sans">Bosmanat — kontakt</p>
-          <a :href="`tel:${data.marina.phone.replace(/\s/g,'')}`"
-             class="font-display text-white text-2xl font-light hover:text-gold transition-colors">
-            {{ data.marina.phone }}
-          </a>
-        </div>
+    <!-- Marina: collage + text -->
+    <div class="border-t border-gold/15 max-w-7xl mx-auto px-8 lg:px-16 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div class="lg:order-2">
+        <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-4">{{ data.marina.tag }}</p>
+        <h2 class="font-display text-white text-3xl font-light mb-3">{{ data.marina.title }}</h2>
+        <p class="text-white/45 font-sans text-sm leading-relaxed mb-8">{{ data.marina.body }}</p>
+
+        <ul class="flex flex-col gap-2.5 mb-10">
+          <li
+            v-for="item in data.marina.items"
+            :key="item.label"
+            class="flex items-center gap-3 text-white/55 font-sans text-sm"
+          >
+            <span class="w-4 h-px bg-gold/50 shrink-0" />
+            {{ item.label }}
+          </li>
+        </ul>
+
+        <a
+          :href="`tel:${data.marina.phone.replace(/\s/g,'')}`"
+          class="inline-flex items-center gap-3 text-gold group"
+        >
+          <span class="w-6 h-px bg-gold/50 group-hover:w-10 transition-all duration-300" />
+          <span class="font-sans text-sm tracking-wider">{{ data.marina.phone }}</span>
+        </a>
+      </div>
+
+      <div class="lg:order-1 lg:pt-8">
+        <PhotoCollage :images="data.marina.images" />
       </div>
     </div>
 
-    <!-- Land activities -->
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-16 border-t border-gold/15">
-      <div class="pt-16 mb-8">
-        <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-3">{{ data.land.tag }}</p>
-        <h2 class="font-display text-white text-3xl font-light">{{ data.land.title }}</h2>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gold/10">
-        <div v-for="item in data.land.items" :key="item.label" class="bg-forest flex flex-col group">
-          <div class="relative overflow-hidden" style="aspect-ratio: 16/9">
-            <img :src="item.image" :alt="item.label" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div class="absolute inset-0 bg-gradient-to-t from-forest/50 to-transparent" />
-          </div>
-          <div class="p-7 flex flex-col gap-3">
-            <div class="text-gold opacity-75">
+    <!-- Land activities: text + collage -->
+    <div class="border-t border-gold/15 max-w-7xl mx-auto px-8 lg:px-16 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div>
+        <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-4">{{ data.land.tag }}</p>
+        <h2 class="font-display text-white text-3xl font-light mb-10">{{ data.land.title }}</h2>
+
+        <div class="flex flex-col gap-6">
+          <div
+            v-for="item in data.land.items"
+            :key="item.label"
+            class="flex items-start gap-5"
+          >
+            <div class="text-gold opacity-70 shrink-0 mt-0.5">
               <ActivityIcon :name="item.icon" />
             </div>
-            <h3 class="font-display text-white text-xl font-light">{{ item.label }}</h3>
-            <p class="text-white/45 font-sans text-sm leading-relaxed">{{ item.desc }}</p>
+            <div>
+              <p class="font-display text-white text-lg font-light mb-1">{{ item.label }}</p>
+              <p class="text-white/40 font-sans text-xs leading-relaxed">{{ item.desc }}</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div class="lg:pt-8">
+        <PhotoCollage :images="[
+          { src: '/images/solina4.avif', alt: 'Bieszczady' },
+          { src: '/images/solina1.avif', alt: 'Jezioro z lotu ptaka' },
+          { src: '/images/solina2.avif', alt: 'Jezioro Solina' },
+        ]" />
       </div>
     </div>
 
