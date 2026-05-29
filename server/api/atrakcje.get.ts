@@ -22,18 +22,49 @@ export default defineEventHandler(() => {
     marina: {
       tag: 'Bosmanat',
       title: 'Usługi przystani',
-      body: 'Pomost przyjmuje duże żaglówki i jachty. Wjazd na teren przystani jest bezpłatny i ogólnodostępny.',
-      items: [
-        { label: 'Bezpłatne cumowanie do 3h' },
-        { label: 'Slip mechaniczny do wodowania jachtów' },
-        { label: 'Prysznice i pralnia dla żeglarzy' },
-        { label: 'Dostęp do prądu przy pomoście' },
-        { label: 'Bezprzewodowy internet' },
-        { label: 'Kamera online monitorująca pomost' },
-        { label: 'Zaplecze sanitarne na miejscu' },
-        { label: 'Dwa baseny rekreacyjne (głęb. 0,5m) ze zjeżdżalniami i jacuzzi' },
-        { label: 'Trawiasta plaża z widokiem na jezioro i góry' },
-        { label: 'Letnie koncerty plenerowe — wstęp wolny' },
+      body: 'Pomost przyjmuje duże żaglówki i jachty. Wjazd na teren przystani jest bezpłatny i ogólnodostępny. Krótkoterminowe cumowanie do 6h w miejscu bosmanatu — bezpłatne.',
+      amenities: [
+        'Prysznice i pralnia dla żeglarzy',
+        'Dostęp do prądu przy pomoście',
+        'Bezprzewodowy internet',
+        'Kamera online monitorująca pomost',
+        'Zaplecze sanitarne na miejscu',
+        'Dwa baseny rekreacyjne ze zjeżdżalniami i jacuzzi',
+        'Trawiasta plaża z widokiem na jezioro i góry',
+        'Letnie koncerty plenerowe — wstęp wolny',
+      ],
+      pricing: [
+        {
+          category: 'Cumowanie',
+          items: [
+            { label: 'Cumowanie krótkoterminowe (do 6h)', price: 'Bezpłatnie' },
+            { label: 'Cumowanie przy nabrzeżu (do 7 dni)', price: '50 zł / dobę' },
+            { label: 'Jacht nieczarterowy', price: '2 500 zł' },
+            { label: 'Jacht czarterowy', price: '3 500 zł' },
+          ],
+        },
+        {
+          category: 'Slip / wodowanie',
+          items: [
+            { label: 'Skutery wodne (własny pojazd)', price: '30 zł' },
+            { label: 'Łodzie powyżej 4m (własny pojazd)', price: '50 zł' },
+            { label: 'Jachty do 7,5m', price: '150 zł' },
+            { label: 'Jachty powyżej 7,5m', price: '200 zł' },
+          ],
+        },
+        {
+          category: 'Serwis i wyposażenie',
+          items: [
+            { label: 'Wynajem przyczepy podłodziowej (3h)', price: '150 zł' },
+            { label: 'Wynajem przyczepy podłodziowej (doba)', price: '300 zł' },
+            { label: 'Ożaglowanie / odożaglowanie', price: '150 zł' },
+            { label: 'Podnoszenie łodzi', price: '200 zł' },
+            { label: 'Prace stolarskie', price: '100 zł / godz.' },
+            { label: 'Sprzątanie kabiny (do 7,5m)', price: '100 zł' },
+            { label: 'Sprzątanie kabiny (powyżej 7,5m)', price: '150 zł' },
+            { label: 'Ozonowanie', price: '50 zł / godz.' },
+          ],
+        },
       ],
       phone: '+48 536 700 537',
       images: [
