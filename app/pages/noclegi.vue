@@ -16,7 +16,7 @@ const nav = {
 
 <template>
   <main v-if="data && content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" />
+    <TheNavbar :nav="nav" :always-show-logo="true" />
 
     <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
 

@@ -4,6 +4,7 @@ defineProps<{
     links: { label: string; href: string }[]
     cta: { label: string; href: string }
   }
+  alwaysShowLogo?: boolean
 }>()
 
 const scrolled = ref(false)
@@ -21,7 +22,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       <a
         href="/"
         class="font-display text-white tracking-[0.25em] text-lg font-medium select-none transition-all duration-500"
-        :class="scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+        :class="(scrolled || alwaysShowLogo) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
       >
         PRZYSTAŃ CARYŃSKA
       </a>

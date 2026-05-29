@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <section class="relative h-screen flex flex-col overflow-hidden">
     <div
-      class="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat ken-burns"
       :style="`background-image: url('${hero.image}')`"
     />
 

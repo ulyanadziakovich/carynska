@@ -27,6 +27,17 @@
   animation: fade-in-up 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
+@keyframes ken-burns {
+  0%   { transform: scale(1.05); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1.05); }
+}
+
+.ken-burns {
+  animation: ken-burns 22s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* Date input color on webkit */
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1) opacity(0.5);
