@@ -60,6 +60,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 v-for="child in link.children"
                 :key="child.label"
                 :href="child.href"
+                :target="child.external ? '_blank' : undefined"
+                :rel="child.external ? 'noopener' : undefined"
                 class="block px-5 py-2.5 text-white/60 hover:text-gold hover:bg-white/5 text-[11px] tracking-[0.15em] uppercase font-sans transition-colors duration-150 whitespace-nowrap"
               >
                 {{ child.label }}
