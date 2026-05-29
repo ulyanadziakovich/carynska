@@ -10,12 +10,39 @@ export default defineEventHandler(() => {
     water: {
       tag: 'Wypożyczalnia sprzętu wodnego',
       title: 'Na jeziorze Solińskim',
-      body: 'Czarteruj żaglówki i jachty lub wyrusz w rejs z profesjonalnym skipperem. Do wyboru pełen sprzęt wodny — od spokojnych łódek elektrycznych po dynamiczne kajaki i SUP.',
+      body: 'Czartery żaglówek z skipperem lub samodzielnie, łodzie elektryczne bez patentu, kajaki, SUP i pontony. Czynne od 8:00 do 19:00. Rezerwacje: +48 536 700 537.',
       items: [
-        { icon: 'zaglowka', label: 'Żaglówki', desc: 'Samodzielny rejs lub z skipperem. Czartery na jezioro Solińskie.', image: '/images/solina2.avif' },
-        { icon: 'jacht', label: 'Jachty', desc: 'Większe jednostki na dłuższe rejsy po Jeziorze Solińskim.', image: '/images/solina3.avif' },
-        { icon: 'elektryczna', label: 'Łodzie elektryczne', desc: 'Cicha, ekologiczna przejażdżka po jeziorze. Idealna na rodzinny relaks.', image: '/images/solina4.avif' },
-        { icon: 'kajak', label: 'Kajaki & SUP', desc: 'Aktywna eksploracja jeziora w swoim tempie.', image: '/images/solina1.avif' },
+        { icon: 'zaglowka', label: 'Żaglówki & Jachty', desc: 'Samodzielny rejs lub z skipperem. Czartery na Jezioro Solińskie.' },
+        { icon: 'elektryczna', label: 'Łodzie elektryczne', desc: 'Bez patentu. Dla 4, 5 lub 8 osób. Cicha, ekologiczna przejażdżka.' },
+        { icon: 'kajak', label: 'Kajaki & SUP', desc: 'Kajaki, deski SUP, rowerki wodne i pontony wiosłowe.' },
+      ],
+      pricing: [
+        {
+          category: 'Sprzęt niesilnikowy',
+          items: [
+            { label: 'Kajak', price: '20 zł / godz. · 80 zł / dzień' },
+            { label: 'Deska SUP', price: '25 zł / godz. · 90 zł / dzień' },
+            { label: 'Rowerek wodny', price: '35 zł / godz. · 120 zł / dzień' },
+            { label: 'Ponton wiosłowy', price: '20 zł / godz. · 80 zł / dzień' },
+          ],
+        },
+        {
+          category: 'Łodzie elektryczne (bez patentu)',
+          items: [
+            { label: 'Łódź 4-osobowa', price: '80 zł / godz. · 350 zł / dzień' },
+            { label: 'Łódź 8-os. Holica/Połonina/Solina', price: '200 zł / godz. · 700 zł / 5h' },
+            { label: 'Łódź 8-os. Tarnica (2024)', price: '250 zł / godz. · 800 zł / 5h' },
+            { label: 'Saturn 23GT 5-os. (2024)', price: '250 zł / godz. · 800 zł / 5h' },
+          ],
+        },
+        {
+          category: 'Jachty żaglowe',
+          items: [
+            { label: 'Omega', price: '230 zł / dzień' },
+            { label: 'Saturn 23GT 4-koj. (2024)', price: '380–480 zł / dzień' },
+            { label: 'Saturn 25L 6-koj. Caryńska (2024)', price: '430–530 zł / dzień' },
+          ],
+        },
       ],
     },
 
@@ -55,13 +82,13 @@ export default defineEventHandler(() => {
         {
           category: 'Serwis i wyposażenie',
           items: [
-            { label: 'Wynajem przyczepy podłodziowej (3h)', price: '150 zł' },
-            { label: 'Wynajem przyczepy podłodziowej (doba)', price: '300 zł' },
+            { label: 'Wynajem przyczepy (3h)', price: '150 zł' },
+            { label: 'Wynajem przyczepy (doba)', price: '300 zł' },
             { label: 'Ożaglowanie / odożaglowanie', price: '150 zł' },
             { label: 'Podnoszenie łodzi', price: '200 zł' },
             { label: 'Prace stolarskie', price: '100 zł / godz.' },
             { label: 'Sprzątanie kabiny (do 7,5m)', price: '100 zł' },
-            { label: 'Sprzątanie kabiny (powyżej 7,5m)', price: '150 zł' },
+            { label: 'Sprzątanie kabiny (pow. 7,5m)', price: '150 zł' },
             { label: 'Ozonowanie', price: '50 zł / godz.' },
           ],
         },
@@ -75,12 +102,13 @@ export default defineEventHandler(() => {
     },
 
     land: {
-      tag: 'Na lądzie',
-      title: 'Bieszczady pełne aktywności',
+      tag: 'Aktywny dzień',
+      title: 'Więcej niż woda',
+      body: 'Boisko wielofunkcyjne, korty tenisowe, szlaki górskie i atrakcje całego regionu — Bieszczady mają tu wiele do zaoferowania.',
       items: [
-        { icon: 'trekking', label: 'Szlaki piesze', desc: 'Trasy piesze i biegowe w Bieszczadach tuż przy obiekcie.', image: '/images/solina4.avif' },
-        { icon: 'plaza', label: 'Plaża nad jeziorem', desc: 'Trawiasta plaża z widokiem na jezioro i pasma górskie.', image: '/images/solina1.avif' },
-        { icon: 'koncert', label: 'Letnie koncerty', desc: 'Bezpłatne imprezy plenerowe w sezonie letnim.', image: '/images/solina2.avif' },
+        { icon: 'plaza', label: 'Baseny & Plaża', desc: 'Dwa baseny rekreacyjne ze zjeżdżalniami, fontannami i jacuzzi. Trawiasta plaża z leżakami.' },
+        { icon: 'trekking', label: 'Boisko & Tenis', desc: 'Nowoczesne boisko wielofunkcyjne (piłka nożna, koszykówka, siatkówka) oraz korty tenisowe z oświetleniem.' },
+        { icon: 'koncert', label: 'Atrakcje regionu', desc: 'Zapora w Solinie, kolejka bieszczadzka, gondola, trasy MTB, quady, browary rzemieślnicze.' },
       ],
     },
 

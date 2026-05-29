@@ -49,7 +49,7 @@ export default defineEventHandler(() => {
         'Nasza Tawerna to miejsce, gdzie regionalna kuchnia spotyka się z widokiem na jezioro Solina. Świeże składniki, lokalni producenci, smaki których nie zapomnisz.',
         'Śniadania, obiady, kolacje oraz imprezy okolicznościowe — wszystko przygotowane z pasją w samym sercu Bieszczad.',
       ],
-      cta: { label: 'Zobacz menu', href: '#' },
+      cta: { label: 'Zobacz menu', href: '/tawerna' },
       image: { src: '/images/solina4.avif', alt: 'Tawerna Przystań Caryńska' },
     },
 
