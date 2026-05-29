@@ -41,8 +41,8 @@
       <!-- Image side -->
       <div class="relative overflow-hidden min-h-[50vh] lg:min-h-0">
         <img
-          src="/images/solina2.avif"
-          alt="Pokój z widokiem na jezioro Solina"
+          src="/images/hotel.png"
+          alt="Hotel Przystań Caryńska"
           class="w-full h-full object-cover"
         />
         <!-- Subtle dark overlay on edges -->
