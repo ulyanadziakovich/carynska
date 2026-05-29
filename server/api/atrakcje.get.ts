@@ -12,10 +12,10 @@ export default defineEventHandler(() => {
       title: 'Na jeziorze Solińskim',
       body: 'Czarteruj żaglówki i jachty lub wyrusz w rejs z profesjonalnym skipperem. Do wyboru pełen sprzęt wodny — od spokojnych łódek elektrycznych po dynamiczne kajaki i SUP.',
       items: [
-        { icon: 'zaglowka', label: 'Żaglówki', desc: 'Samodzielny rejs lub z skipperem. Czartery na jezioro Solińskie.' },
-        { icon: 'jacht', label: 'Jachty', desc: 'Większe jednostki na dłuższe rejsy po Jeziorze Solińskim.' },
-        { icon: 'elektryczna', label: 'Łodzie elektryczne', desc: 'Cicha, ekologiczna przejażdżka po jeziorze. Idealna na rodzinny relaks.' },
-        { icon: 'kajak', label: 'Kajaki & SUP', desc: 'Aktywna eksploracja jeziora w swoim tempie.' },
+        { icon: 'zaglowka', label: 'Żaglówki', desc: 'Samodzielny rejs lub z skipperem. Czartery na jezioro Solińskie.', image: '/images/solina2.avif' },
+        { icon: 'jacht', label: 'Jachty', desc: 'Większe jednostki na dłuższe rejsy po Jeziorze Solińskim.', image: '/images/solina3.avif' },
+        { icon: 'elektryczna', label: 'Łodzie elektryczne', desc: 'Cicha, ekologiczna przejażdżka po jeziorze. Idealna na rodzinny relaks.', image: '/images/solina4.avif' },
+        { icon: 'kajak', label: 'Kajaki & SUP', desc: 'Aktywna eksploracja jeziora w swoim tempie.', image: '/images/solina1.avif' },
       ],
     },
 
@@ -36,9 +36,9 @@ export default defineEventHandler(() => {
       tag: 'Na lądzie',
       title: 'Bieszczady pełne aktywności',
       items: [
-        { icon: 'trekking', label: 'Szlaki piesze', desc: 'Trasy piesze i biegowe w Bieszczadach tuż przy obiekcie.' },
-        { icon: 'plaza', label: 'Plaża nad jeziorem', desc: 'Trawiasta plaża z widokiem na jezioro i pasma górskie.' },
-        { icon: 'koncert', label: 'Letnie koncerty', desc: 'Bezpłatne imprezy plenerowe w sezonie letnim.' },
+        { icon: 'trekking', label: 'Szlaki piesze', desc: 'Trasy piesze i biegowe w Bieszczadach tuż przy obiekcie.', image: '/images/solina4.avif' },
+        { icon: 'plaza', label: 'Plaża nad jeziorem', desc: 'Trawiasta plaża z widokiem na jezioro i pasma górskie.', image: '/images/solina1.avif' },
+        { icon: 'koncert', label: 'Letnie koncerty', desc: 'Bezpłatne imprezy plenerowe w sezonie letnim.', image: '/images/solina2.avif' },
       ],
     },
 
