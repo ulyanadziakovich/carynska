@@ -37,7 +37,7 @@ defineProps<{
         </div>
       </div>
 
-      <p class="text-white/50 font-sans font-light text-sm leading-relaxed flex-1">{{ room.desc }}</p>
+      <p class="text-white/50 font-sans font-light text-sm leading-relaxed line-clamp-3">{{ room.desc }}</p>
 
       <ul class="flex flex-col gap-1.5 pt-2 border-t border-white/8">
         <li

@@ -6,6 +6,7 @@ defineProps<{
     body: string
     image: { src: string; alt: string }
     features: { icon: string; label: string }[]
+    cta: { label: string; href: string }
   }
 }>()
 </script>
@@ -24,6 +25,13 @@ defineProps<{
         >{{ data.title }}</h2>
         <div class="w-8 h-px bg-gold mt-8 mb-8" />
         <p class="text-white/60 font-sans font-light text-sm max-w-md leading-relaxed">{{ data.body }}</p>
+
+        <NuxtLink
+          :to="data.cta.href"
+          class="mt-10 inline-flex items-center gap-3 border border-gold/60 text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-7 py-3 text-[11px] tracking-[0.2em] uppercase font-sans"
+        >
+          {{ data.cta.label }}
+        </NuxtLink>
       </div>
     </div>
 
@@ -33,7 +41,9 @@ defineProps<{
         :key="item.label"
         class="flex flex-col items-center justify-center py-10 px-6 text-center border-r border-gold/20 last:border-r-0 group cursor-default"
       >
-        <span class="text-gold text-2xl mb-4">{{ item.icon }}</span>
+        <div class="text-gold mb-5 opacity-80 group-hover:opacity-100 transition-opacity duration-200">
+          <ActivityIcon :name="item.icon" />
+        </div>
         <p class="text-white text-[11px] tracking-[0.2em] uppercase font-sans">{{ item.label }}</p>
       </div>
     </div>

@@ -34,11 +34,12 @@ export default defineEventHandler(() => {
       body: 'Żaglówki, łodzie elektryczne, kajaki, SUP i jachty do wynajęcia. Woda i Bieszczady — wszystko w jednym miejscu.',
       image: { src: '/images/solina3.avif', alt: 'Atrakcje wodne na jeziorze Solina' },
       features: [
-        { icon: '⛵', label: 'Żaglówki' },
-        { icon: '🚣', label: 'Kajaki & SUP' },
-        { icon: '⚡', label: 'Łodzie elektryczne' },
-        { icon: '⚓', label: 'Jachty' },
+        { icon: 'zaglowka', label: 'Żaglówki' },
+        { icon: 'kajak', label: 'Kajaki & SUP' },
+        { icon: 'elektryczna', label: 'Łodzie elektryczne' },
+        { icon: 'jacht', label: 'Jachty' },
       ],
+      cta: { label: 'Zobacz wszystkie atrakcje', href: '/atrakcje' },
     },
 
     kuchnia: {
