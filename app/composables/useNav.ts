@@ -28,6 +28,10 @@ export function useNav() {
         label: 'Tawerna',
         href: '/tawerna',
       },
+      {
+        label: 'Galeria',
+        href: '/galeria',
+      },
     ] as NavLink[],
     cta: { label: 'Booking now', href: BOOKING_URL },
   }
