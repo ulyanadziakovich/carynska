@@ -4,16 +4,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/content'),
 ])
 
-const nav = {
-  links: [
-    { label: 'Home', href: '/' },
-    { label: 'Noclegi', href: '/noclegi' },
-    { label: 'Atrakcje', href: '/atrakcje' },
-    { label: 'Tawerna', href: '/tawerna' },
-    { label: 'Contact', href: '/#contact' },
-  ],
-  cta: { label: 'Booking now', href: '/#booking' },
-}
+const nav = useNav()
 
 const activeTab = ref(0)
 const activeSection = computed(() => data.value?.menu[activeTab.value])

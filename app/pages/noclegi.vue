@@ -4,14 +4,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/content'),
 ])
 
-const nav = {
-  links: [
-    { label: 'Home', href: '/' },
-    { label: 'Noclegi', href: '/noclegi' },
-    { label: 'Contact', href: '/#contact' },
-  ],
-  cta: { label: 'Booking now', href: '/#booking' },
-}
+const nav = useNav()
 </script>
 
 <template>

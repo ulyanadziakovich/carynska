@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const { data: content } = await useFetch('/api/content')
+const nav = useNav()
 </script>
 
 <template>
   <main v-if="content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="content.nav" />
+    <TheNavbar :nav="nav" />
     <HeroSection :hero="content.hero" />
     <NoclegiSection :data="content.noclegi" />
     <AtrakcjeSection :data="content.atrakcje" />
