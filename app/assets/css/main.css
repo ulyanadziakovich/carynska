@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #162016;
+  --color-forest-mid: #1a2a1a;
+  --color-gold: #C9A96E;
+  --color-gold-light: #DFB97E;
+  --color-cream: #F5EDD6;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Raleway', system-ui, sans-serif;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fade-in-up 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Date input color on webkit */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.5);
+  cursor: pointer;
+}
+
+select option {
+  background-color: #162016;
+  color: #fff;
+}
