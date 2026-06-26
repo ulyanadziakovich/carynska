@@ -11,6 +11,7 @@ export function useNav() {
         href: '/noclegi',
         children: [
           { label: 'Pokoje & Apartamenty', href: '/noclegi/pokoje' },
+          { label: 'Hotel na wodzie', href: '/noclegi/jacht' },
           { label: 'Cennik', href: '/noclegi/cennik' },
           { label: 'Grupy & Eventy', href: '/grupy' },
         ],

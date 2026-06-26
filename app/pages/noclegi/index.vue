@@ -21,9 +21,9 @@ const nav = useNav()
       <p class="text-white/50 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
     </div>
 
-    <!-- Three main tiles -->
+    <!-- Four main tiles -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gold/10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gold/10">
 
         <!-- Pokoje tile -->
         <NuxtLink to="/noclegi/pokoje" class="hub-tile group">
@@ -60,6 +60,21 @@ const nav = useNav()
           <div class="hub-cta">
             <span>Pełny cennik</span>
             <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          </div>
+        </NuxtLink>
+
+        <!-- Hotel na wodzie tile -->
+        <NuxtLink to="/noclegi/jacht" class="hub-tile group">
+          <img src="/images/saturn25-jezero.webp" alt="Hotel na wodzie" class="hub-tile-img" />
+          <div class="hub-tile-overlay" />
+          <div class="hub-tile-body">
+            <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans">Wyjątkowe</p>
+            <h2 class="font-display text-white font-light" style="font-size: clamp(1.8rem, 2.5vw, 2.5rem)">Hotel<br>na wodzie</h2>
+            <p class="text-white/45 font-sans text-sm leading-relaxed">Noc na jachcie na Jeziorze Solińskim — bez patentu</p>
+            <div class="hub-cta">
+              <span>Zobacz jachty</span>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
           </div>
         </NuxtLink>
 

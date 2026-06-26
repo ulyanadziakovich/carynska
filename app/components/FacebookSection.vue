@@ -73,8 +73,8 @@
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
         />
       </div>
-      <!-- desktop iframe (500px) -->
-      <div class="fb-wrap w-full hidden lg:block">
+      <!-- desktop iframe (500px scaled to 650px) -->
+      <div class="fb-wrap fb-wrap--desktop w-full hidden lg:block">
         <iframe
           src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprzystancarynska&tabs=timeline&width=500&height=500&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=false"
           class="fb-iframe fb-iframe--desktop"
@@ -107,5 +107,12 @@
   height: 500px;
   border: none;
   display: block;
+  transform: scale(1.3);
+  transform-origin: top left;
+}
+
+/* 500px * 1.3 = 650px — wrapper crops the scaled overflow cleanly */
+.fb-wrap--desktop {
+  height: 650px;
 }
 </style>
