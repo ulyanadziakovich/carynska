@@ -3,13 +3,14 @@ export default defineEventHandler(() => {
     hero: {
       tag: 'Tawerna',
       title: 'Smaki\nBieszczad',
-      image: '/images/solina4.avif',
+      image: '/images/tawerna-bar.jpg',
     },
     intro: 'Regionalna kuchnia polska z widokiem na jezioro Solina. Śniadania, obiady, kolacje i pizza z pieca — wszystko przygotowane z lokalnych składników w sercu Bieszczad.',
 
     menu: [
       {
         category: 'Śniadania',
+        menuImage: '/images/menu-sniadania.svg',
         items: [
           { name: 'Szwedzki bufet', price: '35 zł', note: '25 zł dzieci' },
           { name: 'Jajecznica z kiełbasą', price: '' },
@@ -20,6 +21,7 @@ export default defineEventHandler(() => {
       },
       {
         category: 'Zupy',
+        menuImage: '/images/menu-zupy.svg',
         items: [
           { name: 'Żurek staropolski z jajkiem i kiełbasą z chlebem', price: '19 zł' },
           { name: 'Pomidorowa z makaronem', price: '18 zł' },

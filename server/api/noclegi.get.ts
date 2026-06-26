@@ -91,6 +91,117 @@ export default defineEventHandler(() => {
         { label: 'Opłata klimatyczna',               price: '3 zł / os. / dobę' },
       ],
     },
+    grupy: {
+      tag: 'Grupy & Eventy',
+      title: 'Idealne miejsce\nna Twój event',
+      sections: [
+        {
+          title: 'Idealne miejsce na event!',
+          body: 'Ze względu na położenie w spokojnej, turystyczno-sportowej części Polańczyka, mniejsze tłumy i łatwy dojazd – Przystań Caryńska to idealne miejsce na organizację większych wydarzeń kulturalnych, sportowych i towarzyskich. Posiadamy odpowiednie zaplecze noclegowe, gastronomiczne, duży parking oraz szeroką gamę atrakcji, która uświetni każdy wyjazd. Do dyspozycji mamy łodzie żaglowe, elektryczne, rowerki, kajaki oraz mini aquapark.',
+        },
+        {
+          title: 'Pobyt w przystani dla każdego!',
+          body: 'Przyjmujemy wycieczki, kolonie, zielone szkoły, obozy sportowe, pielgrzymki oraz wszystkie inne grupy zorganizowane od dzieci po seniorów. Organizujemy konferencje, wyjazdy firmowe, eventy, szkolenia, warsztaty i inne spotkania integracyjne. Wieczorne biesiady przy ognisku, muzyce i dobrym jedzeniu to nasza specjalność. Organizujemy również imprezy okolicznościowe takie jak wesela, chrzciny, urodziny i inne – nasza restauracja przystosowana jest do przyjęć nawet na 110 osób i słynie z pysznej, domowej kuchni. W restauracji i na przystani gościmy również wycieczki objazdowe (spoza naszego ośrodka).',
+          note: 'Dla grup korzystających z naszych atrakcji i wyżywienia parking dla autobusów gratis.',
+        },
+        {
+          title: 'Pobyt pełen atrakcji!',
+          body: 'Przy współudziale lokalnych firm organizujemy gry i zabawy sportowe, warsztaty rękodzielnicze, off-road czy paintball. Dzięki współpracy z PKL Solina mamy możliwość sprzedaży biletów na kolejkę, która jest niewątpliwie jedną z największych atrakcji regionu, w preferencyjnych cenach. Mając na uwadze różnorodność potrzeb Naszych klientów, do każdej grupy podchodzimy indywidualnie tworząc ofertę najlepiej dopasowaną do Państwa potrzeb. Oferujemy pomoc w wyszukaniu przewodnika, transportu czy lokalnych atrakcji.',
+        },
+      ],
+      pricing: {
+        tag: 'Cennik 2026',
+        minPersons: 25,
+        bonuses: [
+          { threshold: 'Powyżej 30 osób', reward: '1 osoba gratis' },
+          { threshold: 'Powyżej 40 osób', reward: '2 osoby gratis' },
+        ],
+        cols: ['Zielona szkoła (dzieci)', 'Ferie zimowe (dzieci)', 'Poza sezonem (dzieci)', 'Poza sezonem (dorośli)', 'W sezonie (7 lip – 28 sie)'],
+        rows: [
+          { type: 'Cena HB', values: ['150 zł', '—', '150 zł', '190 zł', 'indywidualnie'] },
+          { type: 'Cena FB', values: ['170 zł', '150 zł', '170 zł', '215 zł', 'indywidualnie'] },
+        ],
+        includes: {
+          hb: [
+            'Nocleg',
+            'Śniadanie (bufet szwedzki, ok. 8:30–9:30)',
+            'Kolacja serwowana (ok. 18:00–19:00)',
+            'Parking monitorowany przy obiekcie',
+            'Wi-Fi',
+          ],
+          fb: [
+            'Nocleg',
+            'Śniadanie (bufet szwedzki, ok. 8:30–9:30)',
+            'Obiad (zupa + drugie danie, ok. 14:00–15:00)',
+            'Kolacja serwowana (ok. 18:00–19:00)',
+            'Parking monitorowany przy obiekcie',
+            'Wi-Fi',
+          ],
+          footnote: 'Godziny posiłków są przykładowe — elastycznie podchodzimy do każdej grupy.',
+        },
+        notes: [
+          'Darmowy parking dla autokarów przy obiekcie.',
+          'Sprzęt przystani wodnej – 15% rabatu od cen standardowych.',
+          'Pobyt 1-nocny podnosi cenę oferty o 15 zł/os.',
+        ],
+        extras: [
+          {
+            category: 'Wyżywienie dodatkowe',
+            items: [
+              { name: 'Suchy prowiant', desc: 'Bułka z serem żółtym, bułka z wędliną, owoc, baton, woda 0,5 l — idealna opcja na wycieczkę, w góry lub nad wodę.', price: '25 zł/szt.' },
+              { name: 'Obiadokolacja tradycyjna', desc: 'Zupa, drugie danie, kompot.', price: '40 zł/os.' },
+              { name: 'Obiadokolacja regionalna', desc: 'Zupa, drugie danie, kompot.', price: '45 zł/os.' },
+            ],
+          },
+          {
+            category: 'Grupy objazdowe (nienocujące)',
+            note: 'Parking do 6 h gratis.',
+            items: [
+              { name: 'Obiad dwudaniowy', desc: 'Zupa, drugie danie, kompot.', price: 'Dzieci od 25 zł / Dorośli od 35 zł' },
+              { name: 'Przerwa kawowa ciągła', desc: 'Kawa, herbata, woda mineralna, ciasteczka kruche, owoce, ciasto domowe.', price: '30 zł/os.' },
+            ],
+          },
+          {
+            category: 'Wieczory & Ogniska',
+            items: [
+              { name: 'Ognisko', desc: 'Kiełbasa, ziemniaczek pieczony z masłem czosnkowym, napoje w dzbankach, chleb, smalec, pikle, ketchup, musztarda, drzewo.', price: '50 zł/os.' },
+              { name: 'Grill', desc: 'Karkówka, kiełbasa, sałatka grecka, ziemniaczki pieczone, oscypek z żurawiną, napoje, chleb, smalec, pikle, ketchup, musztarda.', price: '100 zł/os.' },
+              { name: 'Watra Bojkowska', desc: 'Szynka pieczona ogniem żywym z kaszą maszczoną skwarkami i kapustą zasmażaną, grule z sosem czosnkowym, kawa, herbata, pikle, smalczyk, powidła, gorące trunki lokalne (100 ml/os.).', price: '70 zł/os. · 85 zł/os.' },
+              { name: 'Kolacja Chłopska I', desc: 'Szwedzki stół: kaszanka z cebulką, żurek staropolski, kociołek gulaszu, zimne półmiski wędlin regionalnych i serów, sałatka, powidła, kawa, herbata, pikle, pajda.', price: '80 zł/os.', note: 'Podawana wyłącznie przy zamówieniu obiadokolacji.' },
+              { name: 'Kolacja Chłopska II', desc: 'Szwedzki stół: kaszanka z cebulką, zimne półmiski wędlin regionalnych i serów, sałatka, powidła, pikle, pajda.', price: '100 zł/os.', note: 'Podawana wyłącznie przy zamówieniu obiadokolacji.' },
+              { name: 'Kolacja Bojkowska', desc: 'Szwedzki stół: barszcz ukraiński, żur staropolski, pierogi po bojkowsku, gulasz, pieczeń, bandury, kasza, kapusta, zimne półmiski, sery regionalne, sałatki, powidła, ciasto domowe, napoje, kawa, herbata.', price: '120 zł/os.' },
+            ],
+          },
+          {
+            category: 'Sala & Rozrywka',
+            items: [
+              { name: 'Sala konferencyjna', desc: 'Pełny węzeł multimediów + flipchart.', price: '50 zł/h' },
+              { name: 'Kapela WATRA', desc: 'W przypadku dostępności.', price: '1 620 zł (do 4 h) · 2 000 zł/wieczór' },
+              { name: 'DJ', desc: 'Wraz z salą.', price: '1 200 zł/wieczór' },
+            ],
+          },
+        ],
+        legal: 'Cennik nie jest ofertą handlową w rozumieniu Kodeksu Cywilnego. Przystań Caryńska zastrzega sobie prawo do zmian cen, o czym informuje klienta w momencie potwierdzenia rezerwacji.',
+      },
+
+      capacity: {
+        rooms: [
+          { count: 10, label: 'pokoi dwuosobowych' },
+          { count: 7,  label: 'pokoi trzyosobowych' },
+          { count: 2,  label: 'apartamentów pięcioosobowych' },
+          { count: 1,  label: 'pokój czteroosobowy' },
+          { count: 1,  label: 'pokój jednoosobowy' },
+        ],
+        totalRooms: 21,
+        beds: 56,
+        maxOccupancy: 73,
+        halls: [
+          { name: 'Sala restauracyjna', seats: '60 osób' },
+          { name: 'Sala konferencyjna', seats: '60 osób (80 w układzie kinowym)' },
+        ],
+      },
+    },
+
     cta: {
       phone: '+48 691 944 266',
       email: 'przystan@carynska.pl',

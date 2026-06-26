@@ -12,7 +12,7 @@ defineProps<{
       class="absolute inset-0 bg-cover bg-center scale-105"
       :style="`background-image: url('${image}')`"
     />
-    <div class="absolute inset-0 bg-gradient-to-b from-forest/70 via-black/35 to-forest/95" />
+    <div class="absolute inset-0 bg-black/30" />
 
     <div class="relative h-full flex flex-col items-center justify-center text-center px-6">
       <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-5">{{ tag }}</p>

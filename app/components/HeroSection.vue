@@ -37,6 +37,8 @@ defineProps<{
         {{ hero.title }}
       </h1>
       <div class="fade-in w-10 h-px bg-gold mt-10" style="animation-delay: 1s" />
+
+      <CallMenu variant="hero" />
     </div>
 
     <div class="relative">
@@ -44,3 +46,27 @@ defineProps<{
     </div>
   </section>
 </template>
+
+<style scoped>
+.hero-call-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 2rem;
+  background: #C9A96E;
+  color: #162016;
+  padding: 0.9rem 2rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  transition: background 0.25s, transform 0.2s;
+}
+.hero-call-btn:hover {
+  background: #b8914f;
+  transform: translateY(-2px);
+}
+</style>
