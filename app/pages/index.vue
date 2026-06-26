@@ -11,6 +11,7 @@ const nav = useNav()
     <AtrakcjeSection :data="content.atrakcje" />
     <KuchniaSection :data="content.kuchnia" />
     <ReviewsSection :reviews="content.reviews" />
+    <FacebookSection />
     <KontaktSection :data="content.kontakt" />
   </main>
 </template>

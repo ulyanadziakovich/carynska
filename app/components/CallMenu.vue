@@ -71,7 +71,6 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  margin-top: 2rem;
   background: #C9A96E;
   color: #162016;
   padding: 0.9rem 2rem;

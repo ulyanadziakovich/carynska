@@ -70,7 +70,7 @@ function onSectionsScroll() {
             <div class="w-8 h-px bg-gold/60" />
             <h3 class="font-display text-forest text-2xl font-light italic leading-snug">{{ sec.title }}</h3>
             <p class="text-forest/50 font-sans font-light text-sm leading-relaxed flex-1">{{ sec.body }}</p>
-            <p v-if="sec.note" class="text-forest/35 font-sans text-xs leading-relaxed border-l border-gold/40 pl-4 italic">{{ sec.note }}</p>
+            <p v-if="(sec as any).note" class="text-forest/35 font-sans text-xs leading-relaxed border-l border-gold/40 pl-4 italic">{{ (sec as any).note }}</p>
           </div>
         </div>
 
@@ -170,14 +170,14 @@ function onSectionsScroll() {
             <h3 class="font-display text-forest text-2xl font-light italic whitespace-nowrap">{{ cat.category }}</h3>
             <div class="flex-1 h-px bg-black/8" />
           </div>
-          <p v-if="cat.note" class="text-forest/35 font-sans text-xs mb-6 italic">{{ cat.note }}</p>
+          <p v-if="(cat as any).note" class="text-forest/35 font-sans text-xs mb-6 italic">{{ (cat as any).note }}</p>
 
           <div class="divide-y divide-black/5">
             <div v-for="item in cat.items" :key="item.name" class="py-5 flex items-start justify-between gap-8 group">
               <div class="flex-1 min-w-0">
                 <p class="text-forest font-sans text-sm mb-1">{{ item.name }}</p>
                 <p class="text-forest/40 font-sans text-xs leading-relaxed">{{ item.desc }}</p>
-                <p v-if="item.note" class="text-forest/30 font-sans text-[10px] italic mt-1">{{ item.note }}</p>
+                <p v-if="(item as any).note" class="text-forest/30 font-sans text-[10px] italic mt-1">{{ (item as any).note }}</p>
               </div>
               <span class="text-forest font-display text-lg font-light shrink-0 group-hover:text-gold transition-colors duration-200">{{ item.price }}</span>
             </div>

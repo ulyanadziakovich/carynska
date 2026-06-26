@@ -38,7 +38,17 @@ defineProps<{
       </h1>
       <div class="fade-in w-10 h-px bg-gold mt-10" style="animation-delay: 1s" />
 
-      <CallMenu variant="hero" />
+      <div class="flex flex-wrap items-stretch justify-center gap-4 mt-8">
+        <CallMenu variant="hero" />
+        <a
+          href="https://carynska.app-tapporder.ngastro.lsisoftware.net/zpc-skorka-spolka-jawna/products?group=af95-0528-1b1b-4b7a"
+          target="_blank"
+          rel="noopener"
+          class="hero-pizza-btn"
+        >
+          🍕 Zamów pizzę
+        </a>
+      </div>
     </div>
 
     <div class="relative">
@@ -67,6 +77,31 @@ defineProps<{
 }
 .hero-call-btn:hover {
   background: #b8914f;
+  transform: translateY(-2px);
+}
+
+.hero-pizza-btn {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.5);
+  color: #fff;
+  padding: 0.9rem 2rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  transition: background 0.25s, border-color 0.25s, transform 0.2s;
+}
+.hero-pizza-btn:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.8);
   transform: translateY(-2px);
 }
 </style>

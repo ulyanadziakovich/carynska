@@ -187,7 +187,7 @@ async function submitForm() {
     </div>
 
     <!-- Siostrzane obiekty -->
-    <div v-if="data.siostrzaneObiekty?.length" class="border-t border-white/10 px-8 lg:px-16 py-12">
+    <div v-if="data.siostrzaneObiekty && data.siostrzaneObiekty.length" class="border-t border-white/10 px-8 lg:px-16 py-12">
       <p class="text-white/30 text-[10px] tracking-[0.45em] uppercase font-sans mb-7">Nasze obiekty</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gold/8">
         <a

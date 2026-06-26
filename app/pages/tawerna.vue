@@ -106,7 +106,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
                     <span class="menu-item__num">{{ romanNumerals[j] }}.</span>
                     <div class="flex-1 min-w-0">
                       <p class="menu-item__name">{{ item.name }}</p>
-                      <p v-if="item.note" class="menu-item__note">{{ item.note }}</p>
+                      <p v-if="(item as any).note" class="menu-item__note">{{ (item as any).note }}</p>
                     </div>
                     <span v-if="item.price" class="menu-item__price">{{ item.price }}</span>
                     <span v-else class="menu-item__dash">—</span>

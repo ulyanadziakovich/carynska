@@ -5,7 +5,7 @@ const [{ data }, { data: content }] = await Promise.all([
 ])
 const nav = useNav()
 
-type Room = typeof data.value.rooms[number]
+type Room = NonNullable<typeof data.value>['rooms'][number]
 const selectedRoom = ref<Room | null>(null)
 
 function openRoom(room: Room) {

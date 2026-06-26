@@ -5,7 +5,7 @@ interface Tile {
   title: string
   icon: string
   image: string
-  from: 'left' | 'right'
+  from: string
   modalTitle: string
   modalBody: string[]
   highlights: string[]
