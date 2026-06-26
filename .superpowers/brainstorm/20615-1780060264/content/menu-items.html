@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu – styl pozycji</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --forest:#162016; --gold:#C9A96E; --cream:#F5EDD6; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background:#0e1a0e;
+    color:var(--cream);
+    font-family:'Raleway',sans-serif;
+    padding:40px 20px 60px;
+  }
+  .page-title {
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:13px;
+    letter-spacing:.4em;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .page-sub {
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    color:rgba(245,237,214,.4);
+    font-size:16px;
+    margin-bottom:44px;
+  }
+  .cards {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:22px;
+    max-width:1050px;
+    margin:0 auto;
+  }
+  .card {
+    border:1px solid rgba(201,169,110,.18);
+    border-radius:2px;
+    background:rgba(255,255,255,.025);
+    cursor:pointer;
+    transition:border-color .25s,background .25s,transform .2s;
+    overflow:hidden;
+    position:relative;
+  }
+  .card:hover { border-color:rgba(201,169,110,.45); background:rgba(255,255,255,.04); transform:translateY(-2px); }
+  .card.selected { border-color:var(--gold); background:rgba(201,169,110,.08); }
+  .card.selected::after {
+    content:'✓ wybrano';
+    position:absolute; top:12px; right:14px;
+    font-size:10px; letter-spacing:.15em;
+    color:var(--gold); font-family:'Raleway',sans-serif; text-transform:uppercase;
+  }
+  .card-label {
+    background:rgba(201,169,110,.1);
+    border-bottom:1px solid rgba(201,169,110,.15);
+    padding:10px 20px;
+    font-size:10px; letter-spacing:.35em; color:var(--gold);
+    text-transform:uppercase; font-family:'Raleway',sans-serif;
+  }
+  .card-body { padding:22px 22px 18px; }
+  .cat-heading {
+    font-family:'Cormorant Garamond',serif;
+    font-size:24px; font-weight:300; letter-spacing:.15em;
+    color:var(--cream); margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .cat-heading::before,.cat-heading::after {
+    content:''; flex:1; height:1px; background:rgba(201,169,110,.2);
+  }
+  .card-desc {
+    margin-top:16px; padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.06);
+    font-size:12px; color:rgba(245,237,214,.4); line-height:1.6;
+  }
+
+  /* ── STYLE A: kropkowana linia (klasyczne menu) ── */
+  .style-dots .item {
+    display:flex; align-items:baseline;
+    padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04);
+    gap:6px;
+  }
+  .style-dots .item:last-child { border-bottom:none; }
+  .style-dots .name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px; font-weight:300; color:rgba(245,237,214,.85);
+    white-space:nowrap;
+  }
+  .style-dots .note {
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic; font-size:12px; color:rgba(245,237,214,.3);
+  }
+  .style-dots .dots {
+    flex:1; border-bottom:1px dotted rgba(201,169,110,.3);
+    position:relative; top:-5px; min-width:16px;
+  }
+  .style-dots .price {
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px; color:var(--gold); white-space:nowrap;
+  }
+  .style-dots .name-wrap { display:flex; flex-direction:column; }
+
+  /* ── STYLE B: czyste wiersze, cena po prawej ── */
+  .style-clean .item {
+    padding:10px 0; border-bottom:1px solid rgba(255,255,255,.05);
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+  }
+  .style-clean .item:last-child { border-bottom:none; }
+  .style-clean .item-left { flex:1; }
+  .style-clean .name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px; font-weight:300; color:rgba(245,237,214,.88);
+    line-height:1.3;
+  }
+  .style-clean .note {
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic; font-size:12.5px; color:rgba(245,237,214,.32);
+    margin-top:3px; line-height:1.4;
+  }
+  .style-clean .price {
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px; color:var(--gold); font-weight:300;
+    background:rgba(201,169,110,.08);
+    border:1px solid rgba(201,169,110,.2);
+    padding:2px 10px;
+    white-space:nowrap;
+    align-self:flex-start;
+  }
+
+  /* ── STYLE C: karta z tłem hover, bardziej restauracyjny ── */
+  .style-card .item {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:10px 12px; margin:0 -12px;
+    border-radius:1px;
+    border-bottom:1px solid rgba(255,255,255,.04);
+    transition:background .2s;
+    gap:12px;
+  }
+  .style-card .item:last-child { border-bottom:none; }
+  .style-card .item-num {
+    font-family:'Cormorant Garamond',serif;
+    font-size:11px; color:rgba(201,169,110,.4);
+    padding-top:3px; min-width:18px;
+    font-style:italic;
+  }
+  .style-card .item-left { flex:1; }
+  .style-card .name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px; font-weight:300; color:rgba(245,237,214,.88);
+    line-height:1.3;
+  }
+  .style-card .note {
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic; font-size:12px; color:rgba(245,237,214,.3);
+    margin-top:3px;
+  }
+  .style-card .price {
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px; color:var(--gold);
+    white-space:nowrap; padding-top:2px;
+  }
+  .style-card .price-dash { color:rgba(201,169,110,.25); }
+</style>
+<script>
+  function select(el,choice) {
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+    if(window.parent&&window.parent!==window) window.parent.postMessage({type:'choice',choice},'*');
+  }
+</script>
+</head>
+<body>
+
+<p class="page-title">Tawerna — Menu</p>
+<p class="page-sub">Jak mają wyglądać pozycje dań?</p>
+
+<div class="cards">
+
+  <!-- STYLE A -->
+  <div class="card" onclick="select(this,'A')">
+    <div class="card-label">Styl A — Klasyczna karta (z kropkami)</div>
+    <div class="card-body">
+      <div class="cat-heading">Zestawy dla Kapitana</div>
+      <div class="style-dots">
+        <div class="item">
+          <div class="name-wrap">
+            <span class="name">Zestaw dnia</span>
+            <span class="note">zupa + drugie danie</span>
+          </div>
+          <span class="dots"></span>
+          <span class="price">40 zł</span>
+        </div>
+        <div class="item">
+          <div class="name-wrap">
+            <span class="name">Burger wołowy</span>
+            <span class="note">pomidor, cebula, cheddar, frytki</span>
+          </div>
+          <span class="dots"></span>
+          <span class="price">42 zł</span>
+        </div>
+        <div class="item">
+          <div class="name-wrap">
+            <span class="name">Pierogi ukraińskie zapiekane</span>
+            <span class="note">sos czosnkowy</span>
+          </div>
+          <span class="dots"></span>
+          <span class="price">32 zł</span>
+        </div>
+        <div class="item">
+          <div class="name-wrap">
+            <span class="name">Kotlet schabowy po Polsku</span>
+            <span class="note">ziemniaki lub frytki, surówka</span>
+          </div>
+          <span class="dots"></span>
+          <span class="price">44 zł</span>
+        </div>
+        <div class="item">
+          <div class="name-wrap">
+            <span class="name">Ser zapiekany z żurawiną</span>
+          </div>
+          <span class="dots"></span>
+          <span class="price">34 zł</span>
+        </div>
+      </div>
+      <div class="card-desc">Linia kropek łączy nazwę z ceną — klasyk restauracyjny. Bardzo czytelne, tradycyjne. Pasuje do rustykalnego klimatu tawerny.</div>
+    </div>
+  </div>
+
+  <!-- STYLE B -->
+  <div class="card" onclick="select(this,'B')">
+    <div class="card-label">Styl B — Nowoczesny, cena w ramce</div>
+    <div class="card-body">
+      <div class="cat-heading">Zestawy dla Kapitana</div>
+      <div class="style-clean">
+        <div class="item">
+          <div class="item-left">
+            <div class="name">Zestaw dnia</div>
+            <div class="note">zupa + drugie danie</div>
+          </div>
+          <span class="price">40 zł</span>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <div class="name">Burger wołowy</div>
+            <div class="note">pomidor, cebula, cheddar, frytki</div>
+          </div>
+          <span class="price">42 zł</span>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <div class="name">Pierogi ukraińskie zapiekane</div>
+            <div class="note">sos czosnkowy</div>
+          </div>
+          <span class="price">32 zł</span>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <div class="name">Kotlet schabowy po Polsku</div>
+            <div class="note">ziemniaki lub frytki, surówka</div>
+          </div>
+          <span class="price">44 zł</span>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <div class="name">Ser zapiekany z żurawiną</div>
+          </div>
+          <span class="price">34 zł</span>
+        </div>
+      </div>
+      <div class="card-desc">Cena wyróżniona delikatną złotą ramką. Opis dania mniejszą kursywą pod nazwą. Elegancki, nowoczesny wygląd fine-dining.</div>
+    </div>
+  </div>
+
+  <!-- STYLE C -->
+  <div class="card" onclick="select(this,'C')">
+    <div class="card-label">Styl C — Z numeracją, bardziej restauracyjny</div>
+    <div class="card-body">
+      <div class="cat-heading">Zestawy dla Kapitana</div>
+      <div class="style-card">
+        <div class="item">
+          <span class="item-num">I.</span>
+          <div class="item-left">
+            <div class="name">Zestaw dnia</div>
+            <div class="note">zupa + drugie danie</div>
+          </div>
+          <span class="price">40 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">II.</span>
+          <div class="item-left">
+            <div class="name">Burger wołowy</div>
+            <div class="note">pomidor, cebula, cheddar, frytki</div>
+          </div>
+          <span class="price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">III.</span>
+          <div class="item-left">
+            <div class="name">Pierogi ukraińskie zapiekane</div>
+            <div class="note">sos czosnkowy</div>
+          </div>
+          <span class="price">32 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">IV.</span>
+          <div class="item-left">
+            <div class="name">Kotlet schabowy po Polsku</div>
+            <div class="note">ziemniaki lub frytki, surówka</div>
+          </div>
+          <span class="price">44 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">V.</span>
+          <div class="item-left">
+            <div class="name">Ser zapiekany z żurawiną</div>
+          </div>
+          <span class="price">34 zł</span>
+        </div>
+      </div>
+      <div class="card-desc">Numeracja rzymska nadaje elegancki, restauracyjny charakter. Subtelne podświetlenie przy najechaniu. Fajnie przy kategoriach z krótką listą.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

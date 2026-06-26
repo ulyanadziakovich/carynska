@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — podgląd finalny</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --forest:#162016; --gold:#C9A96E; --cream:#F5EDD6; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body { background:#0e1a0e; color:var(--cream); font-family:'Raleway',sans-serif; }
+
+  .page-note {
+    text-align:center; padding:18px;
+    font-size:11px; letter-spacing:.25em; color:rgba(201,169,110,.5);
+    text-transform:uppercase; border-bottom:1px solid rgba(201,169,110,.1);
+    background:rgba(201,169,110,.04);
+  }
+
+  /* ── LAYOUT ── */
+  .menu-wrap {
+    max-width:960px; margin:0 auto;
+    display:flex; gap:0;
+    padding:48px 24px 80px;
+    align-items:flex-start;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width:180px; flex-shrink:0;
+    position:sticky; top:32px;
+    padding-right:32px;
+    border-right:1px solid rgba(201,169,110,.12);
+  }
+  .sidebar-label {
+    font-size:9px; letter-spacing:.4em; color:rgba(201,169,110,.4);
+    text-transform:uppercase; margin-bottom:20px;
+  }
+  .sidebar-item {
+    display:block; padding:9px 0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px; font-weight:300;
+    color:rgba(245,237,214,.35);
+    border-bottom:1px solid rgba(255,255,255,.04);
+    cursor:pointer; transition:color .2s;
+    text-decoration:none; letter-spacing:.05em;
+  }
+  .sidebar-item:last-child { border-bottom:none; }
+  .sidebar-item:hover { color:rgba(245,237,214,.65); }
+  .sidebar-item.active {
+    color:var(--gold);
+    padding-left:10px;
+    border-left:2px solid var(--gold);
+    margin-left:-2px;
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+
+  /* ── CONTENT ── */
+  .content { flex:1; padding-left:48px; }
+
+  .section { margin-bottom:64px; }
+
+  .section-head {
+    margin-bottom:28px;
+  }
+  .section-tag {
+    font-size:9px; letter-spacing:.4em; color:rgba(201,169,110,.5);
+    text-transform:uppercase; margin-bottom:10px;
+  }
+  .section-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(28px,4vw,38px); font-weight:300;
+    color:var(--cream); letter-spacing:.1em; line-height:1;
+    margin-bottom:16px;
+  }
+  .section-divider {
+    display:flex; align-items:center; gap:12px;
+  }
+  .section-divider .line { flex:1; height:1px; background:rgba(201,169,110,.2); }
+  .section-divider .diamond {
+    width:5px; height:5px; background:rgba(201,169,110,.5);
+    transform:rotate(45deg); flex-shrink:0;
+  }
+
+  /* ── ITEMS ── */
+  .items { margin-top:20px; }
+  .item {
+    display:flex; align-items:flex-start; gap:12px;
+    padding:11px 0; border-bottom:1px solid rgba(255,255,255,.05);
+    transition:background .15s;
+  }
+  .item:last-child { border-bottom:none; }
+  .item-num {
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic; font-size:12px;
+    color:rgba(201,169,110,.35); min-width:22px;
+    padding-top:3px; text-align:right; flex-shrink:0;
+  }
+  .item-body { flex:1; }
+  .item-name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:19px; font-weight:300;
+    color:rgba(245,237,214,.88); line-height:1.3;
+  }
+  .item-note {
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic; font-size:13px;
+    color:rgba(245,237,214,.3); margin-top:3px; line-height:1.4;
+  }
+  .item-price {
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px; color:var(--gold);
+    white-space:nowrap; padding-top:2px;
+    font-weight:300; flex-shrink:0;
+  }
+  .item-price.empty { color:rgba(201,169,110,.2); font-style:italic; font-size:14px; }
+
+  /* ── MOBILE ── */
+  @media(max-width:640px){
+    .menu-wrap { flex-direction:column; padding:24px 16px 60px; }
+    .sidebar {
+      width:100%; position:static; padding-right:0;
+      border-right:none; border-bottom:1px solid rgba(201,169,110,.12);
+      padding-bottom:20px; margin-bottom:32px;
+    }
+    .sidebar-label { display:none; }
+    .sidebar-scroll { display:flex; gap:0; overflow-x:auto; padding-bottom:4px; }
+    .sidebar-item {
+      border-bottom:none; border-right:none; padding:6px 14px;
+      white-space:nowrap; font-size:13px;
+    }
+    .sidebar-item.active {
+      border-bottom:2px solid var(--gold);
+      border-left:none; padding-left:14px; margin-left:0;
+    }
+    .content { padding-left:0; }
+  }
+</style>
+<script>
+  function setActive(el, id) {
+    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    const target = document.getElementById(id);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+</script>
+</head>
+<body>
+
+<div class="page-note">Podgląd finalnego układu — układ A + styl C</div>
+
+<div class="menu-wrap">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Kategorie</div>
+    <div class="sidebar-scroll">
+      <a class="sidebar-item active" onclick="setActive(this,'sniadania')">Śniadania</a>
+      <a class="sidebar-item" onclick="setActive(this,'zupy')">Zupy</a>
+      <a class="sidebar-item" onclick="setActive(this,'zakaski')">Zakąski</a>
+      <a class="sidebar-item" onclick="setActive(this,'zestawy')">Zestawy</a>
+      <a class="sidebar-item" onclick="setActive(this,'rybki')">Rybki</a>
+      <a class="sidebar-item" onclick="setActive(this,'pizza')">Pizza</a>
+      <a class="sidebar-item" onclick="setActive(this,'stripsy')">Stripsy & Wings</a>
+      <a class="sidebar-item" onclick="setActive(this,'dodatki')">Dodatki</a>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- Śniadania -->
+    <div class="section" id="sniadania">
+      <div class="section-head">
+        <div class="section-tag">Tawerna Caryńska</div>
+        <div class="section-title">Śniadania</div>
+        <div class="section-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+      </div>
+      <div class="items">
+        <div class="item">
+          <span class="item-num">I.</span>
+          <div class="item-body"><div class="item-name">Szwedzki bufet</div><div class="item-note">25 zł dzieci</div></div>
+          <span class="item-price">35 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">II.</span>
+          <div class="item-body"><div class="item-name">Jajecznica z kiełbasą</div></div>
+          <span class="item-price empty">—</span>
+        </div>
+        <div class="item">
+          <span class="item-num">III.</span>
+          <div class="item-body"><div class="item-name">Naleśniki</div></div>
+          <span class="item-price empty">—</span>
+        </div>
+        <div class="item">
+          <span class="item-num">IV.</span>
+          <div class="item-body"><div class="item-name">Płatki zbożowe z mlekiem</div></div>
+          <span class="item-price empty">—</span>
+        </div>
+        <div class="item">
+          <span class="item-num">V.</span>
+          <div class="item-body"><div class="item-name">Tace śniadaniowe</div></div>
+          <span class="item-price empty">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zestawy -->
+    <div class="section" id="zestawy">
+      <div class="section-head">
+        <div class="section-tag">Tawerna Caryńska</div>
+        <div class="section-title">Zestawy dla Kapitana</div>
+        <div class="section-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+      </div>
+      <div class="items">
+        <div class="item">
+          <span class="item-num">I.</span>
+          <div class="item-body"><div class="item-name">Zestaw dnia</div><div class="item-note">zupa + drugie danie</div></div>
+          <span class="item-price">40 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">II.</span>
+          <div class="item-body"><div class="item-name">Burger wołowy</div><div class="item-note">pomidor, cebula, ogórek, sałata, cheddar, sos szefa, frytki</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">III.</span>
+          <div class="item-body"><div class="item-name">Pierogi ukraińskie zapiekane</div><div class="item-note">sos czosnkowy</div></div>
+          <span class="item-price">32 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">IV.</span>
+          <div class="item-body"><div class="item-name">Placki po „Bieszczadzku"</div><div class="item-note">wieprzowina, zestaw surówek</div></div>
+          <span class="item-price">43 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">V.</span>
+          <div class="item-body"><div class="item-name">Kotlet schabowy po Polsku z kością</div><div class="item-note">ziemniaki lub frytki, surówka</div></div>
+          <span class="item-price">44 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">VI.</span>
+          <div class="item-body"><div class="item-name">Portowa Bida</div><div class="item-note">gulasz, kasza hreczana z skwarkami lub makaron, ogórek</div></div>
+          <span class="item-price">32 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">VII.</span>
+          <div class="item-body"><div class="item-name">Ser zapiekany z żurawiną</div><div class="item-note">frytki, surówka</div></div>
+          <span class="item-price">34 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">VIII.</span>
+          <div class="item-body"><div class="item-name">Ser zapiekany + piwo lane</div></div>
+          <span class="item-price">35 zł</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pizza -->
+    <div class="section" id="pizza">
+      <div class="section-head">
+        <div class="section-tag">Tawerna Caryńska</div>
+        <div class="section-title">Pizza Portowa z Pieca</div>
+        <div class="section-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+      </div>
+      <div class="items">
+        <div class="item">
+          <span class="item-num">I.</span>
+          <div class="item-body"><div class="item-name">Goła Margherita</div><div class="item-note">sos pomidorowy, mozzarella</div></div>
+          <span class="item-price">34 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">II.</span>
+          <div class="item-body"><div class="item-name">Cichy Wieprz</div><div class="item-note">sos pomidorowy, mozzarella, szynka, pieczarki</div></div>
+          <span class="item-price">39 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">III.</span>
+          <div class="item-body"><div class="item-name">Popołudniowa Bryza</div><div class="item-note">szynka, salami, pieczarki, suszone pomidory</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">IV.</span>
+          <div class="item-body"><div class="item-name">Osioł Portowy 🌶</div><div class="item-note">jalapeno, salami, oliwki</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">V.</span>
+          <div class="item-body"><div class="item-name">Burza na Rufie 🌶</div><div class="item-note">jalapeno, salami, oliwki, suszone pomidory, cebula</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">VI.</span>
+          <div class="item-body"><div class="item-name">Bieszczadzki Port</div><div class="item-note">scypek, boczek, ogórek kiszony, cebula</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+        <div class="item">
+          <span class="item-num">VII.</span>
+          <div class="item-body"><div class="item-name">Pizza Caryńska</div><div class="item-note">scypek, szynka, kukurydza</div></div>
+          <span class="item-price">42 zł</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

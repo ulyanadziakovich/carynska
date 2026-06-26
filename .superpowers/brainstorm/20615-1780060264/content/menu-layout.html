@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu – wybór układu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #162016;
+    --forest-mid: #1a2a1a;
+    --gold: #C9A96E;
+    --gold-light: #DFB97E;
+    --cream: #F5EDD6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0e1a0e;
+    color: var(--cream);
+    font-family: 'Raleway', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+  .page-title {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: .4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .page-sub {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(245,237,214,.45);
+    font-size: 16px;
+    margin-bottom: 48px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .card {
+    border: 1px solid rgba(201,169,110,.18);
+    border-radius: 2px;
+    background: rgba(255,255,255,.025);
+    cursor: pointer;
+    transition: border-color .25s, background .25s, transform .2s;
+    overflow: hidden;
+    position: relative;
+  }
+  .card:hover { border-color: rgba(201,169,110,.45); background: rgba(255,255,255,.04); transform: translateY(-2px); }
+  .card.selected { border-color: var(--gold); background: rgba(201,169,110,.08); }
+  .card.selected::after {
+    content: '✓ wybrano';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: var(--gold);
+    font-family: 'Raleway', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .card-label {
+    background: rgba(201,169,110,.12);
+    border-bottom: 1px solid rgba(201,169,110,.15);
+    padding: 10px 20px;
+    font-size: 10px;
+    letter-spacing: .35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-family: 'Raleway', sans-serif;
+  }
+  .card-body { padding: 24px 24px 20px; }
+
+  /* ── MOCKUP A: scrollable sections ── */
+  .mock-a-cat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .mock-a-cat .cat-icon {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(201,169,110,.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .mock-a-cat .cat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--cream);
+    font-weight: 300;
+    letter-spacing: .1em;
+  }
+  .mock-a-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,169,110,.4), transparent);
+    margin-bottom: 12px;
+  }
+  .mock-a-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    gap: 8px;
+  }
+  .mock-a-item:last-child { border-bottom: none; }
+  .mock-a-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: rgba(245,237,214,.8);
+    font-weight: 300;
+  }
+  .mock-a-dots {
+    flex: 1;
+    border-bottom: 1px dotted rgba(201,169,110,.25);
+    margin: 0 8px;
+    position: relative;
+    top: -4px;
+    min-width: 20px;
+  }
+  .mock-a-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .mock-a-sidebar {
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 14px;
+    border-right: 1px solid rgba(201,169,110,.15);
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+  .mock-a-sidebar-item {
+    font-size: 9px;
+    letter-spacing: .12em;
+    color: rgba(245,237,214,.35);
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+  .mock-a-sidebar-item.active {
+    color: var(--gold);
+    border-left: 2px solid var(--gold);
+    padding-left: 6px;
+    margin-left: -2px;
+  }
+  .mock-a-row { display: flex; }
+
+  /* ── MOCKUP B: category grid cards ── */
+  .mock-b-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .mock-b-cat-card {
+    aspect-ratio: 1;
+    border: 1px solid rgba(201,169,110,.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: rgba(255,255,255,.02);
+    padding: 6px 4px;
+  }
+  .mock-b-cat-card.active-cat {
+    background: rgba(201,169,110,.12);
+    border-color: var(--gold);
+  }
+  .mock-b-icon { font-size: 18px; }
+  .mock-b-cat-name {
+    font-size: 7.5px;
+    letter-spacing: .08em;
+    color: rgba(245,237,214,.5);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .mock-b-cat-card.active-cat .mock-b-cat-name { color: var(--gold); }
+  .mock-b-selected-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--cream);
+    font-weight: 300;
+    letter-spacing: .15em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mock-b-selected-title::before, .mock-b-selected-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,169,110,.25);
+  }
+  .mock-b-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .mock-b-iname { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: rgba(245,237,214,.75); }
+  .mock-b-iprice { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--gold); }
+
+  /* ── MOCKUP C: horizontal scroll tabs + image strip ── */
+  .mock-c-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(201,169,110,.15);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .mock-c-tab {
+    padding: 6px 10px;
+    font-size: 8.5px;
+    letter-spacing: .18em;
+    color: rgba(245,237,214,.3);
+    text-transform: uppercase;
+    font-family: 'Raleway', sans-serif;
+    white-space: nowrap;
+  }
+  .mock-c-tab.active {
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: -1px;
+  }
+  .mock-c-image-strip {
+    height: 70px;
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #2a3a2a 0%, #1a2a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .mock-c-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--forest) 0%, transparent 40%, transparent 60%, var(--forest) 100%);
+  }
+  .mock-c-img-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(245,237,214,.6);
+    letter-spacing: .15em;
+    position: relative;
+    z-index: 1;
+  }
+  .mock-c-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 12px;
+    margin: 0 -6px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .mock-c-item:hover-sim { background: rgba(255,255,255,.02); }
+  .mock-c-iname {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: rgba(245,237,214,.85);
+    font-weight: 300;
+  }
+  .mock-c-inote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: rgba(245,237,214,.3);
+    margin-top: 2px;
+  }
+  .mock-c-iprice {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+  }
+
+  .card-desc {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    font-size: 12px;
+    color: rgba(245,237,214,.4);
+    line-height: 1.6;
+    letter-spacing: .02em;
+  }
+</style>
+<script>
+  function select(el, choice) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'choice', choice}, '*');
+    }
+  }
+</script>
+</head>
+<body>
+
+<p class="page-title">Tawerna — Menu</p>
+<p class="page-sub">Który układ wygląda najlepiej?</p>
+
+<div class="cards">
+
+  <!-- OPTION A: Scrollable with sidebar -->
+  <div class="card" onclick="select(this,'A')">
+    <div class="card-label">Opcja A — Strona jak karta dań</div>
+    <div class="card-body">
+
+      <div class="mock-a-row">
+        <div class="mock-a-sidebar">
+          <div class="mock-a-sidebar-item active">Śniadania</div>
+          <div class="mock-a-sidebar-item">Zupy</div>
+          <div class="mock-a-sidebar-item">Zakąski</div>
+          <div class="mock-a-sidebar-item">Kapitana</div>
+          <div class="mock-a-sidebar-item">Rybki</div>
+          <div class="mock-a-sidebar-item">Pizza</div>
+          <div class="mock-a-sidebar-item">Stripsy</div>
+          <div class="mock-a-sidebar-item">Dodatki</div>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div class="mock-a-cat">
+            <div class="cat-icon">🍳</div>
+            <div class="cat-name">Śniadania</div>
+          </div>
+          <div class="mock-a-divider"></div>
+          <div class="mock-a-item">
+            <span class="mock-a-name">Szwedzki bufet</span>
+            <span class="mock-a-dots"></span>
+            <span class="mock-a-price">35 zł</span>
+          </div>
+          <div class="mock-a-item">
+            <span class="mock-a-name">Jajecznica z kiełbasą</span>
+            <span class="mock-a-dots"></span>
+            <span class="mock-a-price">—</span>
+          </div>
+          <div class="mock-a-item">
+            <span class="mock-a-name">Naleśniki</span>
+            <span class="mock-a-dots"></span>
+            <span class="mock-a-price">—</span>
+          </div>
+          <div class="mock-a-item">
+            <span class="mock-a-name">Tace śniadaniowe</span>
+            <span class="mock-a-dots"></span>
+            <span class="mock-a-price">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-desc">
+        Boczny panel z kategoriami (sticky). Kliknięcie przeskakuje do sekcji. Wszystko widoczne bez przeładowania — jak prawdziwa karta dań. Klasyczny, elegancki układ.
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B: Category grid -->
+  <div class="card" onclick="select(this,'B')">
+    <div class="card-label">Opcja B — Siatka kategorii z ikonami</div>
+    <div class="card-body">
+
+      <div class="mock-b-grid">
+        <div class="mock-b-cat-card active-cat">
+          <div class="mock-b-icon">🍳</div>
+          <div class="mock-b-cat-name">Śniadania</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🍲</div>
+          <div class="mock-b-cat-name">Zupy</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🍟</div>
+          <div class="mock-b-cat-name">Zakąski</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🍽️</div>
+          <div class="mock-b-cat-name">Zestawy</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🐟</div>
+          <div class="mock-b-cat-name">Rybki</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🍕</div>
+          <div class="mock-b-cat-name">Pizza</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🍗</div>
+          <div class="mock-b-cat-name">Stripsy</div>
+        </div>
+        <div class="mock-b-cat-card">
+          <div class="mock-b-icon">🧄</div>
+          <div class="mock-b-cat-name">Dodatki</div>
+        </div>
+      </div>
+
+      <div class="mock-b-selected-title">Śniadania</div>
+      <div class="mock-b-item">
+        <span class="mock-b-iname">Szwedzki bufet</span>
+        <span class="mock-b-iprice">35 zł</span>
+      </div>
+      <div class="mock-b-item">
+        <span class="mock-b-iname">Jajecznica z kiełbasą</span>
+        <span class="mock-b-iprice">—</span>
+      </div>
+      <div class="mock-b-item">
+        <span class="mock-b-iname">Naleśniki</span>
+        <span class="mock-b-iprice">—</span>
+      </div>
+
+      <div class="card-desc">
+        Ikony kategorii w siatce — szybki wybór wzrokiem. Kliknięcie ładuje dania poniżej. Bardziej nowoczesne, przyjazne mobilnie. Wymaga ikon pasujących do stylu.
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C: Full-width with image accent -->
+  <div class="card" onclick="select(this,'C')">
+    <div class="card-label">Opcja C — Taby + baner kategorii</div>
+    <div class="card-body">
+
+      <div class="mock-c-tabs">
+        <div class="mock-c-tab active">Śniadania</div>
+        <div class="mock-c-tab">Zupy</div>
+        <div class="mock-c-tab">Zakąski</div>
+        <div class="mock-c-tab">Zestawy</div>
+        <div class="mock-c-tab">Rybki</div>
+        <div class="mock-c-tab" style="opacity:.4">…</div>
+      </div>
+
+      <div class="mock-c-image-strip">
+        <div class="mock-c-img-overlay"></div>
+        <div class="mock-c-img-text">Śniadania</div>
+      </div>
+
+      <div class="mock-c-item">
+        <div>
+          <div class="mock-c-iname">Szwedzki bufet</div>
+          <div class="mock-c-inote">25 zł dzieci</div>
+        </div>
+        <span class="mock-c-iprice">35 zł</span>
+      </div>
+      <div class="mock-c-item">
+        <div><div class="mock-c-iname">Jajecznica z kiełbasą</div></div>
+        <span class="mock-c-iprice">—</span>
+      </div>
+      <div class="mock-c-item">
+        <div><div class="mock-c-iname">Naleśniki</div></div>
+        <span class="mock-c-iprice">—</span>
+      </div>
+      <div class="mock-c-item">
+        <div><div class="mock-c-iname">Tace śniadaniowe</div></div>
+        <span class="mock-c-iprice">—</span>
+      </div>
+
+      <div class="card-desc">
+        Obecna struktura tabów, ale wzbogacona o ozdobny baner z nazwą kategorii + tłem. Minimalny nakład zmian, duży efekt wizualny. Taby scrollują poziomo na mobile.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

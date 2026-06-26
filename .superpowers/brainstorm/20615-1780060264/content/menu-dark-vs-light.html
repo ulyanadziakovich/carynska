@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — ciemne vs jasne</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --forest:#162016; --gold:#C9A96E; --cream:#F5EDD6; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body { background:#111; font-family:'Raleway',sans-serif; padding:32px 16px 60px; }
+
+  .page-title {
+    text-align:center; font-family:'Cormorant Garamond',serif;
+    font-size:13px; letter-spacing:.4em; color:var(--gold);
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .page-sub {
+    text-align:center; font-family:'Cormorant Garamond',serif;
+    font-style:italic; color:rgba(201,169,110,.45); font-size:16px; margin-bottom:40px;
+  }
+
+  .split {
+    display:grid; grid-template-columns:1fr 1fr; gap:20px;
+    max-width:1000px; margin:0 auto;
+  }
+  @media(max-width:640px){ .split{ grid-template-columns:1fr; } }
+
+  .panel {
+    border-radius:2px; overflow:hidden; cursor:pointer;
+    border:2px solid transparent;
+    transition:border-color .25s, transform .2s;
+    position:relative;
+  }
+  .panel:hover { transform:translateY(-2px); }
+  .panel.selected { border-color:var(--gold); }
+  .panel.selected::after {
+    content:'✓ wybrano';
+    position:absolute; top:12px; right:14px;
+    font-size:10px; letter-spacing:.15em;
+    font-family:'Raleway',sans-serif; text-transform:uppercase;
+  }
+
+  /* DARK panel */
+  .panel-dark { background:#162016; }
+  .panel-dark.selected::after { color:var(--gold); }
+  .panel-dark .panel-label {
+    background:rgba(201,169,110,.1); border-bottom:1px solid rgba(201,169,110,.15);
+    padding:10px 18px; font-size:10px; letter-spacing:.35em; color:var(--gold);
+    text-transform:uppercase; font-family:'Raleway',sans-serif;
+  }
+  .panel-dark .panel-body { padding:24px 22px 22px; }
+  .panel-dark .sidebar-item {
+    display:block; padding:7px 0; font-family:'Cormorant Garamond',serif;
+    font-size:14px; font-weight:300; color:rgba(245,237,214,.3);
+    border-bottom:1px solid rgba(255,255,255,.04); letter-spacing:.05em;
+  }
+  .panel-dark .sidebar-item.active {
+    color:var(--gold); padding-left:8px;
+    border-left:2px solid var(--gold); margin-left:-2px;
+  }
+  .panel-dark .cat-title {
+    font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300;
+    color:#F5EDD6; letter-spacing:.1em; margin-bottom:14px;
+  }
+  .panel-dark .divider { height:1px; background:rgba(201,169,110,.2); margin-bottom:14px; }
+  .panel-dark .item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .panel-dark .item:last-child { border-bottom:none; }
+  .panel-dark .num { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:11px; color:rgba(201,169,110,.35); width:20px; text-align:right; padding-top:2px; flex-shrink:0; }
+  .panel-dark .iname { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:300; color:rgba(245,237,214,.85); flex:1; }
+  .panel-dark .inote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12px; color:rgba(245,237,214,.3); margin-top:2px; }
+  .panel-dark .iprice { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--gold); flex-shrink:0; }
+
+  /* LIGHT panel */
+  .panel-light { background:#F5EDD6; }
+  .panel-light.selected::after { color:#162016; }
+  .panel-light .panel-label {
+    background:rgba(22,32,22,.07); border-bottom:1px solid rgba(22,32,22,.1);
+    padding:10px 18px; font-size:10px; letter-spacing:.35em; color:rgba(22,32,22,.5);
+    text-transform:uppercase; font-family:'Raleway',sans-serif;
+  }
+  .panel-light .panel-body { padding:24px 22px 22px; }
+  .panel-light .sidebar-item {
+    display:block; padding:7px 0; font-family:'Cormorant Garamond',serif;
+    font-size:14px; font-weight:300; color:rgba(22,32,22,.35);
+    border-bottom:1px solid rgba(22,32,22,.07); letter-spacing:.05em;
+  }
+  .panel-light .sidebar-item.active {
+    color:#162016; padding-left:8px;
+    border-left:2px solid var(--gold); margin-left:-2px;
+    font-weight:400;
+  }
+  .panel-light .cat-title {
+    font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300;
+    color:#162016; letter-spacing:.1em; margin-bottom:14px;
+  }
+  .panel-light .divider { height:1px; background:rgba(201,169,110,.4); margin-bottom:14px; }
+  .panel-light .item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:8px 0; border-bottom:1px solid rgba(22,32,22,.07);
+  }
+  .panel-light .item:last-child { border-bottom:none; }
+  .panel-light .num { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:11px; color:rgba(201,169,110,.7); width:20px; text-align:right; padding-top:2px; flex-shrink:0; }
+  .panel-light .iname { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:300; color:rgba(22,32,22,.8); flex:1; }
+  .panel-light .inote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12px; color:rgba(22,32,22,.4); margin-top:2px; }
+  .panel-light .iprice { font-family:'Cormorant Garamond',serif; font-size:17px; color:#8B6914; flex-shrink:0; }
+
+  .inner { display:flex; gap:14px; }
+  .sidebar { width:80px; flex-shrink:0; }
+  .content { flex:1; min-width:0; }
+
+  .desc {
+    padding:12px 18px 14px;
+    font-size:12px; line-height:1.6; letter-spacing:.02em;
+  }
+  .panel-dark .desc { color:rgba(245,237,214,.35); border-top:1px solid rgba(255,255,255,.06); }
+  .panel-light .desc { color:rgba(22,32,22,.4); border-top:1px solid rgba(22,32,22,.08); }
+</style>
+<script>
+  function select(el,choice) {
+    document.querySelectorAll('.panel').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+    if(window.parent&&window.parent!==window) window.parent.postMessage({type:'choice',choice},'*');
+  }
+</script>
+</head>
+<body>
+
+<p class="page-title">Tawerna — Menu</p>
+<p class="page-sub">Ciemne tło czy jasna sekcja?</p>
+
+<div class="split">
+
+  <!-- DARK -->
+  <div class="panel panel-dark" onclick="select(this,'dark')">
+    <div class="panel-label">Opcja A — Ciemne (obecny styl)</div>
+    <div class="panel-body">
+      <div class="inner">
+        <div class="sidebar">
+          <div class="sidebar-item">Śniadania</div>
+          <div class="sidebar-item active">Zestawy</div>
+          <div class="sidebar-item">Zupy</div>
+          <div class="sidebar-item">Pizza</div>
+          <div class="sidebar-item">Stripsy</div>
+        </div>
+        <div class="content">
+          <div class="cat-title">Zestawy</div>
+          <div class="divider"></div>
+          <div class="item">
+            <span class="num">I.</span>
+            <div style="flex:1">
+              <div class="iname">Zestaw dnia</div>
+              <div class="inote">zupa + drugie danie</div>
+            </div>
+            <span class="iprice">40 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">II.</span>
+            <div style="flex:1"><div class="iname">Burger wołowy</div><div class="inote">cheddar, frytki</div></div>
+            <span class="iprice">42 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">III.</span>
+            <div style="flex:1"><div class="iname">Pierogi ukraińskie</div><div class="inote">sos czosnkowy</div></div>
+            <span class="iprice">32 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">IV.</span>
+            <div style="flex:1"><div class="iname">Kotlet schabowy</div></div>
+            <span class="iprice">44 zł</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="desc">Spójne z resztą strony — leśna ciemna zieleń. Eleganckie, premium. Ceny złote wyraźnie odcinają się od tła.</div>
+  </div>
+
+  <!-- LIGHT -->
+  <div class="panel panel-light" onclick="select(this,'light')">
+    <div class="panel-label">Opcja B — Jasne (kremowe tło)</div>
+    <div class="panel-body">
+      <div class="inner">
+        <div class="sidebar">
+          <div class="sidebar-item">Śniadania</div>
+          <div class="sidebar-item active">Zestawy</div>
+          <div class="sidebar-item">Zupy</div>
+          <div class="sidebar-item">Pizza</div>
+          <div class="sidebar-item">Stripsy</div>
+        </div>
+        <div class="content">
+          <div class="cat-title">Zestawy</div>
+          <div class="divider"></div>
+          <div class="item">
+            <span class="num">I.</span>
+            <div style="flex:1">
+              <div class="iname">Zestaw dnia</div>
+              <div class="inote">zupa + drugie danie</div>
+            </div>
+            <span class="iprice">40 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">II.</span>
+            <div style="flex:1"><div class="iname">Burger wołowy</div><div class="inote">cheddar, frytki</div></div>
+            <span class="iprice">42 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">III.</span>
+            <div style="flex:1"><div class="iname">Pierogi ukraińskie</div><div class="inote">sos czosnkowy</div></div>
+            <span class="iprice">32 zł</span>
+          </div>
+          <div class="item">
+            <span class="num">IV.</span>
+            <div style="flex:1"><div class="iname">Kotlet schabowy</div></div>
+            <span class="iprice">44 zł</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="desc">Przełamuje ciemny charakter strony — jak papierowa karta dań. Bardzo czytelne, lżejsze w odbiorze. Dobre wrażenie kontrastu.</div>
+  </div>
+
+</div>
+
+</body>
+</html>
