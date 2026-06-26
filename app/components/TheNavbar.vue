@@ -8,7 +8,10 @@ defineProps<{
 
 const scrolled = ref(false)
 function onScroll() { scrolled.value = window.scrollY > 60 }
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+})
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 const menuOpen = ref(false)
@@ -24,7 +27,7 @@ function toggleDropdown(label: string) {
 <template>
   <nav
     class="fixed top-0 inset-x-0 z-50 transition-all duration-500"
-    :class="scrolled ? 'bg-forest/95 backdrop-blur-sm py-3 shadow-2xl' : 'bg-transparent py-5'"
+    :class="scrolled ? 'bg-forest/95 backdrop-blur-sm py-3 shadow-2xl' : 'bg-forest/70 backdrop-blur-sm py-5'"
   >
     <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
 
@@ -32,7 +35,7 @@ function toggleDropdown(label: string) {
       <a
         href="/"
         class="select-none transition-all duration-500 flex items-center"
-        :class="(scrolled || alwaysShowLogo) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+        :class="(scrolled || alwaysShowLogo) ? 'opacity-100' : 'opacity-80'"
       >
         <img
           src="/images/logonew.png"

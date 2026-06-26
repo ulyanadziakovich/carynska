@@ -1,6 +1,6 @@
 <template>
   <section class="bg-forest border-t border-gold/15 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 py-16 grid grid-cols-1 lg:grid-cols-[1fr_650px] gap-10 lg:gap-16 items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-[1fr_650px] gap-10 lg:gap-16 items-center">
 
       <!-- Left: text -->
       <div class="flex flex-col gap-6">
@@ -62,22 +62,25 @@
         </div>
       </div>
 
-      <!-- mobile iframe (360px) -->
-      <div class="fb-wrap w-full lg:hidden">
+      <!-- mobile iframe — JS-scaled -->
+      <div ref="mobileWrap" class="fb-wrap w-full lg:hidden" :style="{ height: mobileWrapH + 'px' }">
         <iframe
-          src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprzystancarynska&tabs=timeline&width=360&height=420&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=false"
-          class="fb-iframe fb-iframe--mobile"
+          ref="mobileIframe"
+          src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprzystancarynska&tabs=timeline&width=340&height=420&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+          style="width:340px;height:420px;border:none;display:block;transform-origin:top left"
+          :style="{ transform: 'scale(' + mobileScale + ')' }"
           scrolling="no"
           frameborder="0"
           allowfullscreen
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
         />
       </div>
+
       <!-- desktop iframe (500px scaled to 650px) -->
       <div class="fb-wrap fb-wrap--desktop w-full hidden lg:block">
         <iframe
           src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprzystancarynska&tabs=timeline&width=500&height=500&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=false"
-          class="fb-iframe fb-iframe--desktop"
+          class="fb-iframe--desktop"
           scrolling="no"
           frameborder="0"
           allowfullscreen
@@ -89,17 +92,33 @@
   </section>
 </template>
 
+<script setup lang="ts">
+const FB_MOBILE_W = 340
+const FB_MOBILE_H = 420
+
+const mobileWrap = ref<HTMLElement | null>(null)
+const mobileScale = ref(1)
+const mobileWrapH = ref(FB_MOBILE_H)
+
+function recalcMobile() {
+  if (!mobileWrap.value) return
+  const w = mobileWrap.value.clientWidth
+  const s = w / FB_MOBILE_W
+  mobileScale.value = s
+  mobileWrapH.value = Math.round(FB_MOBILE_H * s)
+}
+
+onMounted(() => {
+  recalcMobile()
+  window.addEventListener('resize', recalcMobile, { passive: true })
+})
+onUnmounted(() => window.removeEventListener('resize', recalcMobile))
+</script>
+
 <style scoped>
 .fb-wrap {
   border: 1px solid rgba(201,169,110,0.15);
   overflow: hidden;
-}
-
-.fb-iframe--mobile {
-  width: 360px;
-  height: 420px;
-  border: none;
-  display: block;
 }
 
 .fb-iframe--desktop {
@@ -111,7 +130,6 @@
   transform-origin: top left;
 }
 
-/* 500px * 1.3 = 650px — wrapper crops the scaled overflow cleanly */
 .fb-wrap--desktop {
   height: 650px;
 }
