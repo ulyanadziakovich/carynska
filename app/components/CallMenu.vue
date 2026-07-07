@@ -7,9 +7,9 @@ const open = ref(false)
 const menuEl = ref<HTMLElement | null>(null)
 
 const phones = [
-  { tag: 'Rezerwacje', label: 'Noclegi', number: '+48 691 944 266' },
-  { tag: 'Restauracja', label: 'Tawerna', number: '+48 514 177 136' },
-  { tag: 'Przystań', label: 'Bosmanat', number: '+48 536 700 537' },
+  { tag: 'Rezerwacje', label: 'Noclegi', number: '+48 691 944 266', icon: 'bed' },
+  { tag: 'Restauracja', label: 'Tawerna', number: '+48 514 177 136', icon: 'utensils' },
+  { tag: 'Przystań', label: 'Bosmanat', number: '+48 536 700 537', icon: 'anchor' },
 ]
 
 function toggle() { open.value = !open.value }
@@ -47,11 +47,33 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
           :key="p.number"
           :href="`tel:${p.number.replace(/\s/g, '')}`"
           class="call-menu__item"
+          :aria-label="`${p.tag} ${p.label}: ${p.number}`"
           @click="open = false"
         >
           <span class="call-menu__item-left">
-            <span class="call-menu__tag">{{ p.tag }}</span>
-            <span class="call-menu__label">{{ p.label }}</span>
+            <span class="call-menu__icon" aria-hidden="true">
+              <svg v-if="p.icon === 'bed'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 18v-7a2 2 0 012-2h14a2 2 0 012 2v7" />
+                <path d="M3 18h18" />
+                <path d="M3 13h18" />
+                <path d="M7 9V6a1 1 0 011-1h8a1 1 0 011 1v3" />
+              </svg>
+              <svg v-else-if="p.icon === 'utensils'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 2v7a2 2 0 002 2h2a2 2 0 002-2V2" />
+                <path d="M7 2v20" />
+                <path d="M21 15V2a5 5 0 00-5 5v6a2 2 0 002 2h3zm0 0v7" />
+              </svg>
+              <svg v-else-if="p.icon === 'anchor'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="5" r="2" />
+                <path d="M12 7v13" />
+                <path d="M5 12H2a10 10 0 0020 0h-3" />
+                <path d="M7 15a5 5 0 0010 0" />
+              </svg>
+            </span>
+            <span class="call-menu__text">
+              <span class="call-menu__tag">{{ p.tag }}</span>
+              <span class="call-menu__label">{{ p.label }}</span>
+            </span>
           </span>
           <span class="call-menu__number">{{ p.number }}</span>
         </a>
@@ -155,6 +177,23 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
 .call-menu__item:hover { background: rgba(201,169,110,0.08); }
 .call-menu__item-left {
   display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.call-menu__icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  color: #C9A96E;
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 50%;
+}
+.call-menu__text {
+  display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
@@ -178,6 +217,12 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
   letter-spacing: 0.05em;
   color: #C9A96E;
   white-space: nowrap;
+}
+
+/* ── Mobile: icons instead of text labels ── */
+@media (max-width: 640px) {
+  .call-menu__icon { display: flex; }
+  .call-menu__text { display: none; }
 }
 
 /* ── Transition ── */
