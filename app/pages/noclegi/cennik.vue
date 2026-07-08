@@ -16,7 +16,7 @@ const nav = useNav()
 
       <!-- Breadcrumb -->
       <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/25 mb-16">
-        <NuxtLink to="/noclegi" class="hover:text-gold transition-colors">Noclegi</NuxtLink>
+        <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">Noclegi</NuxtLink>
         <span>/</span>
         <span class="text-white/45">Cennik</span>
       </div>

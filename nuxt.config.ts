@@ -10,6 +10,10 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  routeRules: {
+    '/noclegi': { redirect: '/noclegi/pokoje' },
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
