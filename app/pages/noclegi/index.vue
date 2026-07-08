@@ -18,16 +18,17 @@ const nav = useNav()
 
     <!-- Intro -->
     <div class="max-w-2xl mx-auto px-8 py-16 text-center">
-      <p class="text-white/50 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
+      <p class="text-white/50 font-sans text-sm leading-relaxed">{{ data.intro }}</p>
     </div>
 
     <!-- Four main tiles -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gold/10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
         <!-- Pokoje tile -->
-        <NuxtLink to="/noclegi/pokoje" class="hub-tile group">
+        <NuxtLink to="/noclegi/pokoje" class="hub-tile card-elevated group">
           <img src="/images/solina2.avif" alt="Pokoje" class="hub-tile-img" />
+          <div class="photo-tint" />
           <div class="hub-tile-overlay" />
           <div class="hub-tile-body">
             <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans">Zakwaterowanie</p>
@@ -41,7 +42,7 @@ const nav = useNav()
         </NuxtLink>
 
         <!-- Cennik tile -->
-        <NuxtLink to="/noclegi/cennik" class="hub-tile-dark group flex flex-col justify-between p-10 gap-8">
+        <NuxtLink to="/noclegi/cennik" class="hub-tile-dark card-elevated group flex flex-col justify-between p-10 gap-8">
           <div>
             <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-5">Ceny</p>
             <h2 class="font-display text-white font-light mb-3" style="font-size: clamp(1.8rem, 2.5vw, 2.5rem)">Cennik<br>2025</h2>
@@ -64,8 +65,9 @@ const nav = useNav()
         </NuxtLink>
 
         <!-- Hotel na wodzie tile -->
-        <NuxtLink to="/noclegi/jacht" class="hub-tile group">
+        <NuxtLink to="/noclegi/jacht" class="hub-tile card-elevated group">
           <img src="/images/saturn25-jezero.webp" alt="Hotel na wodzie" class="hub-tile-img" />
+          <div class="photo-tint" />
           <div class="hub-tile-overlay" />
           <div class="hub-tile-body">
             <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans">Wyjątkowe</p>
@@ -79,8 +81,9 @@ const nav = useNav()
         </NuxtLink>
 
         <!-- Grupy tile -->
-        <NuxtLink to="/grupy" class="hub-tile group">
+        <NuxtLink to="/grupy" class="hub-tile card-elevated group">
           <img src="/images/tawerna-bar.jpg" alt="Grupy i eventy" class="hub-tile-img" />
+          <div class="photo-tint" />
           <div class="hub-tile-overlay" />
           <div class="hub-tile-body">
             <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans">Organizacja</p>
@@ -132,7 +135,7 @@ const nav = useNav()
 }
 .hub-tile-dark {
   min-height: 480px;
-  background: #162216;
+  background: radial-gradient(ellipse 130% 90% at 50% -10%, #1e301e 0%, #162016 45%, #0e160e 100%);
   transition: background 0.3s;
 }
 .hub-tile-dark:hover { background: #1c2c1c; }

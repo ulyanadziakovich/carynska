@@ -22,6 +22,7 @@ defineProps<{
         :alt="room.title"
         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
+      <div class="photo-tint" />
       <div class="absolute inset-0 bg-gradient-to-t from-forest/80 via-transparent to-transparent" />
       <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
         <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">max {{ room.occupancy }} os.</span>
@@ -37,7 +38,7 @@ defineProps<{
         </div>
       </div>
 
-      <p class="text-white/50 font-sans font-light text-sm leading-relaxed line-clamp-3">{{ room.desc }}</p>
+      <p class="text-white/50 font-sans text-sm leading-relaxed line-clamp-3">{{ room.desc }}</p>
 
       <ul class="flex flex-col gap-1.5 pt-2 border-t border-white/8">
         <li

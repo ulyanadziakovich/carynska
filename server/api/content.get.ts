@@ -211,6 +211,7 @@ export default defineEventHandler(() => {
         { label: 'TripAdvisor',   href: 'https://www.tripadvisor.com/Hotel_Review-g3176335-d28568069-Reviews-Przystan_Carynska_w_Polanczyku-Polanczyk_Subcarpathian_Province_Southern_Poland.html?m=19905' },
         { label: 'Noclegowo.pl',  href: 'https://www.noclegowo.pl/polanczyk/r92298-przystan-carynska-osrodek-szkoleniowo-wypoczynkowy-w-polanczyku/' },
         { label: 'e-nocleg.pl',   href: 'https://e-nocleg.pl/nocleg,unitra.html' },
+        { label: 'Nocowanie.pl',  href: 'https://www.nocowanie.pl/rezerwuj/1543039-przystan-carynska-dawniej-unitra-polanczyk/' },
       ],
       bank: {
         name: 'ING Bank Śląski',

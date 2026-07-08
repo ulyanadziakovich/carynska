@@ -45,11 +45,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="bg-white">
+  <section class="bg-forest-void">
 
     <!-- ── Hero image + text ── -->
     <div class="relative h-[70vh] min-h-[500px]">
       <img :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
+      <div class="photo-tint" />
       <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/30 to-forest/80" />
 
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
@@ -60,7 +61,7 @@ onMounted(() => {
           style="font-size: clamp(2.8rem, 6vw, 5.5rem)"
         >{{ data.title }}</h2>
         <div v-reveal="{ delay: 200 }" class="w-8 h-px bg-gold mt-8 mb-8" />
-        <p v-reveal="{ delay: 280 }" class="text-white/60 font-sans font-light text-sm max-w-md leading-relaxed">{{ data.body }}</p>
+        <p v-reveal="{ delay: 280 }" class="text-white/60 font-sans text-sm max-w-md leading-relaxed">{{ data.body }}</p>
         <NuxtLink
           v-reveal="{ delay: 380 }"
           :to="data.cta.href"
@@ -84,6 +85,7 @@ onMounted(() => {
       >
         <!-- photo bg -->
         <img :src="tile.image" :alt="tile.title" class="tile-photo" />
+        <div class="photo-tint" />
         <div class="tile-overlay" />
 
         <!-- text -->

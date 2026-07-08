@@ -174,8 +174,13 @@ async function submitForm() {
     </div>
 
     <!-- Copyright -->
-    <div class="border-t border-white/8 py-4 px-5 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div class="border-t border-white/8 py-4 px-5 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-3">
       <p class="text-white/20 text-[10px] font-sans tracking-[0.3em] uppercase">© 2026 Przystań Caryńska</p>
+      <div class="flex items-center gap-4">
+        <NuxtLink to="/regulamin" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Regulamin</NuxtLink>
+        <span class="text-white/10">·</span>
+        <NuxtLink to="/polityka-prywatnosci" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Polityka Prywatności</NuxtLink>
+      </div>
       <p class="text-white/10 font-sans text-[10px] tracking-widest uppercase">Polańczyk · Jezioro Solińskie · Bieszczady</p>
     </div>
 

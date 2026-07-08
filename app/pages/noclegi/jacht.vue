@@ -38,22 +38,22 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
     <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
 
-    <!-- Light content area -->
-    <div class="bg-white">
+    <!-- Content area -->
+    <div class="bg-forest-wash">
 
       <!-- Breadcrumb -->
       <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-8">
-        <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-forest/30">
+        <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/35">
           <NuxtLink to="/noclegi" class="hover:text-gold transition-colors">Noclegi</NuxtLink>
           <span>/</span>
-          <span class="text-forest/50">Hotel na wodzie</span>
+          <span class="text-white/55">Hotel na wodzie</span>
         </div>
       </div>
 
       <!-- Intro -->
       <div class="max-w-2xl mx-auto px-8 py-10 text-center">
         <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-4">Unikalne doświadczenie</p>
-        <p class="font-display italic text-forest/60 text-lg leading-relaxed">{{ data.intro }}</p>
+        <p class="font-display italic text-white/75 text-lg leading-relaxed">{{ data.intro }}</p>
         <div class="w-8 h-px bg-gold mx-auto mt-6" />
       </div>
 
@@ -63,7 +63,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
           <button
             v-for="yacht in data.yachts"
             :key="yacht.id"
-            class="text-left group cursor-pointer border border-forest/8 hover:border-gold/30 transition-colors"
+            class="card-elevated text-left group cursor-pointer bg-forest-void overflow-hidden"
             @click="openYacht(yacht)"
           >
             <div class="h-full flex flex-col">
@@ -73,30 +73,31 @@ onUnmounted(() => { document.body.style.overflow = '' })
                   :alt="yacht.name"
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5">
-                  <span class="text-forest text-[10px] tracking-[0.2em] font-sans uppercase font-semibold">max {{ yacht.capacity }} os.</span>
+                <div class="photo-tint" />
+                <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
+                  <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">max {{ yacht.capacity }} os.</span>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-forest/20">
-                  <div class="bg-white/90 px-5 py-2.5 text-forest text-[10px] tracking-[0.2em] uppercase font-sans font-semibold">
+                  <div class="bg-forest/80 backdrop-blur-sm border border-gold/40 px-5 py-2.5 text-gold text-[10px] tracking-[0.2em] uppercase font-sans">
                     Zobacz szczegóły
                   </div>
                 </div>
               </div>
               <div class="p-7 flex flex-col gap-3 flex-1">
                 <div>
-                  <p class="text-gold text-[10px] tracking-[0.35em] uppercase font-sans mb-1">{{ yacht.tag }}</p>
-                  <h2 class="font-display text-forest text-3xl font-light">{{ yacht.name }}</h2>
+                  <p class="text-gold/70 text-[10px] tracking-[0.35em] uppercase font-sans mb-1">{{ yacht.tag }}</p>
+                  <h2 class="font-display text-white text-3xl font-light">{{ yacht.name }}</h2>
                 </div>
-                <p class="text-forest/55 font-sans font-light text-sm leading-relaxed line-clamp-2">{{ yacht.desc }}</p>
+                <p class="text-white/60 font-sans text-sm leading-relaxed line-clamp-2">{{ yacht.desc }}</p>
                 <div class="flex gap-6 pt-1">
                   <div v-for="spec in yacht.specs.slice(0, 3)" :key="spec.label">
-                    <p class="text-forest/30 text-[9px] tracking-[0.2em] uppercase font-sans mb-0.5">{{ spec.label }}</p>
-                    <p class="text-forest/70 font-sans text-sm">{{ spec.value }}</p>
+                    <p class="text-white/35 text-[9px] tracking-[0.2em] uppercase font-sans mb-0.5">{{ spec.label }}</p>
+                    <p class="text-white/70 font-sans text-sm">{{ spec.value }}</p>
                   </div>
                 </div>
-                <div class="mt-auto pt-4 border-t border-forest/8 flex items-center justify-between">
+                <div class="mt-auto pt-4 border-t border-white/8 flex items-center justify-between">
                   <span class="text-gold font-display text-xl font-light">{{ yacht.price }}</span>
-                  <span class="text-forest/30 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">Szczegóły →</span>
+                  <span class="text-white/40 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">Szczegóły →</span>
                 </div>
               </div>
             </div>
@@ -106,20 +107,20 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
       <!-- Co w cenie -->
       <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-16">
-        <div class="border border-forest/10 p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 items-start bg-stone-50">
+        <div class="card-elevated border border-gold/15 p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 items-start bg-forest-void">
           <div>
             <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-6">Co zawiera nocleg</p>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-10">
               <li
                 v-for="item in data.includes"
                 :key="item"
-                class="flex items-center gap-3 text-forest/60 font-sans text-sm"
+                class="flex items-center gap-3 text-white/70 font-sans text-sm"
               >
                 <span class="w-4 h-px bg-gold/60 shrink-0" />
                 {{ item }}
               </li>
             </ul>
-            <p class="text-forest/35 font-sans text-xs leading-relaxed mt-6 max-w-xl">{{ data.note }}</p>
+            <p class="text-white/35 font-sans text-xs leading-relaxed mt-6 max-w-xl">{{ data.note }}</p>
           </div>
           <div class="flex flex-col gap-3 lg:min-w-[220px]">
             <a
@@ -133,14 +134,14 @@ onUnmounted(() => { document.body.style.overflow = '' })
             </a>
             <a
               :href="`mailto:${data.contact.email}`"
-              class="flex items-center justify-center gap-3 border border-forest/20 hover:border-gold text-forest/50 hover:text-gold px-6 py-4 font-sans text-[11px] tracking-[0.2em] uppercase transition-all"
+              class="flex items-center justify-center gap-3 border border-white/15 hover:border-gold text-white/50 hover:text-gold px-6 py-4 font-sans text-[11px] tracking-[0.2em] uppercase transition-all"
             >
               {{ data.contact.email }}
             </a>
           </div>
         </div>
       </div>
-    </div><!-- end bg-white -->
+    </div><!-- end content area -->
 
     <KontaktSection :data="content.kontakt" />
 
@@ -195,34 +196,34 @@ onUnmounted(() => { document.body.style.overflow = '' })
               <!-- Specs -->
               <div class="grid grid-cols-3 gap-px bg-forest/8 mb-6">
                 <div v-for="spec in selectedYacht.specs.slice(0,3)" :key="spec.label" class="bg-white px-3 py-3 text-center">
-                  <p class="text-forest/35 text-[8px] tracking-[0.2em] uppercase font-sans mb-1">{{ spec.label }}</p>
+                  <p class="text-forest/55 text-[8px] tracking-[0.2em] uppercase font-sans mb-1">{{ spec.label }}</p>
                   <p class="text-forest font-sans text-sm font-medium">{{ spec.value }}</p>
                 </div>
               </div>
               <div class="grid grid-cols-3 gap-px bg-forest/8 mb-7">
                 <div v-for="spec in selectedYacht.specs.slice(3)" :key="spec.label" class="bg-white px-3 py-3 text-center">
-                  <p class="text-forest/35 text-[8px] tracking-[0.2em] uppercase font-sans mb-1">{{ spec.label }}</p>
+                  <p class="text-forest/55 text-[8px] tracking-[0.2em] uppercase font-sans mb-1">{{ spec.label }}</p>
                   <p class="text-forest font-sans text-sm font-medium">{{ spec.value }}</p>
                 </div>
               </div>
 
-              <p class="text-forest/60 font-sans font-light text-sm leading-relaxed mb-7">{{ selectedYacht.desc }}</p>
+              <p class="text-forest/60 font-sans text-sm leading-relaxed mb-7">{{ selectedYacht.desc }}</p>
 
-              <p class="text-forest/35 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Na pokładzie</p>
+              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Na pokładzie</p>
               <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 mb-7">
                 <li v-for="feat in selectedYacht.features" :key="feat" class="flex items-center gap-3 text-forest/65 font-sans text-sm">
                   <span class="w-3 h-px bg-gold shrink-0" />{{ feat }}
                 </li>
               </ul>
 
-              <p class="text-forest/35 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Cennik sezonowy</p>
+              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Cennik sezonowy</p>
               <div class="border border-forest/10 mb-7">
                 <div
                   v-for="row in (selectedYacht as any).pricing"
                   :key="row.label"
                   class="flex items-center justify-between gap-4 px-4 py-3 border-b border-forest/8 last:border-0"
                 >
-                  <span class="text-forest/55 font-sans text-xs">{{ row.label }}</span>
+                  <span class="text-forest/65 font-sans text-xs">{{ row.label }}</span>
                   <span class="text-gold font-sans text-sm font-semibold shrink-0">{{ row.value }}</span>
                 </div>
               </div>

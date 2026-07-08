@@ -11,6 +11,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 <template>
   <div>
+    <div class="grain-overlay" aria-hidden="true" />
     <NuxtRouteAnnouncer />
     <NuxtPage />
 

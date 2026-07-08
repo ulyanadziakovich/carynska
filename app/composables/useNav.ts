@@ -44,6 +44,13 @@ export function useNav() {
         ],
       },
       {
+        label: 'Praca',
+        href: 'tel:+48609620565',
+        children: [
+          { label: 'Praca sezonowa', subtitle: '+48 609 620 565', href: 'tel:+48609620565' },
+        ],
+      },
+      {
         label: 'Kontakt',
         href: '/#contact',
         children: [

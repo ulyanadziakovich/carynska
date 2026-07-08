@@ -16,7 +16,8 @@ export default defineEventHandler(() => {
         occupancy: 2,
         desc: 'Przytulny pokój z widokiem na jezioro lub góry. Idealne rozwiązanie dla podróżujących solo lub par szukających komfortu w dobrej cenie.',
         amenities: ['Balkon (widok na jezioro lub góry)', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka', 'Suszarka do włosów'],
-        image: '/images/solina2.avif',
+        image: '/images/1os-pokoj.png',
+        images: ['/images/1os-pokoj.png', '/images/1os-lazienka.png'],
       },
       {
         slug: 'pokoj-2-osobowy',
@@ -26,7 +27,8 @@ export default defineEventHandler(() => {
         occupancy: 3,
         desc: 'Dwa łączone łóżka pojedyncze, balkon i pełne wyposażenie. W wybranych pokojach możliwość dostawki dla trzeciej osoby.',
         amenities: ['Balkon (większość pokoi)', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka', 'Suszarka do włosów'],
-        image: '/images/solina3.avif',
+        image: '/images/2os-std-sypialnia1.png',
+        images: ['/images/2os-std-sypialnia1.png', '/images/2os-std-sypialnia2.png', '/images/2os-std-salon.png', '/images/2os-std-lazienka.png'],
       },
       {
         slug: 'pokoj-2-osobowy-plus',
@@ -36,7 +38,8 @@ export default defineEventHandler(() => {
         occupancy: 4,
         desc: 'Strefa dzienna z rozkładaną sofą oraz wydzielona nisza z łóżkiem dwuosobowym. Klimatyzacja ręczna i balkon z widokiem na jezioro lub góry.',
         amenities: ['Balkon z widokiem na jezioro/góry', 'Klimatyzacja ręczna', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka'],
-        image: '/images/hotel.png',
+        image: '/images/2os-salon.png',
+        images: ['/images/2os-salon.png', '/images/2os-sypialnia.png', '/images/2os-lazienka.png'],
       },
       {
         slug: 'studio-3-osobowe',
@@ -46,7 +49,8 @@ export default defineEventHandler(() => {
         occupancy: 5,
         desc: 'Salon z rozkładaną sofą i sypialnia z dwoma łączonymi łóżkami. Przestronne, rodzinne wnętrze z balkonem w większości jednostek.',
         amenities: ['Balkon (większość)', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka', 'Suszarka do włosów'],
-        image: '/images/solina1.avif',
+        image: '/images/studio3-salon1.png',
+        images: ['/images/studio3-salon1.png', '/images/studio3-lazienka.png', '/images/studio3-sypialnia.png', '/images/studio3-salon2.png'],
       },
       {
         slug: 'studio-3-osobowe-plus',
@@ -56,7 +60,8 @@ export default defineEventHandler(() => {
         occupancy: 5,
         desc: 'Większa wersja studia z balkonem z widokiem na jezioro lub góry. Ten sam układ — wyższy standard wykończenia i piękna panorama.',
         amenities: ['Balkon z widokiem na jezioro/góry', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka', 'Suszarka do włosów'],
-        image: '/images/solina4.avif',
+        image: '/images/studio3-plus-sypialnia.png',
+        images: ['/images/studio3-plus-sypialnia.png', '/images/studio3-plus-salon.png', '/images/studio3-plus-lazienka.png'],
       },
       {
         slug: 'apartament-5-osobowy',
@@ -66,7 +71,8 @@ export default defineEventHandler(() => {
         occupancy: 6,
         desc: 'Dwie osobne sypialnie z łączonymi łóżkami i obszerny salon z rozkładaną sofą. Szeroki balkon z panoramicznym widokiem na jezioro lub góry.',
         amenities: ['Szeroki balkon (widok na jezioro/góry)', 'Dwie sypialnie', 'Salon z sofą', 'Łazienka z prysznicem', 'TV + WiFi', 'Czajnik + lodówka'],
-        image: '/images/hotel.png',
+        image: '/images/apt5-salon1.png',
+        images: ['/images/apt5-salon1.png', '/images/apt5-sypialnia.png', '/images/apt5-salon2.png', '/images/apt5-lazienka.png'],
       },
     ],
     pricing: {

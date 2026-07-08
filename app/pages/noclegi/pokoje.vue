@@ -8,14 +8,29 @@ const nav = useNav()
 type Room = NonNullable<typeof data.value>['rooms'][number]
 const selectedRoom = ref<Room | null>(null)
 
+const galleryIndex = ref(0)
+const galleryImages = computed(() => {
+  if (!selectedRoom.value) return []
+  const imgs = (selectedRoom.value as any).images as string[] | undefined
+  return imgs?.length ? imgs : [selectedRoom.value.image]
+})
+
 function openRoom(room: Room) {
   selectedRoom.value = room
+  galleryIndex.value = 0
   document.body.style.overflow = 'hidden'
 }
 function closeRoom() {
   selectedRoom.value = null
   document.body.style.overflow = ''
 }
+function nextImage() {
+  galleryIndex.value = (galleryIndex.value + 1) % galleryImages.value.length
+}
+function prevImage() {
+  galleryIndex.value = (galleryIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length
+}
+
 
 onUnmounted(() => { document.body.style.overflow = '' })
 </script>
@@ -37,25 +52,26 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
     <!-- Intro -->
     <div class="max-w-2xl mx-auto px-8 py-10 text-center">
-      <p class="text-white/50 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
+      <p class="text-white/50 font-sans text-sm leading-relaxed">{{ data.intro }}</p>
     </div>
 
     <!-- Room grid -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gold/10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <button
           v-for="room in data.rooms"
           :key="room.slug"
-          class="text-left group cursor-pointer"
+          class="card-elevated text-left group cursor-pointer overflow-hidden"
           @click="openRoom(room)"
         >
-          <div class="bg-forest h-full flex flex-col">
+          <div class="bg-forest-void h-full flex flex-col">
             <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
               <img
                 :src="room.image"
                 :alt="room.title"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div class="photo-tint" />
               <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
                 <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">max {{ room.occupancy }} os.</span>
               </div>
@@ -74,7 +90,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
                   <span class="text-white/30 text-xs font-sans">{{ room.size }}</span>
                 </div>
               </div>
-              <p class="text-white/50 font-sans font-light text-sm leading-relaxed line-clamp-2">{{ room.desc }}</p>
+              <p class="text-white/50 font-sans text-sm leading-relaxed line-clamp-2">{{ room.desc }}</p>
               <div class="mt-auto pt-4 border-t border-white/8 flex items-center justify-between">
                 <span class="text-white/25 font-sans text-xs tracking-wide">{{ room.amenities.length }} udogodnień</span>
                 <span class="text-gold/60 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">Zobacz →</span>
@@ -109,10 +125,9 @@ onUnmounted(() => { document.body.style.overflow = '' })
         <div v-if="selectedRoom" class="modal-backdrop" @click.self="closeRoom">
           <div class="modal-panel">
 
-            <!-- Image -->
+            <!-- Image gallery -->
             <div class="relative h-64 md:h-80 overflow-hidden shrink-0">
-              <img :src="selectedRoom.image" :alt="selectedRoom.title" class="w-full h-full object-cover" />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#162216]/80 to-transparent" />
+              <img :src="galleryImages[galleryIndex]" :alt="selectedRoom.title" class="w-full h-full object-cover" />
               <div class="absolute bottom-6 left-8">
                 <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-1">{{ selectedRoom.tag }}</p>
                 <h2 class="font-display text-white text-3xl font-light">{{ selectedRoom.title }}</h2>
@@ -126,6 +141,33 @@ onUnmounted(() => { document.body.style.overflow = '' })
                   <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
                 </svg>
               </button>
+
+              <template v-if="galleryImages.length > 1">
+                <button
+                  class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
+                  @click="prevImage"
+                  aria-label="Poprzednie zdjęcie"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button
+                  class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
+                  @click="nextImage"
+                  aria-label="Następne zdjęcie"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="absolute bottom-6 right-8 flex gap-1.5">
+                  <button
+                    v-for="(img, i) in galleryImages"
+                    :key="img"
+                    class="w-1.5 h-1.5 rounded-full transition-colors"
+                    :class="i === galleryIndex ? 'bg-gold' : 'bg-white/30 hover:bg-white/50'"
+                    :aria-label="`Zdjęcie ${i + 1}`"
+                    @click="galleryIndex = i"
+                  />
+                </div>
+              </template>
             </div>
 
             <!-- Content -->
@@ -143,7 +185,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               </div>
 
               <!-- Description -->
-              <p class="text-white/55 font-sans font-light text-sm leading-relaxed mb-8">{{ selectedRoom.desc }}</p>
+              <p class="text-white/55 font-sans text-sm leading-relaxed mb-8">{{ selectedRoom.desc }}</p>
 
               <!-- Amenities -->
               <p class="text-white/25 text-[10px] tracking-[0.3em] uppercase font-sans mb-4">Wyposażenie</p>

@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-forest border-t border-gold/15 overflow-hidden">
+  <section class="bg-forest-wash border-t border-gold/15 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-[1fr_650px] gap-10 lg:gap-16 items-center">
 
       <!-- Left: text -->
@@ -15,21 +15,21 @@
           <div class="w-8 h-px bg-gold mt-7" />
         </div>
 
-        <p class="text-white/45 font-sans font-light text-sm leading-relaxed max-w-sm">
+        <p class="text-white/45 font-sans text-sm leading-relaxed max-w-sm">
           Najnowsze posty, wydarzenia i zdjęcia z Przystani Caryńskiej. Śledź nas na Facebooku i nie przegap żadnej atrakcji sezonu.
         </p>
 
         <!-- Stats -->
-        <div class="grid grid-cols-3 gap-px bg-gold/10 max-w-xs">
-          <div class="bg-forest px-5 py-4">
+        <div class="grid grid-cols-3 gap-3 max-w-xs">
+          <div class="card-elevated bg-forest-void px-5 py-4">
             <p class="font-display text-gold text-2xl font-light">FB</p>
             <p class="text-white/30 font-sans text-[9px] tracking-widest uppercase mt-1">Facebook</p>
           </div>
-          <div class="bg-forest px-5 py-4">
+          <div class="card-elevated bg-forest-void px-5 py-4">
             <p class="font-display text-white text-2xl font-light">IG</p>
             <p class="text-white/30 font-sans text-[9px] tracking-widest uppercase mt-1">Instagram</p>
           </div>
-          <div class="bg-forest px-5 py-4">
+          <div class="card-elevated bg-forest-void px-5 py-4">
             <p class="font-display text-gold text-2xl font-light">★</p>
             <p class="text-white/30 font-sans text-[9px] tracking-widest uppercase mt-1">Opinie</p>
           </div>

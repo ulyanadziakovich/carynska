@@ -15,6 +15,7 @@ defineProps<{
       :style="`background-image: url('${hero.image}')`"
     />
 
+    <div class="photo-tint" />
     <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-black/30 to-forest/95" />
 
     <div class="absolute bottom-20 inset-x-0 pointer-events-none opacity-20">
@@ -27,7 +28,7 @@ defineProps<{
     </div>
 
     <div class="relative flex-1 flex flex-col items-center justify-center text-center px-6">
-      <p class="fade-in text-gold text-[11px] tracking-[0.45em] uppercase mb-6 font-sans font-light" style="animation-delay: 0.3s">
+      <p class="fade-in text-gold text-[11px] tracking-[0.45em] uppercase mb-6 font-sans" style="animation-delay: 0.3s">
         {{ hero.subtitle }}
       </p>
       <h1

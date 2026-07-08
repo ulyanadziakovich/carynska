@@ -9,7 +9,7 @@ defineProps<{
     <div
       v-for="(img, i) in images.slice(0, 3)"
       :key="img.src"
-      class="flex-1 overflow-hidden"
+      class="relative flex-1 overflow-hidden shadow-2xl shadow-black/40"
       :style="{
         marginTop: i === 0 ? '0' : i === 1 ? '3rem' : '1.25rem',
         aspectRatio: '2/3',
@@ -20,6 +20,7 @@ defineProps<{
         :alt="img.alt"
         class="w-full h-full object-cover"
       />
+      <div class="photo-tint" />
     </div>
   </div>
 </template>

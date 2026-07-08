@@ -15,28 +15,28 @@ function onScroll() {
 </script>
 
 <template>
-  <section class="bg-white border-t border-black/6">
+  <section class="bg-forest-void">
     <div class="max-w-7xl mx-auto px-8 lg:px-16 py-20">
 
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
         <div>
-          <p class="text-forest/40 text-[10px] tracking-[0.4em] uppercase font-sans mb-3">Opinie gości</p>
-          <h2 class="font-display text-forest font-light" style="font-size: clamp(1.8rem, 3vw, 2.6rem)">Co mówią nasi goście</h2>
+          <p class="text-gold/70 text-[10px] tracking-[0.4em] uppercase font-sans mb-3">Opinie gości</p>
+          <h2 class="font-display text-white font-light" style="font-size: clamp(1.8rem, 3vw, 2.6rem)">Co mówią nasi goście</h2>
         </div>
       </div>
 
       <!-- Cards -->
       <div
         ref="scrollEl"
-        class="flex md:grid md:grid-cols-4 gap-px bg-black/5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none"
+        class="flex md:grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-2"
         style="scrollbar-width: none"
         @scroll="onScroll"
       >
         <div
           v-for="review in reviews.items"
           :key="review.name"
-          class="bg-white p-7 flex flex-col gap-4 hover:bg-forest/[0.02] transition-colors duration-300 shrink-0 w-[80vw] md:w-auto snap-center"
+          class="card-elevated bg-forest p-7 flex flex-col gap-4 hover:bg-forest-mid transition-colors duration-300 shrink-0 w-[80vw] md:w-auto snap-center"
         >
           <!-- Stars + Google icon -->
           <div class="flex items-center justify-between">
@@ -54,17 +54,17 @@ function onScroll() {
           </div>
 
           <!-- Text -->
-          <p class="text-forest/60 font-sans font-light text-sm leading-relaxed flex-1">„{{ review.text }}"</p>
+          <p class="text-white/65 font-sans text-sm leading-relaxed flex-1">„{{ review.text }}"</p>
 
           <!-- Author -->
-          <div class="flex items-center gap-3 pt-3 border-t border-black/6">
-            <div class="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center shrink-0">
-              <span class="text-forest/50 font-sans text-xs font-medium">{{ review.name[0] }}</span>
+          <div class="flex items-center gap-3 pt-3 border-t border-white/8">
+            <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+              <span class="text-gold/80 font-sans text-xs font-medium">{{ review.name[0] }}</span>
             </div>
             <div class="min-w-0">
-              <p class="text-forest font-sans text-xs font-medium truncate">{{ review.name }}</p>
-              <p class="text-forest/30 font-sans text-[10px]">
-                <span v-if="review.badge" class="text-[#1A73E8]">{{ review.badge }} · </span>{{ review.date }}
+              <p class="text-white font-sans text-xs font-medium truncate">{{ review.name }}</p>
+              <p class="text-white/40 font-sans text-[10px]">
+                <span v-if="review.badge" class="text-[#5B9BF0]">{{ review.badge }} · </span>{{ review.date }}
               </p>
             </div>
           </div>
@@ -77,7 +77,7 @@ function onScroll() {
           v-for="(_, i) in props.reviews.items"
           :key="i"
           class="h-1.5 rounded-full transition-all duration-300"
-          :class="activeDot === i ? 'bg-forest w-4' : 'bg-forest/25 w-1.5'"
+          :class="activeDot === i ? 'bg-gold w-4' : 'bg-white/20 w-1.5'"
           @click="scrollEl?.scrollTo({ left: i * scrollEl.clientWidth, behavior: 'smooth' })"
         />
       </div>
@@ -88,7 +88,7 @@ function onScroll() {
           :href="reviews.googleUrl"
           target="_blank"
           rel="noopener"
-          class="flex items-center gap-3 border border-forest/20 hover:border-forest/50 text-forest/50 hover:text-forest px-7 py-3 font-sans text-[11px] tracking-[0.18em] uppercase transition-all duration-200"
+          class="flex items-center gap-3 border border-gold/25 hover:border-gold/60 text-white/50 hover:text-gold px-7 py-3 font-sans text-[11px] tracking-[0.18em] uppercase transition-all duration-200"
         >
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

@@ -185,9 +185,9 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 
 /* ── Mobile wrapper ── */
 .mobile-booking {
-  padding: 28px 20px 24px;
+  padding: 14px 18px 12px;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .mobile-eyebrow {
@@ -196,7 +196,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(201, 169, 110, 0.6);
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   margin: 0;
 }
 
@@ -223,8 +223,8 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 20px 16px;
+  gap: 3px;
+  padding: 9px 14px;
   cursor: pointer;
   position: relative;
 }
@@ -234,7 +234,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: rgba(201, 169, 110, 0.7);
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   display: block;
 }
 
@@ -256,10 +256,11 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 }
 
 .date-day {
-  font-size: 28px;
-  font-weight: 200;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 400;
   color: rgba(255, 255, 255, 0.9);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -277,7 +278,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 .date-month {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.55);
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   letter-spacing: 0.04em;
   line-height: 1;
 }
@@ -285,23 +286,24 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 .date-weekday {
   font-size: 9px;
   color: rgba(201, 169, 110, 0.55);
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .date-placeholder {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.2);
-  font-family: sans-serif;
+  color: rgba(255, 255, 255, 0.25);
+  font-family: var(--font-display);
+  font-style: italic;
   font-weight: 300;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .dates-arrow {
   flex-shrink: 0;
   padding: 0 4px;
-  margin-top: 12px;
+  margin-top: 5px;
 }
 
 /* ── Divider ── */
@@ -322,18 +324,18 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 7px 18px;
 }
 
 .stepper {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
 .stepper-btn {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   border: 1px solid rgba(201, 169, 110, 0.3);
   background: transparent;
   color: rgba(201, 169, 110, 0.8);
@@ -353,8 +355,9 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 }
 
 .stepper-num {
-  font-size: 22px;
-  font-weight: 200;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
   color: rgba(255, 255, 255, 0.9);
   min-width: 28px;
   text-align: center;
@@ -369,9 +372,9 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
   font-size: 10px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   font-weight: 600;
-  padding: 17px 24px;
+  padding: 11px 22px;
   display: flex;
   align-items: center;
   justify-content: center;

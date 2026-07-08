@@ -16,7 +16,7 @@ const openBoat = ref<string | null>(null)
 
     <!-- Intro -->
     <div class="max-w-3xl mx-auto px-8 py-14 text-center">
-      <p class="text-white/55 font-sans font-light text-sm leading-relaxed">{{ data.intro }}</p>
+      <p class="text-white/55 font-sans text-sm leading-relaxed">{{ data.intro }}</p>
     </div>
 
     <!-- Water activities: text + collage -->
@@ -92,7 +92,7 @@ const openBoat = ref<string | null>(null)
           <div v-if="openBoat === boat.id" class="px-8 pb-8 border-t border-white/6">
             <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 pt-7">
               <div>
-                <p class="text-white/55 font-sans font-light text-sm leading-relaxed mb-6">{{ boat.desc }}</p>
+                <p class="text-white/55 font-sans text-sm leading-relaxed mb-6">{{ boat.desc }}</p>
                 <ul class="flex flex-col gap-2">
                   <li
                     v-for="spec in boat.specs"
@@ -132,8 +132,8 @@ const openBoat = ref<string | null>(null)
     <!-- Water pricing -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
       <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Cennik wypożyczalni</p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gold/10">
-        <div v-for="group in data.water.pricing" :key="group.category" class="bg-forest p-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div v-for="group in data.water.pricing" :key="group.category" class="card-elevated bg-forest-void p-8">
           <p class="text-white text-[11px] tracking-[0.25em] uppercase font-sans mb-1 pb-4 border-b border-gold/20">{{ group.category }}</p>
           <p v-if="(group as any).note" class="text-gold/40 font-sans text-[10px] mb-4">{{ (group as any).note }}</p>
           <div class="flex flex-col gap-3 mt-5">
@@ -170,11 +170,11 @@ const openBoat = ref<string | null>(null)
     <!-- Marina: pricing tables -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
       <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Cennik usług</p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gold/10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div
           v-for="group in data.marina.pricing"
           :key="group.category"
-          class="bg-forest p-8"
+          class="card-elevated bg-forest-void p-8"
         >
           <p class="text-white text-[11px] tracking-[0.25em] uppercase font-sans mb-6 pb-4 border-b border-gold/20">
             {{ group.category }}
