@@ -16,27 +16,16 @@ function openPicker(input: HTMLInputElement | null) {
   }
 }
 
-const HOTEL_URL = 'https://www.booking.com/hotel/pl/przystan-carynska.pl.html'
+const HOTRES_URL = 'https://panel.hotres.pl/v4_step1'
 
 function buildBookingUrl() {
   const params = new URLSearchParams({
-    group_adults: guests.value,
-    group_children: '0',
-    no_rooms: '1',
+    oid: '5426',
+    lang: 'pl',
   })
-  if (checkIn.value) {
-    const d = new Date(checkIn.value)
-    params.set('checkin_year', String(d.getFullYear()))
-    params.set('checkin_month', String(d.getMonth() + 1))
-    params.set('checkin_monthday', String(d.getDate()))
-  }
-  if (checkOut.value) {
-    const d = new Date(checkOut.value)
-    params.set('checkout_year', String(d.getFullYear()))
-    params.set('checkout_month', String(d.getMonth() + 1))
-    params.set('checkout_monthday', String(d.getDate()))
-  }
-  return `${HOTEL_URL}?${params.toString()}`
+  if (checkIn.value) params.set('arrival', checkIn.value)
+  if (checkOut.value) params.set('departure', checkOut.value)
+  return `${HOTRES_URL}?${params.toString()}`
 }
 
 function book() {
