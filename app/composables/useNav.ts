@@ -1,4 +1,4 @@
-const BOOKING_URL = 'https://panel.hotres.pl/v4_step1?oid=5426&lang=pl'
+const BOOKING_URL = 'https://panel.hotres.pl/v4_step1?oid=5426&lang=pl&ref=przystan.bieszczady.pl'
 
 export interface NavChild { label: string; href: string; external?: boolean; subtitle?: string }
 export interface NavLink { label: string; href: string; children?: NavChild[] }

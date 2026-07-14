@@ -22,6 +22,7 @@ function buildBookingUrl() {
   const params = new URLSearchParams({
     oid: '5426',
     lang: 'pl',
+    ref: 'przystan.bieszczady.pl',
   })
   if (checkIn.value) params.set('arrival', checkIn.value)
   if (checkOut.value) params.set('departure', checkOut.value)
