@@ -82,14 +82,23 @@ const sections = [
 
 <template>
   <main class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <PageHero tag="Informacje" title="Regulamin" image="/images/hotel.png" />
 
     <div class="max-w-3xl mx-auto px-8 lg:px-0 py-16 lg:py-20">
-      <p class="text-white/40 font-sans text-sm leading-relaxed mb-14">
+      <p class="text-white/40 font-sans text-sm leading-relaxed mb-8">
         Regulamin pobytu w ośrodku Przystań Caryńska w Polańczyku. Ostatnia aktualizacja: 2026.
       </p>
+
+      <a
+        href="/dokumenty/regulamin-przystan-carynska.pdf"
+        download
+        class="inline-flex items-center gap-3 border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-7 py-3.5 text-[11px] tracking-[0.2em] uppercase font-sans mb-14"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Pobierz regulamin (PDF)
+      </a>
 
       <div class="flex flex-col gap-12">
         <section v-for="sec in sections" :key="sec.title">

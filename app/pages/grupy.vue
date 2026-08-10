@@ -24,7 +24,7 @@ function extraIcon(category: string) {
 
 <template>
   <main v-if="data && content && g" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <!-- ── Hero ── -->
     <div class="relative h-[70vh] min-h-[520px] overflow-hidden">

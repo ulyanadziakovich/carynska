@@ -22,7 +22,7 @@ export function useNav() {
           { label: 'Sprzęt wodny & Jezioro', href: '/atrakcje' },
           { label: 'Cennik wypożyczalni', href: '/atrakcje#cennik' },
           { label: 'Bosmanat', href: '/atrakcje#bosmanat' },
-          { label: 'Zaplanuj pobyt', href: 'https://bieszczady.plus/odkrywaj', external: true },
+          { label: 'Zaplanuj pobyt', href: '/zaplanuj-pobyt' },
         ],
       },
       {
@@ -40,13 +40,6 @@ export function useNav() {
           { label: 'Oferta dla grup', href: '/grupy' },
           { label: 'Cennik grup 2026', href: '/grupy#cennik' },
           { label: 'Pojemność obiektu', href: '/grupy#capacity' },
-        ],
-      },
-      {
-        label: 'Praca',
-        href: 'tel:+48609620565',
-        children: [
-          { label: 'Praca sezonowa', subtitle: '+48 609 620 565', href: 'tel:+48609620565' },
         ],
       },
       {

@@ -37,7 +37,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
 <template>
   <main v-if="data && content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <PageHero tag="Zakwaterowanie" title="Pokoje & Apartamenty" :image="data.hero.image" />
 

@@ -10,7 +10,7 @@ const openBoat = ref<string | null>(null)
 
 <template>
   <main v-if="data && content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
 
@@ -45,9 +45,9 @@ const openBoat = ref<string | null>(null)
 
       <div class="lg:pt-8">
         <PhotoCollage :images="[
+          { src: '/images/saturn25-jezero.webp', alt: 'Jacht Saturn 25 na Jeziorze Solińskim' },
           { src: '/images/solina2.avif', alt: 'Żaglówki' },
-          { src: '/images/solina3.avif', alt: 'Jezioro Solina' },
-          { src: '/images/solina4.avif', alt: 'Bieszczady' },
+          { src: '/images/kajaki-sprzet-wodny.jpg', alt: 'Kajaki i żaglówki na jeziorze Solińskim' },
         ]" />
       </div>
     </div>
@@ -218,9 +218,9 @@ const openBoat = ref<string | null>(null)
 
       <div class="lg:pt-8">
         <PhotoCollage :images="[
-          { src: '/images/solina4.avif', alt: 'Bieszczady' },
-          { src: '/images/solina1.avif', alt: 'Jezioro z lotu ptaka' },
-          { src: '/images/solina2.avif', alt: 'Jezioro Solina' },
+          { src: '/images/aquapark-baseny.jpg', alt: 'Mini-aquapark i baseny przy przystani' },
+          { src: '/images/plac-zabaw.jpg', alt: 'Plac zabaw nad mariną' },
+          { src: '/images/gondola-solina.jpg', alt: 'Kolejka gondolowa Solina' },
         ]" />
       </div>
     </div>

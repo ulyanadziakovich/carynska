@@ -1,22 +1,43 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   hero: {
     title: string
     subtitle: string
     image: string
+    images?: string[]
   }
 }>()
+
+const slides = computed(() => (props.hero.images?.length ? props.hero.images : [props.hero.image]))
+const current = ref(0)
+let timer: ReturnType<typeof setInterval> | undefined
+
+onMounted(() => {
+  if (slides.value.length > 1) {
+    timer = setInterval(() => {
+      current.value = (current.value + 1) % slides.value.length
+    }, 6000)
+  }
+})
+onUnmounted(() => { if (timer) clearInterval(timer) })
 </script>
 
 <template>
   <section class="relative h-screen flex flex-col overflow-hidden">
-    <div
-      class="absolute inset-0 bg-cover bg-center bg-no-repeat ken-burns"
-      :style="`background-image: url('${hero.image}')`"
-    />
+    <div class="absolute inset-0">
+      <div
+        v-for="(img, i) in slides"
+        :key="img"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat ken-burns transition-opacity duration-[2000ms] ease-in-out"
+        :class="i === current ? 'opacity-100' : 'opacity-0'"
+        :style="`background-image: url('${img}')`"
+      />
+    </div>
 
     <div class="photo-tint" />
-    <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-black/30 to-forest/95" />
+    <!-- Extra darkening -->
+    <div class="absolute inset-0 bg-black/40" />
+    <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-black/40 to-forest/95" />
 
     <div class="absolute bottom-20 inset-x-0 pointer-events-none opacity-20">
       <svg viewBox="0 0 1440 100" preserveAspectRatio="none" class="w-full h-20">

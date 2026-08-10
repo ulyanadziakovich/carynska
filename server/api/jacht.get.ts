@@ -115,7 +115,6 @@ export default defineEventHandler(() => {
       },
     ],
     includes: [
-      'Pościel i ręczniki',
       'Dostęp do sanitariatów i pryszniców przystani',
       'Obsługa bosmańska',
       'Parking na terenie obiektu',

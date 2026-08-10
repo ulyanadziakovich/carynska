@@ -6,7 +6,7 @@ export default defineEventHandler(() => {
     hero: {
       tag: 'Atrakcje',
       title: 'Woda, góry\ni przygoda',
-      image: '/images/solina3.avif',
+      image: '/images/przystan-drone-3.jpg',
     },
     intro: 'Polańczyk i jego okolice to raj dla aktywnych — zarówno na wodzie, jak i na lądzie. Jezioro Solińskie, szlaki górskie i Bieszczady tuż za progiem.',
 

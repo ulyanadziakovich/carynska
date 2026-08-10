@@ -176,10 +176,12 @@ async function submitForm() {
     <!-- Copyright -->
     <div class="border-t border-white/8 py-4 px-5 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-3">
       <p class="text-white/20 text-[10px] font-sans tracking-[0.3em] uppercase">© 2026 Przystań Caryńska</p>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
         <NuxtLink to="/regulamin" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Regulamin</NuxtLink>
         <span class="text-white/10">·</span>
-        <NuxtLink to="/polityka-prywatnosci" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Polityka Prywatności</NuxtLink>
+        <NuxtLink to="/regulamin-wypozyczalni" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Regulamin wypożyczalni</NuxtLink>
+        <span class="text-white/10">·</span>
+        <NuxtLink to="/wzor-umowy-jachtu" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Wzór umowy najmu jachtu</NuxtLink>
       </div>
       <p class="text-white/10 font-sans text-[10px] tracking-widest uppercase">Polańczyk · Jezioro Solińskie · Bieszczady</p>
     </div>

@@ -2,37 +2,68 @@
 const nav = useNav()
 
 const photos = [
-  { src: '/images/solina1.avif', alt: 'Jezioro Solina z lotu ptaka', label: 'Jezioro Solina' },
-  { src: '/images/solina2.avif', alt: 'Żaglówka na jeziorze Solina', label: 'Żaglówki' },
-  { src: '/images/solina3.avif', alt: 'Panorama Jeziora Solińskiego', label: 'Panorama' },
-  { src: '/images/solina4.avif', alt: 'Widok na Bieszczady', label: 'Bieszczady' },
-  { src: '/images/hotel.png', alt: 'Hotel Przystań Caryńska', label: 'Obiekt' },
-  { src: '/images/galeria-jezioro-zmierzch.png', alt: 'Jezioro Solina o zmierzchu z lotu ptaka', label: 'Zmierzch nad jeziorem' },
-  { src: '/images/galeria-panorama.png', alt: 'Panorama zatoki i przystani z lotu ptaka', label: 'Panorama zatoki' },
-  { src: '/images/galeria-dzieci-lodka.png', alt: 'Dzieci na łodzi pontonowej', label: 'Rejs dla najmłodszych' },
-  { src: '/images/galeria-sup.png', alt: 'Osoba na desce SUP przy żaglówce', label: 'SUP na jeziorze' },
-  { src: '/images/galeria-przystan-lotu-ptaka.png', alt: 'Przystań Caryńska z lotu ptaka', label: 'Przystań z lotu ptaka' },
-  { src: '/images/galeria-marina-baseny.png', alt: 'Marina i baseny przy przystani', label: 'Marina i baseny' },
-  { src: '/images/galeria-budynek.png', alt: 'Budynek hotelu Przystań Caryńska', label: 'Nasz obiekt' },
-  { src: '/images/galeria-basen.png', alt: 'Basen z fontanną przy przystani', label: 'Baseny' },
-  { src: '/images/galeria-lodki-motorowe.png', alt: 'Zacumowane łodzie motorowe', label: 'Łodzie motorowe' },
-  { src: '/images/galeria-pstrag.png', alt: 'Pstrąg z frytkami i surówką', label: 'Pstrąg z Tawerny' },
-  { src: '/images/galeria-pizza.png', alt: 'Pizza z pieca', label: 'Pizza z pieca' },
-  { src: '/images/galeria-sniadanie.png', alt: 'Bufet śniadaniowy', label: 'Śniadania' },
+  { src: '/images/galeria-przystan-lotu-ptaka.png', alt: 'Przystań Caryńska z lotu ptaka', label: 'Przystań z lotu ptaka', cat: 'przystan' },
+  { src: '/images/przystan-drone-2.jpg', alt: 'Poranna mgła nad Jeziorem Solińskim', label: 'Poranek nad jeziorem', cat: 'przystan' },
+  { src: '/images/przystan-drone-3.jpg', alt: 'Zatoka i marina z lotu ptaka', label: 'Zatoka i marina', cat: 'przystan' },
+  { src: '/images/solina1.avif', alt: 'Jezioro Solina z lotu ptaka', label: 'Jezioro Solina', cat: 'przystan' },
+  { src: '/images/solina3.avif', alt: 'Panorama Jeziora Solińskiego', label: 'Panorama', cat: 'przystan' },
+  { src: '/images/solina4.avif', alt: 'Widok na Bieszczady', label: 'Bieszczady', cat: 'przystan' },
+  { src: '/images/galeria-jezioro-zmierzch.png', alt: 'Jezioro Solina o zmierzchu z lotu ptaka', label: 'Zmierzch nad jeziorem', cat: 'przystan' },
+  { src: '/images/galeria-panorama.png', alt: 'Panorama zatoki i przystani z lotu ptaka', label: 'Panorama zatoki', cat: 'przystan' },
+  { src: '/images/gondola-solina.jpg', alt: 'Kolejka gondolowa Solina', label: 'Kolejka gondolowa', cat: 'przystan' },
+
+  { src: '/images/hotel.png', alt: 'Hotel Przystań Caryńska', label: 'Nasz obiekt', cat: 'noclegi' },
+  { src: '/images/galeria-budynek.png', alt: 'Budynek hotelu Przystań Caryńska', label: 'Budynek', cat: 'noclegi' },
+
+  { src: '/images/galeria-pstrag.png', alt: 'Pstrąg z frytkami i surówką', label: 'Pstrąg z Tawerny', cat: 'tawerna' },
+  { src: '/images/galeria-pizza.png', alt: 'Pizza z pieca', label: 'Pizza z pieca', cat: 'tawerna' },
+  { src: '/images/galeria-sniadanie.png', alt: 'Bufet śniadaniowy', label: 'Śniadania', cat: 'tawerna' },
+
+  { src: '/images/galeria-basen.png', alt: 'Basen z fontanną przy przystani', label: 'Baseny', cat: 'baseny' },
+  { src: '/images/galeria-marina-baseny.png', alt: 'Marina i baseny przy przystani', label: 'Marina i baseny', cat: 'baseny' },
+  { src: '/images/aquapark-baseny.jpg', alt: 'Mini-aquapark przy przystani', label: 'Mini-aquapark', cat: 'baseny' },
+
+  { src: '/images/solina2.avif', alt: 'Żaglówka na jeziorze Solina', label: 'Żaglówki', cat: 'wypozyczalnia' },
+  { src: '/images/kajaki-sprzet-wodny.jpg', alt: 'Kajaki i żaglówki na jeziorze Solińskim', label: 'Kajaki', cat: 'wypozyczalnia' },
+  { src: '/images/galeria-sup.png', alt: 'Osoba na desce SUP przy żaglówce', label: 'SUP na jeziorze', cat: 'wypozyczalnia' },
+  { src: '/images/galeria-lodki-motorowe.png', alt: 'Zacumowane łodzie motorowe', label: 'Łodzie motorowe', cat: 'wypozyczalnia' },
+  { src: '/images/galeria-dzieci-lodka.png', alt: 'Dzieci na łodzi pontonowej', label: 'Rejs dla najmłodszych', cat: 'wypozyczalnia' },
+
+  { src: '/images/organizacja-imprez.jpg', alt: 'Dekoracja na imprezę okolicznościową', label: 'Imprezy okolicznościowe', cat: 'eventy' },
+  { src: '/images/plac-zabaw.jpg', alt: 'Plac zabaw nad mariną', label: 'Plac zabaw', cat: 'eventy' },
 ]
 
+const categories = [
+  { id: 'all', label: 'Wszystkie' },
+  { id: 'noclegi', label: 'Noclegi' },
+  { id: 'tawerna', label: 'Tawerna' },
+  { id: 'baseny', label: 'Baseny' },
+  { id: 'wypozyczalnia', label: 'Wypożyczalnia' },
+  { id: 'eventy', label: 'Eventy & grupy' },
+  { id: 'przystan', label: 'Przystań & okolica' },
+]
+
+const selected = ref('all')
+const filtered = computed(() =>
+  selected.value === 'all' ? photos : photos.filter(p => p.cat === selected.value),
+)
+function selectCategory(id: string) {
+  selected.value = id
+  lightboxIndex.value = null
+}
+
 const lightboxIndex = ref<number | null>(null)
-const currentPhoto = computed(() => lightboxIndex.value !== null ? photos[lightboxIndex.value] : null)
+const currentPhoto = computed(() => lightboxIndex.value !== null ? filtered.value[lightboxIndex.value] : null)
 
 function openLightbox(i: number) { lightboxIndex.value = i }
 function closeLightbox() { lightboxIndex.value = null }
 function nextPhoto() {
   if (lightboxIndex.value === null) return
-  lightboxIndex.value = (lightboxIndex.value + 1) % photos.length
+  lightboxIndex.value = (lightboxIndex.value + 1) % filtered.value.length
 }
 function prevPhoto() {
   if (lightboxIndex.value === null) return
-  lightboxIndex.value = (lightboxIndex.value - 1 + photos.length) % photos.length
+  lightboxIndex.value = (lightboxIndex.value - 1 + filtered.value.length) % filtered.value.length
 }
 
 function onKeydown(e: KeyboardEvent) {
@@ -57,16 +88,32 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
 <template>
   <main class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <PageHero tag="Galeria" :title="'Przystań\nCaryńska'" image="/images/solina1.avif" />
 
     <div class="max-w-7xl mx-auto px-8 lg:px-16 py-16">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-10">Zdjęcia</p>
+      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Zdjęcia</p>
+
+      <!-- Category filter -->
+      <div class="flex flex-wrap gap-2.5 mb-10">
+        <button
+          v-for="cat in categories"
+          :key="cat.id"
+          type="button"
+          class="px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-sans border transition-colors duration-200"
+          :class="selected === cat.id
+            ? 'border-gold bg-gold text-forest'
+            : 'border-white/15 text-white/55 hover:border-gold/60 hover:text-gold'"
+          @click="selectCategory(cat.id)"
+        >
+          {{ cat.label }}
+        </button>
+      </div>
 
       <div class="columns-1 sm:columns-2 lg:columns-3 gap-px space-y-px">
         <div
-          v-for="(photo, i) in photos"
+          v-for="(photo, i) in filtered"
           :key="photo.src"
           class="relative overflow-hidden group cursor-pointer break-inside-avoid"
           @click="openLightbox(i)"

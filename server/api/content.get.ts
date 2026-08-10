@@ -14,7 +14,12 @@ export default defineEventHandler(() => {
     hero: {
       title: 'PRZYSTAŃ\nCARYŃSKA',
       subtitle: 'Luksus w sercu Bieszczad',
-      image: '/images/solina1.avif',
+      image: '/images/przystan-drone.jpg',
+      images: [
+        '/images/przystan-drone.jpg',
+        '/images/przystan-drone-2.jpg',
+        '/images/przystan-drone-3.jpg',
+      ],
     },
 
     noclegi: {
@@ -64,7 +69,7 @@ export default defineEventHandler(() => {
           tag: 'Wypożyczalnia',
           title: 'Sprzęt Wodny',
           icon: '/images/boat.svg',
-          image: '/images/gene-dizon-wu_r3tdg_ug-unsplash.jpg',
+          image: '/images/kajaki-sprzet-wodny.jpg',
           from: 'left',
           modalTitle: 'Wypożyczalnia sprzętu wodnego',
           modalBody: [
@@ -78,7 +83,7 @@ export default defineEventHandler(() => {
           tag: 'Events',
           title: 'Organizacja Imprez',
           icon: '/images/part.svg',
-          image: '/images/jack-h_Jqc3liKCk-unsplash.jpg',
+          image: '/images/organizacja-imprez.jpg',
           from: 'right',
           modalTitle: 'Idealne miejsce na event!',
           modalBody: [
@@ -141,7 +146,7 @@ export default defineEventHandler(() => {
           name: 'Stan. Jar.',
           badge: 'Lokalny przewodnik',
           date: '3 tygodnie temu',
-          stars: 5,
+          stars: 4,
           text: 'Pokoje czyste część z widokiem na Solinę obsługa przemiła jedzenie pyszne. Pani Kasia nasza wspaniała przewodniczka Bardzo jesteśmy zadowoleni Fajna grupa 45 osobowa z pod Poznania Pozdrawiamy polecamy...',
         },
         {
@@ -155,7 +160,7 @@ export default defineEventHandler(() => {
           name: 'Sylwia Giełzak',
           badge: null,
           date: 'miesiąc temu',
-          stars: 5,
+          stars: 4,
           text: 'Super lokalizacja z przepięknym widokiem na jezioro solińskie, mili właściciele, polecam z całego ❤️',
         },
         {

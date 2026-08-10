@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { NavLink } from '~/composables/useNav'
 
-defineProps<{
+withDefaults(defineProps<{
   nav: { links: NavLink[]; cta: { label: string; href: string } }
   alwaysShowLogo?: boolean
-}>()
+  overlay?: boolean
+}>(), { overlay: true })
 
 const scrolled = ref(false)
 function onScroll() { scrolled.value = window.scrollY > 60 }
@@ -31,7 +32,7 @@ function toggleDropdown(label: string) {
 </script>
 
 <template>
-  <nav class="fixed top-0 inset-x-0 z-50">
+  <nav :class="overlay ? 'fixed top-0 inset-x-0 z-50' : 'relative z-50'">
 
     <!-- Contact bar: phone numbers. Collapses on scroll on desktop only —
          on mobile it stays put since it now also houses the hamburger. -->
@@ -107,7 +108,7 @@ function toggleDropdown(label: string) {
     <!-- Main nav row: logo + desktop links, hidden on mobile (logo/hamburger live in the contact bar there) -->
     <div
       class="hidden md:block transition-all duration-500"
-      :class="scrolled ? 'bg-forest/95 backdrop-blur-sm py-3 shadow-2xl' : 'bg-forest/70 backdrop-blur-sm py-5'"
+      :class="scrolled ? 'bg-forest/95 backdrop-blur-sm py-3 shadow-2xl' : (overlay ? 'bg-forest/70 backdrop-blur-sm py-5' : 'bg-forest py-5')"
     >
     <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
 

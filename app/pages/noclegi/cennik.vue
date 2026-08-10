@@ -8,9 +8,9 @@ const nav = useNav()
 
 <template>
   <main v-if="data && content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero tag="Noclegi" title="Cennik 2025" :image="data.hero.image" />
+    <PageHero tag="Noclegi" title="Cennik 2026" :image="data.hero.image" />
 
     <div class="max-w-4xl mx-auto px-8 lg:px-12 py-20">
 
@@ -24,7 +24,7 @@ const nav = useNav()
       <!-- Pricing table -->
       <section id="cennik" class="scroll-mt-20 mb-20">
         <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-4">Ceny za dobę</p>
-        <h2 class="font-display text-white text-3xl font-light mb-10">Cennik pokoi 2025</h2>
+        <h2 class="font-display text-white text-3xl font-light mb-10">Cennik pokoi 2026</h2>
 
         <div class="overflow-x-auto mb-6">
           <table class="w-full text-sm font-sans border-collapse">

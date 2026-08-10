@@ -10,6 +10,12 @@ const selectedYacht = ref<Yacht | null>(null)
 const activePhoto = ref(0)
 let touchStartX = 0
 
+const gallery = computed<string[]>(() => {
+  if (!selectedYacht.value) return []
+  const imgs = (selectedYacht.value as any).gallery as string[] | undefined
+  return imgs?.length ? imgs : [selectedYacht.value.image]
+})
+
 function openYacht(y: Yacht) {
   selectedYacht.value = y
   activePhoto.value = 0
@@ -19,22 +25,27 @@ function closeYacht() {
   selectedYacht.value = null
   document.body.style.overflow = ''
 }
+function nextPhoto() {
+  activePhoto.value = (activePhoto.value + 1) % gallery.value.length
+}
+function prevPhoto() {
+  activePhoto.value = (activePhoto.value - 1 + gallery.value.length) % gallery.value.length
+}
 function onTouchStart(e: TouchEvent) {
   touchStartX = e.touches[0].clientX
 }
 function onTouchEnd(e: TouchEvent) {
   const diff = touchStartX - e.changedTouches[0].clientX
-  const gallery = (selectedYacht.value as any)?.gallery
-  if (!gallery || Math.abs(diff) < 40) return
-  if (diff > 0) activePhoto.value = Math.min(activePhoto.value + 1, gallery.length - 1)
-  else activePhoto.value = Math.max(activePhoto.value - 1, 0)
+  if (gallery.value.length < 2 || Math.abs(diff) < 40) return
+  if (diff > 0) nextPhoto()
+  else prevPhoto()
 }
 onUnmounted(() => { document.body.style.overflow = '' })
 </script>
 
 <template>
   <main v-if="data && content" class="bg-forest min-h-screen">
-    <TheNavbar :nav="nav" :always-show-logo="true" />
+    <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
 
@@ -160,7 +171,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
             >
               <img
                 :key="activePhoto"
-                :src="(selectedYacht as any).gallery ? (selectedYacht as any).gallery[activePhoto] : selectedYacht.image"
+                :src="gallery[activePhoto]"
                 :alt="selectedYacht.name"
                 class="w-full h-full object-cover"
               />
@@ -174,16 +185,34 @@ onUnmounted(() => { document.body.style.overflow = '' })
                   <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
               </button>
-              <!-- Dots -->
-              <div v-if="(selectedYacht as any).gallery?.length > 1" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+              <template v-if="gallery.length > 1">
+                <!-- Prev / Next -->
                 <button
-                  v-for="(_, i) in (selectedYacht as any).gallery"
-                  :key="i"
-                  @click.stop="activePhoto = i"
-                  class="rounded-full transition-all duration-200"
-                  :class="activePhoto === i ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/50 hover:bg-white/80'"
-                />
-              </div>
+                  class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
+                  @click.stop="prevPhoto"
+                  aria-label="Poprzednie zdjęcie"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button
+                  class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
+                  @click.stop="nextPhoto"
+                  aria-label="Następne zdjęcie"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <!-- Dots -->
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                  <button
+                    v-for="(_, i) in gallery"
+                    :key="i"
+                    @click.stop="activePhoto = i"
+                    class="rounded-full transition-all duration-200"
+                    :class="activePhoto === i ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/50 hover:bg-white/80'"
+                    :aria-label="`Zdjęcie ${i + 1}`"
+                  />
+                </div>
+              </template>
             </div>
 
             <!-- Header -->

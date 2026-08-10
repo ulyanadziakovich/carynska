@@ -17,7 +17,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
 
     <!-- Dark hero area -->
     <div class="bg-forest">
-      <TheNavbar :nav="nav" :always-show-logo="true" />
+      <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
       <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
     </div>
 
@@ -34,6 +34,30 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
         <div class="flex-1 max-w-xs h-px bg-gold-muted" />
         <div class="w-1.5 h-1.5 rotate-45 bg-gold-strong" />
         <div class="flex-1 max-w-xs h-px bg-gold-muted" />
+      </div>
+
+      <!-- Zamów z dostawą (nad menu) -->
+      <div class="tawerna-delivery">
+        <div class="max-w-3xl mx-auto px-8 py-16 text-center">
+          <p class="section-eyebrow mb-4">{{ data.delivery.title }}</p>
+          <p class="font-display italic text-base text-stone mb-10">{{ data.delivery.body }}</p>
+          <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+            <a
+              href="https://carynska.app-tapporder.ngastro.lsisoftware.net/zpc-skorka-spolka-jawna/products?group=af95-0528-1b1b-4b7a"
+              target="_blank"
+              rel="noopener"
+              class="btn-gold"
+            >
+              🍕 Zamów pizzę
+            </a>
+            <a :href="`tel:${data.delivery.phone.replace(/\s/g,'')}`" class="btn-outline">
+              {{ data.delivery.phone }}
+            </a>
+            <a :href="`mailto:${data.contact.email}`" class="btn-outline">
+              {{ data.contact.email }}
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- Menu: flip-through book -->
@@ -70,30 +94,6 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
             </div>
           </template>
         </ClientOnly>
-      </div>
-
-      <!-- Delivery band -->
-      <div class="tawerna-delivery">
-        <div class="max-w-3xl mx-auto px-8 py-16 text-center">
-          <p class="section-eyebrow mb-4">{{ data.delivery.title }}</p>
-          <p class="font-display italic text-base text-stone mb-10">{{ data.delivery.body }}</p>
-          <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
-            <a
-              href="https://carynska.app-tapporder.ngastro.lsisoftware.net/zpc-skorka-spolka-jawna/products?group=af95-0528-1b1b-4b7a"
-              target="_blank"
-              rel="noopener"
-              class="btn-gold"
-            >
-              🍕 Zamów pizzę
-            </a>
-            <a :href="`tel:${data.delivery.phone.replace(/\s/g,'')}`" class="btn-outline">
-              {{ data.delivery.phone }}
-            </a>
-            <a :href="`mailto:${data.contact.email}`" class="btn-outline">
-              {{ data.contact.email }}
-            </a>
-          </div>
-        </div>
       </div>
 
     </div>
