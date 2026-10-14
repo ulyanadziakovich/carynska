@@ -82,8 +82,7 @@ uzupełnia, nie zmienia.
 
 - Telefony i e-maile tylko w `dzialy` / `kontakt`. Formularze stron mają pole
   `record` „Dział kontaktowy” → strona pokazuje jego dane.
-- Strona główna nie trzyma kopii pokoi: zapowiedź noclegów bierze pokoje
-  z `noclegi-pokoje` (pole „Pokaż na stronie głównej” przy pokoju).
+- Strona główna w sekcji „Noclegi” pokazuje jedno zdjęcie — własne pole „Zdjęcie” w formularzu strony głównej (nie lista pokoi).
 - Link hotres jest tylko w `ustawienia`; wszystkie przyciski „Rezerwuj”
   korzystają z niego.
 
