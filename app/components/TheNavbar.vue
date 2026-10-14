@@ -81,7 +81,8 @@ function toggleDropdown(label: string) {
 
         <div class="flex items-center gap-4">
           <a
-            :href="`mailto:${kontakt?.email}`"
+            v-if="kontakt?.email"
+            :href="`mailto:${kontakt.email}`"
             class="hidden md:block text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.1em] transition-colors"
           >
             {{ kontakt?.email }}
@@ -114,7 +115,7 @@ function toggleDropdown(label: string) {
         class="select-none transition-all duration-500 flex items-center"
         :class="(scrolled || alwaysShowLogo) ? 'opacity-100' : 'opacity-80'"
       >
-        <img
+        <img v-if="cmsImg(ustawienia?.logo)"
           :src="cmsImg(ustawienia?.logo)"
           :alt="ustawienia?.siteName"
           class="h-7 md:h-10 w-auto object-contain"
@@ -142,7 +143,7 @@ function toggleDropdown(label: string) {
 
             <!-- Logo top-left -->
             <a href="/" @click="closeMenu" class="menu-logo menu-item" style="--i:0">
-              <img :src="cmsImg(ustawienia?.logo)" :alt="ustawienia?.siteName" style="filter: brightness(0) invert(1) sepia(0.18) brightness(0.96);" />
+              <img v-if="cmsImg(ustawienia?.logo)" :src="cmsImg(ustawienia?.logo)" :alt="ustawienia?.siteName" style="filter: brightness(0) invert(1) sepia(0.18) brightness(0.96);" />
             </a>
 
             <!-- Nav links -->

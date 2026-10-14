@@ -8,24 +8,35 @@ export interface CmsDzial { id: number; name: string; tag?: string; phone?: stri
 const CMS_RETRY = 2
 const CMS_RETRY_DELAY_MS = 300
 
+/**
+ * CMS nie odpowiada i nie ma zapasowej kopii: zamiast pustej strony z kodem 200
+ * (którą zapamiętałyby wyszukiwarki) — strona błędu 503.
+ */
+function failIfMissing<T extends { data: Ref<unknown>; error: Ref<unknown> }>(res: T): T {
+  if (res.error.value && !res.data.value) {
+    throw createError({ statusCode: 503, statusMessage: 'CMS niedostępny', fatal: true })
+  }
+  return res
+}
+
 /** Formularz pojedynczy (np. „strona-glowna”). */
-export function useCmsSingle<T = Record<string, any>>(name: string) {
-  return useFetch<T>(`/api/cms/collections/${name}`, {
+export async function useCmsSingle<T = Record<string, any>>(name: string) {
+  return failIfMissing(await useFetch<T>(`/api/cms/collections/${name}`, {
     key: `cms-${name}`,
     query: { populate: true },
     retry: CMS_RETRY,
     retryDelay: CMS_RETRY_DELAY_MS,
-  })
+  }))
 }
 
 /** Lista rekordów (np. „dzialy”). */
-export function useCmsCollection<T = Record<string, any>>(name: string, opts: { limit?: number; order?: string } = {}) {
-  return useFetch<{ records: T[] }>(`/api/cms/collections/${name}`, {
+export async function useCmsCollection<T = Record<string, any>>(name: string, opts: { limit?: number; order?: string } = {}) {
+  return failIfMissing(await useFetch<{ records: T[] }>(`/api/cms/collections/${name}`, {
     key: `cms-${name}`,
     query: { perPage: opts.limit ?? 100, populate: true, ...(opts.order ? { order: opts.order } : {}) },
     retry: CMS_RETRY,
     retryDelay: CMS_RETRY_DELAY_MS,
-  })
+  }))
 }
 
 /** Adres zdjęcia z CMS dla <img src>; undefined, gdy pole puste (zdjęcie usunięte). */

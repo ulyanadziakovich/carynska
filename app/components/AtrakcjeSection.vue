@@ -50,7 +50,7 @@ onMounted(() => {
 
     <!-- ── Hero image + text ── -->
     <div class="relative h-[70vh] min-h-[500px]">
-      <img :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
+      <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
       <div class="photo-tint" />
       <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/30 to-forest/80" />
 
@@ -85,7 +85,7 @@ onMounted(() => {
         :aria-label="tile.title"
       >
         <!-- photo bg -->
-        <img :src="tile.image" :alt="tile.title" class="tile-photo" />
+        <img v-if="tile.image" :src="tile.image" :alt="tile.title" class="tile-photo" />
         <div class="photo-tint" />
         <div class="tile-overlay" />
 
@@ -115,7 +115,7 @@ onMounted(() => {
 
             <!-- Photo header -->
             <div class="modal-photo">
-              <img :src="activeModal.image" :alt="activeModal.modalTitle" class="w-full h-full object-cover" />
+              <img v-if="activeModal.image" :src="activeModal.image" :alt="activeModal.modalTitle" class="w-full h-full object-cover" />
               <div class="absolute inset-0 bg-gradient-to-t from-forest/60 to-transparent" />
             </div>
 

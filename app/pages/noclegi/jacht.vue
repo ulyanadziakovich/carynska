@@ -89,7 +89,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
           >
             <div class="h-full flex flex-col">
               <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
-                <img
+                <img v-if="yacht.image"
                   :src="yacht.image"
                   :alt="yacht.name"
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -145,7 +145,8 @@ onUnmounted(() => { document.body.style.overflow = '' })
           </div>
           <div class="flex flex-col gap-3 lg:min-w-[220px]">
             <a
-              :href="`tel:${data.contact.phone.replace(/\s/g,'')}`"
+              v-if="data.contact.phone"
+              :href="telHref(data.contact.phone)"
               class="flex items-center justify-center gap-3 bg-gold hover:bg-gold/80 text-forest px-6 py-4 font-sans text-[11px] tracking-[0.2em] uppercase font-semibold transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -154,6 +155,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               {{ data.contact.phone }}
             </a>
             <a
+              v-if="data.contact.email"
               :href="`mailto:${data.contact.email}`"
               class="flex items-center justify-center gap-3 border border-white/15 hover:border-gold text-white/50 hover:text-gold px-6 py-4 font-sans text-[11px] tracking-[0.2em] uppercase transition-all"
             >
@@ -179,7 +181,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               @touchstart.passive="onTouchStart"
               @touchend.passive="onTouchEnd"
             >
-              <img
+              <img v-if="gallery[activePhoto]"
                 :key="activePhoto"
                 :src="gallery[activePhoto]"
                 :alt="selectedYacht.name"
@@ -268,7 +270,8 @@ onUnmounted(() => { document.body.style.overflow = '' })
               </div>
 
               <a
-                :href="`tel:${data!.contact.phone.replace(/\s/g,'')}`"
+                v-if="data?.contact.phone"
+                :href="telHref(data.contact.phone)"
                 class="flex items-center justify-center gap-3 bg-gold hover:bg-gold/80 text-forest py-4 text-[11px] tracking-[0.2em] uppercase font-sans font-semibold transition-colors"
               >
                 {{ p.callCta }}

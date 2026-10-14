@@ -90,7 +90,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
           class="relative overflow-hidden group cursor-pointer break-inside-avoid"
           @click="openLightbox(i)"
         >
-          <img
+          <img v-if="photo.src"
             :src="photo.src"
             :alt="photo.alt"
             class="w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -117,7 +117,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
         @touchstart="onTouchStart"
         @touchend="onTouchEnd"
       >
-        <img
+        <img v-if="currentPhoto.src"
           :src="currentPhoto.src"
           :alt="currentPhoto.alt"
           class="max-w-full max-h-full object-contain select-none"

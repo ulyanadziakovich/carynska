@@ -34,8 +34,16 @@ const STALE_CACHE_MAX_ENTRIES = 64
 /** ~1 MB in UTF-16 units; keeps one outsized collection from pinning memory. */
 const STALE_CACHE_MAX_LENGTH = 1_000_000
 
-/** The only query parameters that change a collection payload. */
-const CACHE_KEY_PARAMS = ['limit', 'order', 'populate'] as const
+/**
+ * The only query parameters forwarded to the CMS (what useCms sends). Anything
+ * else — `select`, `where`, … — is dropped, so a visitor cannot make the proxy
+ * fetch (and cache as "last good copy") a trimmed or filtered payload.
+ */
+const FORWARDED_PARAMS = ['perPage', 'order', 'populate'] as const
+
+/** After a failed upstream call, serve stale copies at once for this long. */
+const CMS_DOWN_MS = 30_000
+let cmsDownUntil = 0
 
 /** A hung upstream must not hold the render open — fail fast, serve stale. */
 const CMS_TIMEOUT_MS = 8_000
@@ -43,13 +51,17 @@ const CMS_TIMEOUT_MS = 8_000
 /** Pruvious always answers these with JSON; we pass the body through verbatim. */
 const COLLECTION_CONTENT_TYPE = 'application/json; charset=utf-8'
 
-function cacheKey(path: string, query: Record<string, unknown>): string {
-  let key = path
-  for (const param of CACHE_KEY_PARAMS) {
-    const value = query[param]
-    if (value !== undefined) key += `\n${param}=${String(value)}`
+function forwardedQuery(query: Record<string, unknown>): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const param of FORWARDED_PARAMS) {
+    if (query[param] !== undefined) out[param] = String(query[param])
   }
-  return key
+  return out
+}
+
+/** Built from exactly what is forwarded, so equal keys mean equal payloads. */
+function cacheKey(path: string, query: Record<string, string>): string {
+  return [path, ...FORWARDED_PARAMS.map((p) => `${p}=${query[p] ?? ''}`)].join('\n')
 }
 
 /** `Map` iterates in insertion order, so re-inserting marks an entry as used. */
@@ -99,9 +111,18 @@ export default defineEventHandler(async (event) => {
   // escape the intended prefixes entirely via ".." segments to hit routes
   // like /dashboard.
   if (/^collections\/[a-z0-9-]+$/i.test(path)) {
-    const query = getQuery(event)
+    const query = forwardedQuery(getQuery(event))
     const key = cacheKey(path, query)
     let body: string
+
+    // The CMS just failed: answer from the stale copy right away instead of
+    // making every request of every render wait for another timeout.
+    const knownStale = Date.now() < cmsDownUntil ? readStale(key) : undefined
+    if (knownStale !== undefined) {
+      setResponseHeader(event, 'x-cms-stale', '1')
+      setResponseHeader(event, 'content-type', COLLECTION_CONTENT_TYPE)
+      return knownStale
+    }
 
     try {
       // `$fetch.raw` + `responseType: 'text'` hands back the upstream bytes
@@ -113,6 +134,8 @@ export default defineEventHandler(async (event) => {
         query,
         responseType: 'text',
         timeout: CMS_TIMEOUT_MS,
+        // No silent retry: one timeout is enough before falling back to stale.
+        retry: 0,
         // A collections GET has no business redirecting; fail loudly instead of
         // silently following a 3xx to wherever the upstream points.
         redirect: 'error',
@@ -120,6 +143,7 @@ export default defineEventHandler(async (event) => {
 
       body = cleanEditorHtml(path, upstream._data ?? '')
     } catch (error) {
+      cmsDownUntil = Date.now() + CMS_DOWN_MS
       // Timeout, ECONNREFUSED, 5xx, or the 404 a restarting Pruvious serves:
       // all of them mean "the CMS is not answering right now", never "this
       // content is gone" — the allowlisted collections are ones the site ships

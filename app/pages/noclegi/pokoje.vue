@@ -76,7 +76,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
         >
           <div class="bg-forest-void h-full flex flex-col">
             <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
-              <img
+              <img v-if="room.image"
                 :src="room.image"
                 :alt="room.title"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -137,7 +137,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
             <!-- Image gallery -->
             <div class="relative h-64 md:h-80 overflow-hidden shrink-0">
-              <img :src="galleryImages[galleryIndex]" :alt="selectedRoom.title" class="w-full h-full object-cover" />
+              <img v-if="galleryImages[galleryIndex]" :src="galleryImages[galleryIndex]" :alt="selectedRoom.title" class="w-full h-full object-cover" />
               <div class="absolute bottom-6 left-8">
                 <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-1">{{ selectedRoom.tag }}</p>
                 <h2 class="font-display text-white text-3xl font-light">{{ selectedRoom.title }}</h2>

@@ -134,7 +134,7 @@ function toggleSection(key: string) {
         <div class="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
           <div v-for="b in ustawienia?.badges" :key="b.alt" class="logo-slot">
             <component :is="b.href ? 'a' : 'span'" :href="b.href || undefined" target="_blank" rel="noopener" class="contents">
-              <img :src="cmsImg(b.image)" :alt="b.alt" class="max-h-full max-w-[190px] w-auto object-contain" />
+              <img v-if="cmsImg(b.image)" :src="cmsImg(b.image)" :alt="b.alt" class="max-h-full max-w-[190px] w-auto object-contain" />
             </component>
           </div>
         </div>

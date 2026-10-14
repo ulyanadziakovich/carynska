@@ -15,7 +15,7 @@ defineProps<{
     <div class="grid grid-cols-1 lg:grid-cols-[3fr_2fr] min-h-[80vh]">
 
       <div class="relative overflow-hidden" style="min-height: min(55vw, 480px)">
-        <img :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
+        <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
         <div class="photo-tint" />
       </div>
 

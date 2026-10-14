@@ -20,14 +20,16 @@ const { ustawienia } = await useSite()
 
 /** Link hotres z CMS + wybrane daty. */
 function buildBookingUrl() {
-  const url = new URL(ustawienia.value?.bookingUrl ?? '')
+  if (!ustawienia.value?.bookingUrl) return ''
+  const url = new URL(ustawienia.value.bookingUrl)
   if (checkIn.value) url.searchParams.set('arrival', checkIn.value)
   if (checkOut.value) url.searchParams.set('departure', checkOut.value)
   return url.toString()
 }
 
 function book() {
-  window.open(buildBookingUrl(), '_blank', 'noopener')
+  const url = buildBookingUrl()
+  if (url) window.open(url, '_blank', 'noopener')
 }
 
 // Nazwy miesięcy i dni z przeglądarki (polski), zamiast list wpisanych w kod.

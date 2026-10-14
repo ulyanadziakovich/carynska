@@ -265,11 +265,12 @@ function onSectionsScroll() {
         <div>
           <p class="text-white/30 font-sans text-xs tracking-[0.2em] uppercase mb-2">{{ p.inquiryTitle }}</p>
           <a v-if="p.dzial?.phone" :href="telHref(p.dzial.phone)" class="font-display text-gold text-3xl font-light hover:text-gold/80 transition-colors">{{ p.dzial.phone }}</a>
-          <p class="text-white/20 font-sans text-xs mt-1">
+          <p v-if="inquiryEmail" class="text-white/20 font-sans text-xs mt-1">
             <a :href="`mailto:${inquiryEmail}`" class="hover:text-gold/60 transition-colors">{{ inquiryEmail }}</a>
           </p>
         </div>
         <a
+          v-if="inquiryEmail"
           :href="`mailto:${inquiryEmail}`"
           class="border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-8 py-4 text-[11px] tracking-[0.2em] uppercase font-sans whitespace-nowrap"
         >
