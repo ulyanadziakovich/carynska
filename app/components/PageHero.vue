@@ -2,13 +2,14 @@
 defineProps<{
   tag: string
   title: string
-  image: string
+  image?: string
 }>()
 </script>
 
 <template>
   <div class="relative h-[55vh] min-h-[420px] overflow-hidden">
     <div
+      v-if="image"
       class="absolute inset-0 bg-cover bg-center scale-105"
       :style="`background-image: url('${image}')`"
     />

@@ -73,3 +73,13 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Treść strony (CMS)
+
+Cała treść jest w panelu Pruvious — repo `../carynska-cms`.
+
+1. `cd ../carynska-cms && npm run dev` — panel: http://localhost:4322/dashboard
+2. `npm run dev` tutaj — strona: http://localhost:4000
+
+Adres CMS: `runtimeConfig.public.cmsUrl` (nadpisz `NUXT_PUBLIC_CMS_URL`).
+Testy: `npm test` (czyszczenie HTML), `npm run check:hardcoded` (brak tekstów w kodzie), `npm run parity` (strona zgodna z baseline).

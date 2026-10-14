@@ -128,7 +128,7 @@ function toggleDropdown(label: string) {
           <div v-if="menuOpen" class="menu-overlay md:hidden">
 
             <!-- Background: ken-burns photo -->
-            <div class="menu-bg" :style="{ backgroundImage: `url('${cmsImg(ustawienia?.menuBackground)}')` }" />
+            <div class="menu-bg" :style="ustawienia?.menuBackground ? { backgroundImage: `url('${cmsImg(ustawienia.menuBackground)}')` } : undefined" />
             <!-- Vignette: tylko krawędzie dla głębi, bez zabijania zdjęcia -->
             <div class="menu-vignette" />
 

@@ -70,7 +70,7 @@ const pdfUrl = computed(() => (p.value?.pdf?.filename ? cmsImg(`/uploads/${p.val
   flex-shrink: 0;
 }
 .doc-body :deep(ol > li > *) { flex: 1; }
-.doc-body :deep(ol > li) { flex-wrap: wrap; }
+.doc-body :deep(ol > li) { flex-wrap: wrap; row-gap: 0; }
 .doc-body :deep(ol > li > ul) { flex-basis: 100%; padding-left: 2.5rem; margin-top: 0.5rem; }
 .doc-body :deep(ol > li > p) { color: rgb(255 255 255 / 0.6); }
 
