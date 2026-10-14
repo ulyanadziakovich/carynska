@@ -7,7 +7,10 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "parity:snapshot": "node scripts/parity/snapshot.mjs",
+    "parity": "node scripts/parity/compare.mjs",
+    "check:hardcoded": "node scripts/check-hardcoded.mjs"
   },
   "dependencies": {
     "nuxt": "^4.4.6",
