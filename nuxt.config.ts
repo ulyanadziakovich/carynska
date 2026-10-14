@@ -8,6 +8,13 @@ export default defineNuxtConfig({
     port: 4000,
   },
 
+  runtimeConfig: {
+    public: {
+      // Panel treści (repo ../carynska-cms). Na produkcji nadpisz NUXT_PUBLIC_CMS_URL.
+      cmsUrl: 'http://localhost:4322',
+    },
+  },
+
   css: ['~/assets/css/main.css'],
 
   routeRules: {
