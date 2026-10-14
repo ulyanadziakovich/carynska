@@ -3,7 +3,13 @@ interface MenuItem { name: string; note?: string }
 interface MenuSection { category: string; items: MenuItem[] }
 interface BookPage { category: string; items: MenuItem[]; continued: boolean }
 
-const props = defineProps<{ menu: MenuSection[] }>()
+const props = defineProps<{
+  menu: MenuSection[]
+  /** Napisy książki z CMS (formularz „Tawerna” → „Karta dań (książka)”). */
+  labels: { kicker?: string; title?: string; name?: string; section?: string; end?: string; prev?: string; next?: string }
+}>()
+/** Tytuł okładki: pierwsza linia zwykła, druga pochylona („Karta” / „Dań”). */
+const coverTitle = computed(() => lines(props.labels.title))
 
 const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV']
 
@@ -44,7 +50,7 @@ function measurePages(menu: MenuSection[], scopedAttr?: string): BookPage[] {
   inner.className = 'book-page__inner'
   const eyebrow = tag(document.createElement('p'))
   eyebrow.className = 'book-page__eyebrow'
-  eyebrow.textContent = 'Tawerna Caryńska'
+  eyebrow.textContent = props.labels.name ?? ''
   const title = tag(document.createElement('h3'))
   title.className = 'book-page__title'
   title.textContent = 'Kategoria'
@@ -186,7 +192,7 @@ function nextPage() { pageFlip?.flipNext() }
     </nav>
 
     <div class="book-stage">
-      <button type="button" class="book-arrow book-arrow--prev" aria-label="Poprzednia strona" @click="prevPage">‹</button>
+      <button type="button" class="book-arrow book-arrow--prev" :aria-label="labels.prev" @click="prevPage">‹</button>
 
       <div class="book-shadow">
         <div class="book-spine" />
@@ -194,17 +200,17 @@ function nextPage() { pageFlip?.flipNext() }
           <!-- Front cover -->
           <div class="book-page book-cover" data-density="hard">
             <div class="book-cover__inner">
-              <p class="book-cover__eyebrow">Przystań Caryńska</p>
+              <p class="book-cover__eyebrow">{{ labels.kicker }}</p>
               <div class="book-cover__ornament">✦</div>
-              <h2 class="book-cover__title">Karta<br><em>Dań</em></h2>
+              <h2 class="book-cover__title">{{ coverTitle[0] }}<br><em>{{ coverTitle[1] }}</em></h2>
               <div class="book-cover__rule" />
-              <p class="book-cover__sub">Tawerna</p>
+              <p class="book-cover__sub">{{ labels.section }}</p>
             </div>
           </div>
 
           <div v-for="(page, i) in pages" :key="i" class="book-page" data-density="soft">
             <div class="book-page__inner">
-              <p class="book-page__eyebrow">Tawerna Caryńska</p>
+              <p class="book-page__eyebrow">{{ labels.name }}</p>
               <h3 class="book-page__title">
                 {{ page.category }}<span v-if="page.continued" class="book-page__cont"> — c.d.</span>
               </h3>
@@ -226,15 +232,15 @@ function nextPage() { pageFlip?.flipNext() }
           <div class="book-page book-cover book-cover--back" data-density="hard">
             <div class="book-cover__inner">
               <div class="book-cover__ornament">✦</div>
-              <p class="book-cover__closing">Smacznego!</p>
+              <p class="book-cover__closing">{{ labels.end }}</p>
               <div class="book-cover__rule" />
-              <p class="book-cover__eyebrow">Tawerna Caryńska</p>
+              <p class="book-cover__eyebrow">{{ labels.name }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <button type="button" class="book-arrow book-arrow--next" aria-label="Następna strona" @click="nextPage">›</button>
+      <button type="button" class="book-arrow book-arrow--next" :aria-label="labels.next" @click="nextPage">›</button>
     </div>
   </div>
 </template>

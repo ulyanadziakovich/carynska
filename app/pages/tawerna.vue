@@ -1,15 +1,26 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/tawerna'),
-  useFetch('/api/content'),
-])
+const { data: p } = await useCmsSingle('tawerna')
+const { ustawienia, kontakt } = await useSite()
 const nav = await useNav()
+
+// Pola formularza „Tawerna” w kształcie używanym przez szablon.
+const data = computed(() => p.value && {
+  intro: p.value.intro,
+  menu: p.value.menu ?? [],
+  delivery: { title: p.value.deliveryTitle, body: p.value.deliveryBody, phone: p.value.dzial?.phone },
+  // E-mail działu, a gdy go brak — główny e-mail.
+  contact: { email: p.value.dzial?.email || kontakt.value?.email },
+})
+const bookLabels = computed(() => ({
+  kicker: p.value?.bookKicker, title: p.value?.bookTitle, name: p.value?.bookName, section: p.value?.bookSection,
+  end: p.value?.bookEnd, prev: p.value?.bookPrev, next: p.value?.bookNext,
+}))
 
 const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV']
 </script>
 
 <template>
-  <main v-if="data && content" class="relative overflow-hidden">
+  <main v-if="data && p" class="relative overflow-hidden">
 
     <!-- Grain overlay -->
     <div class="pointer-events-none fixed inset-0 z-10 opacity-[0.025]"
@@ -18,7 +29,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
     <!-- Dark hero area -->
     <div class="bg-forest">
       <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
-      <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
+      <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
     </div>
 
     <!-- Light content area -->
@@ -43,17 +54,17 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
           <p class="font-display italic text-base text-stone mb-10">{{ data.delivery.body }}</p>
           <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
             <a
-              href="https://carynska.app-tapporder.ngastro.lsisoftware.net/zpc-skorka-spolka-jawna/products?group=af95-0528-1b1b-4b7a"
+              :href="ustawienia?.pizzaUrl"
               target="_blank"
               rel="noopener"
               class="btn-gold"
             >
-              🍕 Zamów pizzę
+              {{ ustawienia?.pizzaLabel }}
             </a>
-            <a :href="`tel:${data.delivery.phone.replace(/\s/g,'')}`" class="btn-outline">
+            <a v-if="data.delivery.phone" :href="telHref(data.delivery.phone)" class="btn-outline">
               {{ data.delivery.phone }}
             </a>
-            <a :href="`mailto:${data.contact.email}`" class="btn-outline">
+            <a v-if="data.contact.email" :href="`mailto:${data.contact.email}`" class="btn-outline">
               {{ data.contact.email }}
             </a>
           </div>
@@ -63,13 +74,13 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
       <!-- Menu: flip-through book -->
       <div class="max-w-5xl mx-auto pb-28 px-6 lg:px-12 pt-10">
         <ClientOnly>
-          <TawernaBook :menu="data.menu" />
+          <TawernaBook :menu="data.menu" :labels="bookLabels" />
 
           <template #fallback>
             <div class="flex flex-col gap-16">
               <div v-for="section in data.menu" :key="section.category">
                 <div class="mb-10">
-                  <p class="section-eyebrow">Tawerna Caryńska</p>
+                  <p class="section-eyebrow">{{ p.bookName }}</p>
                   <h2 class="section-title">{{ section.category }}</h2>
                   <div class="flex items-center gap-3 mt-5">
                     <div class="w-10 h-px bg-gold-strong/50" />
