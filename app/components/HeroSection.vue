@@ -3,12 +3,13 @@ const props = defineProps<{
   hero: {
     title: string
     subtitle: string
-    image: string
-    images?: string[]
+    images: string[]
   }
 }>()
 
-const slides = computed(() => (props.hero.images?.length ? props.hero.images : [props.hero.image]))
+const { ustawienia } = await useSite()
+
+const slides = computed(() => props.hero.images)
 const current = ref(0)
 let timer: ReturnType<typeof setInterval> | undefined
 
@@ -63,12 +64,13 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
       <div class="flex flex-wrap items-stretch justify-center gap-4 mt-8">
         <CallMenu variant="hero" />
         <a
-          href="https://carynska.app-tapporder.ngastro.lsisoftware.net/zpc-skorka-spolka-jawna/products?group=af95-0528-1b1b-4b7a"
+          v-if="ustawienia?.pizzaUrl"
+          :href="ustawienia.pizzaUrl"
           target="_blank"
           rel="noopener"
           class="hero-pizza-btn"
         >
-          🍕 Zamów pizzę
+          {{ ustawienia.pizzaLabel }}
         </a>
       </div>
     </div>

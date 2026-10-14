@@ -1,10 +1,8 @@
 <script setup lang="ts">
 interface Tile {
-  id: string
   tag: string
   title: string
-  icon: string
-  image: string
+  image?: string
   from: string
   modalTitle: string
   modalBody: string[]
@@ -18,9 +16,12 @@ defineProps<{
     body: string
     image: { src: string; alt: string }
     cta: { label: string; href: string }
+    hint?: string
     tiles: Tile[]
   }
 }>()
+
+const { ustawienia } = await useSite()
 
 const activeModal = ref<Tile | null>(null)
 const tileRefs = ref<HTMLElement[]>([])
@@ -74,7 +75,7 @@ onMounted(() => {
     <div class="grid grid-cols-2 lg:grid-cols-4">
       <div
         v-for="(tile, i) in data.tiles"
-        :key="tile.id"
+        :key="i"
         :ref="el => { if (el) tileRefs[i] = el as HTMLElement }"
         class="tile"
         :class="tile.from === 'left' ? 'tile-from-left' : 'tile-from-right'"
@@ -94,7 +95,7 @@ onMounted(() => {
           <h3 class="tile-title">{{ tile.title }}</h3>
           <div class="tile-hint">
             <span class="tile-hint-dot" />
-            <span>Kliknij, aby dowiedzieć się więcej</span>
+            <span>{{ data.hint }}</span>
           </div>
         </div>
       </div>
@@ -105,7 +106,7 @@ onMounted(() => {
       <Transition name="modal">
         <div v-if="activeModal" class="modal-backdrop" @click.self="closeModal">
           <div class="modal-box">
-            <button @click="closeModal" class="modal-close" aria-label="Zamknij">
+            <button @click="closeModal" class="modal-close" :aria-label="ustawienia?.close">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
                 <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
@@ -118,7 +119,7 @@ onMounted(() => {
               <div class="absolute inset-0 bg-gradient-to-t from-forest/60 to-transparent" />
             </div>
 
-            <p class="modal-tag">Przystań Caryńska</p>
+            <p class="modal-tag">{{ ustawienia?.siteName }}</p>
             <h2 class="modal-title">{{ activeModal.modalTitle }}</h2>
             <div class="modal-line" />
 

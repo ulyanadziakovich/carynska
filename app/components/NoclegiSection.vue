@@ -5,7 +5,7 @@ defineProps<{
     title: string
     body: string[]
     cta: { label: string; href: string }
-    rooms: { type: string; image: string; capacity: string; size: string; features: string[]; view?: string }[]
+    image: { src?: string; alt?: string }
   }
 }>()
 </script>
@@ -51,7 +51,7 @@ defineProps<{
       <div class="relative flex flex-col overflow-hidden bg-forest-void min-h-[360px]">
         <div v-reveal="{ delay: 150 }" class="relative flex flex-1 items-center justify-center p-8">
           <div class="room-frame">
-            <img :src="data.rooms[0].image" :alt="data.rooms[0].type" class="w-full h-full object-cover" />
+            <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
             <div class="photo-tint" />
           </div>
         </div>
