@@ -6,7 +6,10 @@ export default defineEventHandler(() => {
       subtitle: 'Pokoje i apartamenty w Polańczyku',
       image: '/images/hotel.png',
     },
-    intro: 'Całoroczny ośrodek wypoczynkowo-konferencyjny w Polańczyku oferuje komfortowe zakwaterowanie w pokojach o standardzie podstawowym i podwyższonym oraz apartamentach. Łącznie 67 miejsc noclegowych z możliwością dostawek.',
+    intro: [
+      'Przystań Caryńska to całoroczny ośrodek wypoczynkowo-szkoleniowy w Polańczyku, malowniczo położony ok. 200 m od Jeziora Solińskiego z widokiem na Bieszczady. Oferujemy 57 miejsc noclegowych w pokojach o podstawowym i podwyższonym standardzie oraz w apartamentach (łącznie 67 miejsc noclegowych z dostawkami).',
+      'Na naszych gości czeka: elegancka klimatyzowana jadalnia, nastrojowa kawiarnia z kominkiem, boisko do siatkówki, ogród z placem zabaw, wiatą biesiadną i miejscem na ognisko i grilla, wielofunkcyjna sala konferencyjna, stół bilardowy, stół do ping-ponga, piłkarzyki, kącik dla maluchów oraz monitorowany darmowy parking.',
+    ],
     rooms: [
       {
         slug: 'pokoj-1-osobowy',

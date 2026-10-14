@@ -12,6 +12,7 @@ defineProps<{
     bank?: { name: string; account: string; swift: string; note: string }
     siostrzaneObiekty?: { name: string; location: string; href: string; phone: string; email: string; desc: string }[]
   }
+  naturalMapColors?: boolean
 }>()
 
 const form = reactive({ name: '', email: '', phone: '', message: '' })
@@ -34,7 +35,7 @@ async function submitForm() {
       <iframe
         :src="`https://maps.google.com/maps?q=${data.mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`"
         class="w-full h-full"
-        style="border:0;filter:grayscale(90%) invert(10%) sepia(20%) saturate(400%) brightness(80%)"
+        :style="naturalMapColors ? 'border:0' : 'border:0;filter:grayscale(90%) invert(10%) sepia(20%) saturate(400%) brightness(80%)'"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
       />

@@ -8,7 +8,10 @@ export default defineEventHandler(() => {
       title: 'Woda, góry\ni przygoda',
       image: '/images/przystan-drone-3.jpg',
     },
-    intro: 'Polańczyk i jego okolice to raj dla aktywnych — zarówno na wodzie, jak i na lądzie. Jezioro Solińskie, szlaki górskie i Bieszczady tuż za progiem.',
+    intro: [
+      'Nasza Przystań z rozbudowanym zapleczem rekreacyjno-sportowym to niezwykle atrakcyjne miejsce do plażowania, szczególnie przystosowane dla dzieci. Podczas wakacyjnych wieczorów często umilamy Wam czas muzyką na żywo!',
+      'Baseniki i dmuchane zjeżdżalnie, mała gastronomia, strefa gier i wypożyczalnia sprzętu wodnego sprawią, że będziecie tutaj często gościć podczas swojego wypoczynku. Polecamy również rejsy jachtami żaglowymi oraz komfortowymi łodziami elektrycznymi (samodzielne i ze sternikiem).',
+    ],
 
     water: {
       tag: 'Wypożyczalnia sprzętu wodnego',

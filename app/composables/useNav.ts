@@ -43,6 +43,10 @@ export function useNav() {
         ],
       },
       {
+        label: 'Projekty',
+        href: '/projekty',
+      },
+      {
         label: 'Kontakt',
         href: '/#contact',
         children: [

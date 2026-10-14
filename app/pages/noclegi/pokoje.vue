@@ -51,8 +51,12 @@ onUnmounted(() => { document.body.style.overflow = '' })
     </div>
 
     <!-- Intro -->
-    <div class="max-w-2xl mx-auto px-8 py-10 text-center">
-      <p class="text-white/50 font-sans text-sm leading-relaxed">{{ data.intro }}</p>
+    <div class="max-w-3xl mx-auto px-8 py-10 text-center">
+      <p
+        v-for="(p, i) in data.intro"
+        :key="i"
+        class="text-white/50 font-sans text-sm leading-relaxed mb-4 last:mb-0"
+      >{{ p }}</p>
     </div>
 
     <!-- Room grid -->

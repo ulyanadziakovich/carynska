@@ -16,7 +16,11 @@ const openBoat = ref<string | null>(null)
 
     <!-- Intro -->
     <div class="max-w-3xl mx-auto px-8 py-14 text-center">
-      <p class="text-white/55 font-sans text-sm leading-relaxed">{{ data.intro }}</p>
+      <p
+        v-for="(p, i) in data.intro"
+        :key="i"
+        class="text-white/55 font-sans text-sm leading-relaxed mb-4 last:mb-0"
+      >{{ p }}</p>
     </div>
 
     <!-- Water activities: text + collage -->
