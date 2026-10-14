@@ -19,11 +19,29 @@ const OPTIONS: sanitizeHtml.IOptions = {
   allowedSchemes: ['http', 'https', 'mailto', 'tel'],
 }
 
-export function sanitizeEditorFields<T extends Record<string, unknown>>(collection: string, record: T): T {
-  const fields = EDITOR_FIELDS[collection]
-  if (!fields) return record
-  const out: Record<string, unknown> = { ...record }
-  for (const field of fields) {
+/** Pola z adresem: `href`, `…Href`, `…Url` (menu, przyciski, social, rezerwacje). */
+const LINK_FIELD = /^href$|Href$|Url$/
+/** http(s), mailto, tel, ścieżka na stronie („/…”, nie „//…”) albo kotwica „#…”. */
+const SAFE_LINK = /^(https?:|mailto:|tel:)|^\/(?!\/)|^#/i
+
+/** Adres spoza listy (np. „javascript:”) zamieniany na pusty — link po prostu znika. */
+function cleanLinks(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(cleanLinks)
+  if (!value || typeof value !== 'object') return value
+  const out: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(value)) {
+    out[k] = LINK_FIELD.test(k) && typeof v === 'string' ? (SAFE_LINK.test(v.trim()) ? v : '') : cleanLinks(v)
+  }
+  return out
+}
+
+/**
+ * Czyści rekord z CMS przed wysłaniem na stronę: HTML z pól edytora (lista
+ * dozwolonych znaczników) i adresy w polach linków (lista dozwolonych schematów).
+ */
+export function sanitizeCmsRecord<T extends Record<string, unknown>>(collection: string, record: T): T {
+  const out = cleanLinks(record) as Record<string, unknown>
+  for (const field of EDITOR_FIELDS[collection] ?? []) {
     if (typeof out[field] === 'string') out[field] = sanitizeHtml(out[field] as string, OPTIONS)
   }
   return out as T

@@ -96,7 +96,7 @@ function writeStale(key: string, body: string): void {
 function cleanEditorHtml(path: string, body: string): string {
   const collection = path.split('/')[1] ?? ''
   try {
-    return JSON.stringify(sanitizeEditorFields(collection, JSON.parse(body)))
+    return JSON.stringify(sanitizeCmsRecord(collection, JSON.parse(body)))
   } catch {
     return body
   }
