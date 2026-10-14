@@ -1,18 +1,33 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/atrakcje'),
-  useFetch('/api/content'),
-])
+const { data: p } = await useCmsSingle('atrakcje')
+const { ustawienia } = await useSite()
+const imgs = (list?: CmsImage[]) => (list ?? []).filter((i) => i?.src).map((i) => ({ src: cmsImg(i)!, alt: i.alt ?? '' }))
+
+// Pola formularza „Atrakcje” w kształcie używanym przez szablon.
+const data = computed(() => p.value && {
+  intro: paragraphs(p.value.intro),
+  water: {
+    tag: p.value.waterTag, title: p.value.waterTitle, body: p.value.waterBody,
+    items: p.value.waterItems ?? [], pricing: p.value.waterPricing ?? [], images: imgs(p.value.waterImages),
+    fleet: (p.value.fleet ?? []).map((f: any, i: number) => ({ ...f, id: String(i), units: lines(f.units), specs: lines(f.specs) })),
+  },
+  marina: {
+    tag: p.value.marinaTag, title: p.value.marinaTitle, body: p.value.marinaBody, amenities: lines(p.value.marinaAmenities),
+    pricing: p.value.marinaPricing ?? [], images: imgs(p.value.marinaImages), phone: p.value.marinaDzial?.phone,
+  },
+  land: { tag: p.value.landTag, title: p.value.landTitle, body: p.value.landBody, items: p.value.landItems ?? [], images: imgs(p.value.landImages) },
+  groups: { tag: p.value.groupsTag, title: p.value.groupsTitle },
+})
 
 const nav = await useNav()
 const openBoat = ref<string | null>(null)
 </script>
 
 <template>
-  <main v-if="data && content" class="bg-forest min-h-screen">
+  <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
 
     <!-- Intro -->
     <div class="max-w-3xl mx-auto px-8 py-14 text-center">
@@ -48,17 +63,13 @@ const openBoat = ref<string | null>(null)
       </div>
 
       <div class="lg:pt-8">
-        <PhotoCollage :images="[
-          { src: '/images/saturn25-jezero.webp', alt: 'Jacht Saturn 25 na Jeziorze Solińskim' },
-          { src: '/images/solina2.avif', alt: 'Żaglówki' },
-          { src: '/images/kajaki-sprzet-wodny.jpg', alt: 'Kajaki i żaglówki na jeziorze Solińskim' },
-        ]" />
+        <PhotoCollage :images="data.water.images" />
       </div>
     </div>
 
     <!-- Fleet accordions -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-16">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Nasza flota</p>
+      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">{{ p.fleetTitle }}</p>
       <div class="flex flex-col gap-px bg-gold/10">
         <div
           v-for="boat in data.water.fleet"
@@ -75,13 +86,13 @@ const openBoat = ref<string | null>(null)
               <p class="text-gold/50 text-[9px] tracking-[0.35em] uppercase font-sans mb-1">{{ boat.type }}</p>
               <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                 <h3 class="font-display text-white text-xl font-light">{{ boat.name }}</h3>
-                <span class="text-white/30 font-sans text-xs">{{ boat.units.length > 1 ? `${boat.units.length} jednostki` : boat.units[0] }}</span>
+                <span class="text-white/30 font-sans text-xs">{{ boat.units.length > 1 ? fill(p.unitsCount, boat.units.length) : boat.units[0] }}</span>
               </div>
             </div>
             <div class="hidden sm:flex items-center gap-6 shrink-0">
-              <span class="text-white/30 font-sans text-xs">max {{ boat.capacity }} os.</span>
+              <span class="text-white/30 font-sans text-xs">{{ fill(ustawienia?.maxPersons, boat.capacity) }}</span>
               <span class="text-gold font-sans text-sm font-medium">{{ boat.price }}</span>
-              <span v-if="!boat.patent" class="text-[9px] tracking-widest uppercase border border-gold/30 text-gold/60 px-2 py-0.5">bez patentu</span>
+              <span v-if="!boat.patent" class="text-[9px] tracking-widest uppercase border border-gold/30 text-gold/60 px-2 py-0.5">{{ p.noPatentLabel }}</span>
             </div>
             <svg
               class="w-4 h-4 text-white/25 shrink-0 transition-transform duration-300"
@@ -114,11 +125,11 @@ const openBoat = ref<string | null>(null)
                   rel="noopener"
                   class="inline-flex items-center gap-2 mt-6 text-gold/60 hover:text-gold font-sans text-[11px] tracking-[0.15em] uppercase transition-colors"
                 >
-                  Specyfikacja producenta →
+                  {{ p.specLink }}
                 </a>
               </div>
               <div v-if="boat.units.length > 1" class="shrink-0">
-                <p class="text-white/25 text-[9px] tracking-[0.35em] uppercase font-sans mb-3">Jednostki</p>
+                <p class="text-white/25 text-[9px] tracking-[0.35em] uppercase font-sans mb-3">{{ p.unitsLabel }}</p>
                 <div class="flex flex-wrap lg:flex-col gap-2">
                   <span
                     v-for="unit in boat.units"
@@ -135,7 +146,7 @@ const openBoat = ref<string | null>(null)
 
     <!-- Water pricing -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Cennik wypożyczalni</p>
+      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">{{ p.waterPricingTitle }}</p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div v-for="group in data.water.pricing" :key="group.category" class="card-elevated bg-forest-void p-8">
           <p class="text-white text-[11px] tracking-[0.25em] uppercase font-sans mb-1 pb-4 border-b border-gold/20">{{ group.category }}</p>
@@ -161,7 +172,7 @@ const openBoat = ref<string | null>(null)
             <span class="w-4 h-px bg-gold/50 shrink-0" />{{ item }}
           </li>
         </ul>
-        <a :href="`tel:${data.marina.phone.replace(/\s/g,'')}`" class="inline-flex items-center gap-3 text-gold group">
+        <a v-if="data.marina.phone" :href="telHref(data.marina.phone)" class="inline-flex items-center gap-3 text-gold group">
           <span class="w-6 h-px bg-gold/50 group-hover:w-10 transition-all duration-300" />
           <span class="font-sans text-sm tracking-wider">{{ data.marina.phone }}</span>
         </a>
@@ -173,7 +184,7 @@ const openBoat = ref<string | null>(null)
 
     <!-- Marina: pricing tables -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Cennik usług</p>
+      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">{{ p.marinaPricingTitle }}</p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div
           v-for="group in data.marina.pricing"
@@ -221,11 +232,7 @@ const openBoat = ref<string | null>(null)
       </div>
 
       <div class="lg:pt-8">
-        <PhotoCollage :images="[
-          { src: '/images/aquapark-baseny.jpg', alt: 'Mini-aquapark i baseny przy przystani' },
-          { src: '/images/plac-zabaw.jpg', alt: 'Plac zabaw nad mariną' },
-          { src: '/images/gondola-solina.jpg', alt: 'Kolejka gondolowa Solina' },
-        ]" />
+        <PhotoCollage :images="data.land.images" />
       </div>
     </div>
 
@@ -233,7 +240,7 @@ const openBoat = ref<string | null>(null)
     <ContactCta
       :tag="data.groups.tag"
       :title="data.groups.title"
-      :dzial="data.contact"
+      :dzial="p.groupsDzial"
     />
 
     <KontaktSection />
