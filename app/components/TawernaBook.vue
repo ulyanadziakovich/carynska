@@ -6,7 +6,7 @@ interface BookPage { category: string; items: MenuItem[]; continued: boolean }
 const props = defineProps<{
   menu: MenuSection[]
   /** Napisy książki z CMS (formularz „Tawerna” → „Karta dań (książka)”). */
-  labels: { kicker?: string; title?: string; name?: string; section?: string; end?: string; prev?: string; next?: string }
+  labels: { kicker?: string; title?: string; name?: string; section?: string; end?: string; continued?: string; prev?: string; next?: string }
 }>()
 /** Tytuł okładki: pierwsza linia zwykła, druga pochylona („Karta” / „Dań”). */
 const coverTitle = computed(() => lines(props.labels.title))
@@ -212,7 +212,7 @@ function nextPage() { pageFlip?.flipNext() }
             <div class="book-page__inner">
               <p class="book-page__eyebrow">{{ labels.name }}</p>
               <h3 class="book-page__title">
-                {{ page.category }}<span v-if="page.continued" class="book-page__cont"> — c.d.</span>
+                {{ page.category }}<span v-if="page.continued && labels.continued" class="book-page__cont"> — {{ labels.continued }}</span>
               </h3>
               <div class="book-page__rule" />
               <div class="book-page__items">

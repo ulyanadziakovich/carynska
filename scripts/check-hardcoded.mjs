@@ -3,7 +3,8 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
-const ALLOW = new Set([])
+// Wyjątek: komunikat błędu 503 pokazuje się właśnie wtedy, gdy CMS nie działa — nie może pochodzić z CMS.
+const ALLOW = new Set(['$CMS niedostępny'])
 const LETTERS = /[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]{3,}/
 const files = []
 const walk = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); statSync(p).isDirectory() ? walk(p) : /\.(vue|ts)$/.test(p) && files.push(p) } }

@@ -13,7 +13,7 @@ const data = computed(() => p.value && {
 })
 const bookLabels = computed(() => ({
   kicker: p.value?.bookKicker, title: p.value?.bookTitle, name: p.value?.bookName, section: p.value?.bookSection,
-  end: p.value?.bookEnd, prev: p.value?.bookPrev, next: p.value?.bookNext,
+  end: p.value?.bookEnd, continued: p.value?.bookContinued, prev: p.value?.bookPrev, next: p.value?.bookNext,
 }))
 
 const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV']
