@@ -3,7 +3,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/jacht'),
   useFetch('/api/content'),
 ])
-const nav = useNav()
+const nav = await useNav()
 
 type Yacht = NonNullable<typeof data.value>['yachts'][number]
 const selectedYacht = ref<Yacht | null>(null)
@@ -154,7 +154,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
       </div>
     </div><!-- end content area -->
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
 
     <!-- Yacht modal -->
     <Teleport to="body">

@@ -3,7 +3,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/noclegi'),
   useFetch('/api/content'),
 ])
-const nav = useNav()
+const nav = await useNav()
 const g = computed(() => data.value?.grupy)
 
 const sectionsScroll = ref<HTMLElement | null>(null)
@@ -280,7 +280,7 @@ function extraIcon(category: string) {
       </div>
     </div>
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>
 

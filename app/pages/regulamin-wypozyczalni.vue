@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const nav = useNav()
+const nav = await useNav()
 
 const rules = [
   { text: 'Wypożyczalnia sprzętu wodnego czynna jest codziennie w wyznaczonych godzinach w sezonie letnim.' },

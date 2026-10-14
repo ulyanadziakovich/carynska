@@ -1,19 +1,14 @@
 <script setup lang="ts">
-defineProps<{
-  data: {
-    address: string
-    email: string
-    emailFirma?: string
-    mapQuery: string
-    logo: { src: string; alt: string }
-    departments: { tag: string; name: string; desc: string; phone: string; email?: string }[]
-    social: { label: string; href: string; icon: string }[]
-    platforms: { label: string; href: string }[]
-    bank?: { name: string; account: string; swift: string; note: string }
-    siostrzaneObiekty?: { name: string; location: string; href: string; phone: string; email: string; desc: string }[]
-  }
-  naturalMapColors?: boolean
-}>()
+defineProps<{ naturalMapColors?: boolean }>()
+
+const { kontakt, ustawienia, dzialy } = await useSite()
+// Linki w stopce mają nazwy dokumentów z CMS.
+const docs = await Promise.all(
+  (['regulamin', 'regulamin-wypozyczalni', 'wzor-umowy-jachtu'] as const).map(async (name) => {
+    const { data } = await useCmsSingle(name)
+    return { href: `/${name}`, data }
+  }),
+)
 
 const form = reactive({ name: '', email: '', phone: '', message: '' })
 const sent = ref(false)
@@ -33,7 +28,7 @@ async function submitForm() {
     <!-- Map — full width, generous height -->
     <div class="w-full map-strip" style="position:relative;">
       <iframe
-        :src="`https://maps.google.com/maps?q=${data.mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`"
+        :src="`https://maps.google.com/maps?q=${encodeURIComponent(kontakt?.mapQuery ?? '')}&t=&z=15&ie=UTF8&iwloc=&output=embed`"
         class="w-full h-full"
         :style="naturalMapColors ? 'border:0' : 'border:0;filter:grayscale(90%) invert(10%) sepia(20%) saturate(400%) brightness(80%)'"
         loading="lazy"
@@ -48,17 +43,18 @@ async function submitForm() {
       <div class="max-w-7xl mx-auto px-5 lg:px-16 py-5 md:py-6 flex flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-6">
           <img
-            :src="data.logo.src"
-            :alt="data.logo.alt"
+            v-if="ustawienia?.footerLogo"
+            :src="cmsImg(ustawienia.footerLogo)"
+            :alt="ustawienia.siteName"
             class="w-32 md:w-44"
             style="filter:brightness(0) invert(1) sepia(0.8) saturate(1.4) hue-rotate(5deg) opacity(0.9)"
           />
           <div class="w-px h-10 bg-gold/20 hidden md:block" />
-          <p class="font-display italic text-white/30 text-lg hidden md:block">Jezioro Solińskie · Bieszczady</p>
+          <p class="font-display italic text-white/30 text-lg hidden md:block">{{ kontakt?.kicker }}</p>
         </div>
         <div class="flex gap-2">
           <a
-            v-for="s in data.social"
+            v-for="s in kontakt?.social"
             :key="s.label"
             :href="s.href"
             target="_blank"
@@ -81,28 +77,28 @@ async function submitForm() {
 
       <!-- Departments -->
       <div class="bg-forest p-5 md:p-6 flex flex-col gap-4 md:gap-5">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">Kontakt</p>
+        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.title }}</p>
         <!-- Mobile: compact horizontal grid; Desktop: vertical list -->
         <div class="grid grid-cols-2 gap-x-5 gap-y-4 md:flex md:flex-col md:gap-4">
-          <div v-for="dept in data.departments" :key="dept.name">
+          <div v-for="dept in dzialy" :key="dept.id">
             <p class="text-white/25 text-[9px] tracking-[0.3em] uppercase font-sans mb-0.5">{{ dept.tag }}</p>
             <p class="font-display text-white text-base md:text-lg font-light leading-snug">{{ dept.name }}</p>
-            <a :href="`tel:${dept.phone.replace(/\s/g,'')}`" class="text-white/50 hover:text-gold font-sans text-sm tracking-wider transition-colors block mt-0.5">{{ dept.phone }}</a>
+            <a v-if="dept.phone" :href="telHref(dept.phone)" class="text-white/50 hover:text-gold font-sans text-sm tracking-wider transition-colors block mt-0.5">{{ dept.phone }}</a>
             <a v-if="dept.email" :href="`mailto:${dept.email}`" class="text-white/25 hover:text-gold/60 font-sans text-xs transition-colors block">{{ dept.email }}</a>
           </div>
         </div>
         <div class="pt-3 border-t border-white/8">
-          <p class="text-white/25 font-sans text-xs leading-relaxed">{{ data.address }}</p>
-          <a :href="`mailto:${data.email}`" class="text-gold/50 hover:text-gold font-sans text-xs transition-colors block mt-1">{{ data.email }}</a>
+          <p class="text-white/25 font-sans text-xs leading-relaxed">{{ kontakt?.address }}</p>
+          <a v-if="kontakt?.email" :href="`mailto:${kontakt.email}`" class="text-gold/50 hover:text-gold font-sans text-xs transition-colors block mt-1">{{ kontakt.email }}</a>
         </div>
       </div>
 
       <!-- Rezerwacje + dane bankowe -->
       <div class="bg-forest p-5 md:p-6 flex flex-col gap-4 md:gap-5">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">Rezerwacje</p>
+        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.reservationsTitle }}</p>
         <div class="flex flex-wrap gap-x-6 gap-y-2 md:flex-col md:gap-3">
           <a
-            v-for="p in data.platforms"
+            v-for="p in kontakt?.platforms"
             :key="p.label"
             :href="p.href"
             target="_blank"
@@ -113,20 +109,20 @@ async function submitForm() {
             <span class="font-sans text-sm tracking-[0.1em]">{{ p.label }}</span>
           </a>
         </div>
-        <div v-if="data.bank" class="pt-3 border-t border-white/8 flex flex-col gap-2.5">
-          <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">Dane do przelewu</p>
+        <div v-if="kontakt?.account" class="pt-3 border-t border-white/8 flex flex-col gap-2.5">
+          <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt.bankTitle }}</p>
           <div class="grid grid-cols-1 gap-2">
             <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">Bank</p>
-              <p class="text-white/55 font-sans text-xs mt-0.5">{{ data.bank.name }}</p>
+              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.bankLabel }}</p>
+              <p class="text-white/55 font-sans text-xs mt-0.5">{{ kontakt.bankName }}</p>
             </div>
             <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">Nr rachunku</p>
-              <p class="text-gold/60 font-sans text-xs tracking-wider mt-0.5 leading-relaxed break-all">{{ data.bank.account }}</p>
+              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.accountLabel }}</p>
+              <p class="text-gold/60 font-sans text-xs tracking-wider mt-0.5 leading-relaxed break-all">{{ kontakt.account }}</p>
             </div>
             <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">SWIFT / BIC</p>
-              <p class="text-white/40 font-sans text-xs tracking-widest mt-0.5">{{ data.bank.swift }}</p>
+              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.swiftLabel }}</p>
+              <p class="text-white/40 font-sans text-xs tracking-widest mt-0.5">{{ kontakt.swift }}</p>
             </div>
           </div>
         </div>
@@ -134,19 +130,19 @@ async function submitForm() {
 
       <!-- Formularz -->
       <div class="bg-forest p-5 md:p-6 flex flex-col gap-3">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">Napisz do nas</p>
+        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.formTitle }}</p>
         <div v-if="sent" class="flex flex-col gap-3 py-4">
           <div class="w-8 h-px bg-gold" />
-          <p class="font-display text-white text-xl font-light">Dziękujemy!</p>
-          <p class="text-white/40 font-sans text-sm">Odezwiemy się wkrótce.</p>
+          <p class="font-display text-white text-xl font-light">{{ kontakt?.formThanks }}</p>
+          <p class="text-white/40 font-sans text-sm">{{ kontakt?.formThanksText }}</p>
         </div>
         <form v-else class="flex flex-col gap-2 flex-1" @submit.prevent="submitForm">
-          <input v-model="form.name" type="text" placeholder="Imię i nazwisko" required class="foot-input" />
-          <input v-model="form.email" type="email" placeholder="Email" required class="foot-input" />
-          <input v-model="form.phone" type="tel" placeholder="Telefon" class="foot-input" />
-          <textarea v-model="form.message" placeholder="Wiadomość" rows="3" required class="foot-input resize-none" />
+          <input v-model="form.name" type="text" :placeholder="kontakt?.formName" required class="foot-input" />
+          <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" required class="foot-input" />
+          <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" class="foot-input" />
+          <textarea v-model="form.message" :placeholder="kontakt?.formMessage" rows="3" required class="foot-input resize-none" />
           <button type="submit" :disabled="sending" class="foot-btn mt-1">
-            {{ sending ? 'Wysyłanie…' : 'Wyślij wiadomość' }}
+            {{ sending ? kontakt?.formSending : kontakt?.formSubmit }}
           </button>
         </form>
       </div>
@@ -154,12 +150,12 @@ async function submitForm() {
     </div>
 
     <!-- Siostrzane obiekty -->
-    <div v-if="data.siostrzaneObiekty && data.siostrzaneObiekty.length" class="border-t border-white/8 px-5 lg:px-16 py-5">
+    <div v-if="kontakt?.sisters?.length" class="border-t border-white/8 px-5 lg:px-16 py-5">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row gap-4 sm:gap-12 items-start">
-        <p class="text-gold/40 text-[9px] tracking-[0.5em] uppercase font-sans shrink-0 mt-0.5">Nasze obiekty</p>
+        <p class="text-gold/40 text-[9px] tracking-[0.5em] uppercase font-sans shrink-0 mt-0.5">{{ kontakt.sisterTitle }}</p>
         <div class="flex flex-wrap gap-x-10 gap-y-4">
           <a
-            v-for="obj in data.siostrzaneObiekty"
+            v-for="obj in kontakt.sisters"
             :key="obj.name"
             :href="obj.href"
             target="_blank"
@@ -176,15 +172,14 @@ async function submitForm() {
 
     <!-- Copyright -->
     <div class="border-t border-white/8 py-4 px-5 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p class="text-white/20 text-[10px] font-sans tracking-[0.3em] uppercase">© 2026 Przystań Caryńska</p>
+      <p class="text-white/20 text-[10px] font-sans tracking-[0.3em] uppercase">{{ withYear(ustawienia?.copyright) }}</p>
       <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <NuxtLink to="/regulamin" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Regulamin</NuxtLink>
-        <span class="text-white/10">·</span>
-        <NuxtLink to="/regulamin-wypozyczalni" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Regulamin wypożyczalni</NuxtLink>
-        <span class="text-white/10">·</span>
-        <NuxtLink to="/wzor-umowy-jachtu" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">Wzór umowy najmu jachtu</NuxtLink>
+        <template v-for="(doc, i) in docs" :key="doc.href">
+          <span v-if="i" class="text-white/10">·</span>
+          <NuxtLink :to="doc.href" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">{{ doc.data.value?.title }}</NuxtLink>
+        </template>
       </div>
-      <p class="text-white/10 font-sans text-[10px] tracking-widest uppercase">Polańczyk · Jezioro Solińskie · Bieszczady</p>
+      <p class="text-white/10 font-sans text-[10px] tracking-widest uppercase">{{ ustawienia?.regionLine }}</p>
     </div>
 
   </footer>

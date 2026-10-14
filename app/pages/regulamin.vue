@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const nav = useNav()
+const nav = await useNav()
 
 const sections = [
   {

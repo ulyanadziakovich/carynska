@@ -3,7 +3,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/tawerna'),
   useFetch('/api/content'),
 ])
-const nav = useNav()
+const nav = await useNav()
 
 const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV']
 </script>
@@ -98,7 +98,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
 
     </div>
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>
 

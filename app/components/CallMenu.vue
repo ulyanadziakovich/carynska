@@ -6,11 +6,7 @@ const props = defineProps<{
 const open = ref(false)
 const menuEl = ref<HTMLElement | null>(null)
 
-const phones = [
-  { tag: 'Rezerwacje', label: 'Noclegi', number: '+48 691 944 266', icon: 'bed' },
-  { tag: 'Restauracja', label: 'Tawerna', number: '+48 514 177 136', icon: 'utensils' },
-  { tag: 'Przystań', label: 'Bosmanat', number: '+48 536 700 537', icon: 'anchor' },
-]
+const { callDzialy, ustawienia } = await useSite()
 
 function toggle() { open.value = !open.value }
 
@@ -31,23 +27,23 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
       class="call-btn"
       :class="`call-btn--${variant}`"
       @click.stop="toggle"
-      aria-label="Zadzwoń do nas"
+      :aria-label="ustawienia?.callTitle"
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11a19.79 19.79 0 01-3.07-8.67A2 2 0 012.81 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
       </svg>
-      Zadzwoń do nas
+      {{ ustawienia?.callTitle }}
     </button>
 
     <Transition name="pop">
       <div v-if="open" class="call-menu" :class="`call-menu--${variant}`">
-        <p class="call-menu__hint">Wybierz dział</p>
+        <p class="call-menu__hint">{{ ustawienia?.callSubtitle }}</p>
         <a
-          v-for="p in phones"
-          :key="p.number"
-          :href="`tel:${p.number.replace(/\s/g, '')}`"
+          v-for="p in callDzialy"
+          :key="p.id"
+          :href="telHref(p.phone)"
           class="call-menu__item"
-          :aria-label="`${p.tag} ${p.label}: ${p.number}`"
+          :aria-label="`${p.callTag} ${p.name}: ${p.phone}`"
           @click="open = false"
         >
           <span class="call-menu__item-left">
@@ -71,11 +67,11 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
               </svg>
             </span>
             <span class="call-menu__text">
-              <span class="call-menu__tag">{{ p.tag }}</span>
-              <span class="call-menu__label">{{ p.label }}</span>
+              <span class="call-menu__tag">{{ p.callTag }}</span>
+              <span class="call-menu__label">{{ p.name }}</span>
             </span>
           </span>
-          <span class="call-menu__number">{{ p.number }}</span>
+          <span class="call-menu__number">{{ p.phone }}</span>
         </a>
       </div>
     </Transition>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const nav = useNav()
+const nav = await useNav()
 
 const points = [
   'Okres najmu, dane jachtu i załogi oraz warunki ubezpieczenia (OC i NNW).',

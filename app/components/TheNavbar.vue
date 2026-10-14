@@ -15,11 +15,7 @@ onMounted(() => {
 })
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
-const phones = [
-  { label: 'Noclegi', number: '+48 691 944 266', icon: 'bed' },
-  { label: 'Tawerna', number: '+48 514 177 136', icon: 'utensils' },
-  { label: 'Bosmanat', number: '+48 536 700 537', icon: 'anchor' },
-]
+const { callDzialy, kontakt, ustawienia } = await useSite()
 
 const menuOpen = ref(false)
 const openDropdown = ref<string | null>(null)
@@ -43,23 +39,23 @@ function toggleDropdown(label: string) {
       <div class="max-w-7xl mx-auto px-6 lg:px-12 h-9 flex items-center justify-between">
         <div class="flex items-center gap-3 sm:gap-6">
           <a
-            v-for="p in phones"
-            :key="p.label"
-            :href="`tel:${p.number.replace(/\s/g, '')}`"
+            v-for="p in callDzialy"
+            :key="p.id"
+            :href="telHref(p.phone)"
             class="group hidden sm:flex items-center gap-2"
           >
             <svg class="w-2.5 h-2.5 text-gold/50 shrink-0" viewBox="0 0 12 12" fill="currentColor">
               <path d="M2.5 1C2.5 1 1 1 1 2.5c0 5.523 4.477 10 10 10C12.5 12.5 12.5 11 12.5 11l-1.5-1.5c0 0-.5-.5-1 0L9 10.5C8 10 6 8 5.5 7L6.5 6c.5-.5 0-1 0-1L5 3.5C5 3.5 4 2.5 3.5 2.5L2.5 1z" transform="scale(0.85)"/>
             </svg>
-            <span class="text-white/30 font-sans text-[10px] tracking-[0.15em] group-hover:text-white/60 transition-colors">{{ p.label }}</span>
-            <span class="text-white/55 font-sans text-[10px] tracking-[0.05em] group-hover:text-gold transition-colors">{{ p.number }}</span>
+            <span class="text-white/30 font-sans text-[10px] tracking-[0.15em] group-hover:text-white/60 transition-colors">{{ p.name }}</span>
+            <span class="text-white/55 font-sans text-[10px] tracking-[0.05em] group-hover:text-gold transition-colors">{{ p.phone }}</span>
           </a>
           <!-- Mobile: all 3 numbers, icon instead of department label -->
           <a
-            v-for="p in phones"
-            :key="`m-${p.label}`"
-            :href="`tel:${p.number.replace(/\s/g, '')}`"
-            :aria-label="`${p.label}: ${p.number}`"
+            v-for="p in callDzialy"
+            :key="`m-${p.id}`"
+            :href="telHref(p.phone)"
+            :aria-label="`${p.name}: ${p.phone}`"
             class="sm:hidden flex items-center gap-1 text-white/60 active:text-gold transition-colors"
           >
             <svg v-if="p.icon === 'bed'" class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -79,23 +75,23 @@ function toggleDropdown(label: string) {
               <path d="M5 12H2a10 10 0 0020 0h-3" />
               <path d="M7 15a5 5 0 0010 0" />
             </svg>
-            <span class="font-sans text-[9px] tracking-[0.02em] whitespace-nowrap">{{ p.number }}</span>
+            <span class="font-sans text-[9px] tracking-[0.02em] whitespace-nowrap">{{ p.phone }}</span>
           </a>
         </div>
 
         <div class="flex items-center gap-4">
           <a
-            href="mailto:przystan@carynska.pl"
+            :href="`mailto:${kontakt?.email}`"
             class="hidden md:block text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.1em] transition-colors"
           >
-            przystan@carynska.pl
+            {{ kontakt?.email }}
           </a>
 
           <!-- Hamburger (mobile only) — always just opens -->
           <button
             class="md:hidden relative z-[60] flex flex-col justify-center items-center w-6 h-6 gap-1"
             @click="toggleMenu"
-            aria-label="Otwórz menu"
+            :aria-label="ustawienia?.openMenu"
           >
             <span class="block w-4 h-px bg-white transition-all duration-300" />
             <span class="block w-4 h-px bg-white transition-all duration-300" />
@@ -119,8 +115,8 @@ function toggleDropdown(label: string) {
         :class="(scrolled || alwaysShowLogo) ? 'opacity-100' : 'opacity-80'"
       >
         <img
-          src="/images/logonew.png"
-          alt="Przystań Caryńska"
+          :src="cmsImg(ustawienia?.logo)"
+          :alt="ustawienia?.siteName"
           class="h-7 md:h-10 w-auto object-contain"
           style="filter: brightness(0) invert(1) sepia(0.18) brightness(0.96);"
         />
@@ -132,12 +128,12 @@ function toggleDropdown(label: string) {
           <div v-if="menuOpen" class="menu-overlay md:hidden">
 
             <!-- Background: ken-burns photo -->
-            <div class="menu-bg" style="background-image: url('/images/solina2.avif')" />
+            <div class="menu-bg" :style="{ backgroundImage: `url('${cmsImg(ustawienia?.menuBackground)}')` }" />
             <!-- Vignette: tylko krawędzie dla głębi, bez zabijania zdjęcia -->
             <div class="menu-vignette" />
 
             <!-- Close -->
-            <button @click="closeMenu" class="menu-close" aria-label="Zamknij menu">
+            <button @click="closeMenu" class="menu-close" :aria-label="ustawienia?.closeMenu">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <line x1="2" y1="2" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
                 <line x1="16" y1="2" x2="2" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
@@ -146,7 +142,7 @@ function toggleDropdown(label: string) {
 
             <!-- Logo top-left -->
             <a href="/" @click="closeMenu" class="menu-logo menu-item" style="--i:0">
-              <img src="/images/logonew.png" alt="Przystań Caryńska" style="filter: brightness(0) invert(1) sepia(0.18) brightness(0.96);" />
+              <img :src="cmsImg(ustawienia?.logo)" :alt="ustawienia?.siteName" style="filter: brightness(0) invert(1) sepia(0.18) brightness(0.96);" />
             </a>
 
             <!-- Nav links -->
@@ -197,7 +193,7 @@ function toggleDropdown(label: string) {
 
             <!-- Footer -->
             <footer class="menu-footer menu-item" :style="`--i: ${nav.links.length + 2}`">
-              <p class="menu-tagline">Luksus w sercu Bieszczad</p>
+              <p class="menu-tagline">{{ ustawienia?.tagline }}</p>
               <a
                 :href="nav.cta.href"
                 target="_blank" rel="noopener"

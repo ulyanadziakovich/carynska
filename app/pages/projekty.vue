@@ -3,7 +3,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/projekty'),
   useFetch('/api/content'),
 ])
-const nav = useNav()
+const nav = await useNav()
 
 const openSection = ref<string | null>('project')
 function toggleSection(key: string) {
@@ -137,7 +137,7 @@ function toggleSection(key: string) {
 
     </div><!-- end light content area -->
 
-    <KontaktSection :data="content.kontakt" :natural-map-colors="true" />
+    <KontaktSection :natural-map-colors="true" />
   </main>
 </template>
 

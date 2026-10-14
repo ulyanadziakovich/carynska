@@ -1,5 +1,5 @@
 // Porównuje bieżącą stronę z baseline. Dozwolone różnice: allowed.json
-// ({ "<slug>": ["linia z baseline, która może zniknąć/zmienić się", ...] }).
+// ({ "<slug>" | "*": ["linia, która może zniknąć/zmienić się", ...] }).
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -14,7 +14,8 @@ const allowed = JSON.parse(readFileSync(join(here, 'allowed.json'), 'utf8'))
 let failed = 0
 for (const route of ROUTES) {
   const s = slug(route)
-  const skip = new Set(allowed[s] ?? [])
+  // „*” = różnice dozwolone na każdej podstronie (np. elementy wspólne).
+  const skip = new Set([...(allowed['*'] ?? []), ...(allowed[s] ?? [])])
   const filter = (p) => readFileSync(p, 'utf8').split('\n').filter((l) => !skip.has(l)).join('\n')
   const a = join(cur, `${s}.base`), b = join(cur, `${s}.now`)
   writeFileSync(a, filter(join(here, 'baseline', `${s}.txt`)))

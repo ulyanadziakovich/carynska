@@ -16,34 +16,32 @@ function openPicker(input: HTMLInputElement | null) {
   }
 }
 
-const HOTRES_URL = 'https://panel.hotres.pl/v4_step1'
+const { ustawienia } = await useSite()
 
+/** Link hotres z CMS + wybrane daty. */
 function buildBookingUrl() {
-  const params = new URLSearchParams({
-    oid: '5426',
-    lang: 'pl',
-    ref: 'przystan.bieszczady.pl',
-  })
-  if (checkIn.value) params.set('arrival', checkIn.value)
-  if (checkOut.value) params.set('departure', checkOut.value)
-  return `${HOTRES_URL}?${params.toString()}`
+  const url = new URL(ustawienia.value?.bookingUrl ?? '')
+  if (checkIn.value) url.searchParams.set('arrival', checkIn.value)
+  if (checkOut.value) url.searchParams.set('departure', checkOut.value)
+  return url.toString()
 }
 
 function book() {
   window.open(buildBookingUrl(), '_blank', 'noopener')
 }
 
-const MONTHS_PL = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru']
-const DAYS_PL = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb']
+// Nazwy miesięcy i dni z przeglądarki (polski), zamiast list wpisanych w kod.
+const monthFmt = new Intl.DateTimeFormat('pl-PL', { month: 'short' })
+const weekdayFmt = new Intl.DateTimeFormat('pl-PL', { weekday: 'short' })
 
 function formatDate(dateStr: string) {
   if (!dateStr) return null
   const d = new Date(dateStr + 'T00:00:00')
   return {
     day: String(d.getDate()).padStart(2, '0'),
-    month: MONTHS_PL[d.getMonth()],
+    month: monthFmt.format(d).replace('.', ''),
     year: d.getFullYear(),
-    weekday: DAYS_PL[d.getDay()],
+    weekday: weekdayFmt.format(d).replace('.', ''),
   }
 }
 
@@ -57,22 +55,22 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
     <!-- ─── Desktop (unchanged) ─── -->
     <div class="hidden md:flex max-w-4xl mx-auto">
       <div class="flex-1 flex flex-col px-7 py-5 border-r border-white/10">
-        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">Check-in</label>
+        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">{{ ustawienia?.widgetCheckIn }}</label>
         <input type="date" v-model="checkIn" class="bg-transparent text-white/90 text-sm font-sans outline-none" />
       </div>
       <div class="flex-1 flex flex-col px-7 py-5 border-r border-white/10">
-        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">Check-out</label>
+        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">{{ ustawienia?.widgetCheckOut }}</label>
         <input type="date" v-model="checkOut" class="bg-transparent text-white/90 text-sm font-sans outline-none" />
       </div>
       <div class="flex-1 flex flex-col px-7 py-5 border-r border-white/10">
-        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">Goście</label>
+        <label class="text-gold text-[10px] tracking-[0.25em] uppercase mb-2 font-sans">{{ ustawienia?.widgetGuests }}</label>
         <select v-model="guests" class="bg-transparent text-white/90 text-sm font-sans outline-none cursor-pointer appearance-none">
-          <option v-for="n in 10" :key="n" :value="String(n)" class="bg-forest">{{ n }} {{ n === 1 ? 'Gość' : 'Gości' }}</option>
+          <option v-for="n in 10" :key="n" :value="String(n)" class="bg-forest">{{ n }} {{ n === 1 ? ustawienia?.widgetGuestOne : ustawienia?.widgetGuestMany }}</option>
         </select>
       </div>
       <div class="flex items-center justify-center px-7 py-5">
         <button @click="book" class="bg-gold hover:bg-gold-light text-forest text-[11px] tracking-[0.2em] uppercase font-sans font-semibold px-7 py-3 transition-colors duration-300 whitespace-nowrap">
-          Rezerwuj
+          {{ ustawienia?.widgetReserve }}
         </button>
       </div>
     </div>
@@ -80,7 +78,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
     <!-- ─── Mobile — Glass Card ─── -->
     <div class="md:hidden flex flex-col mobile-booking">
 
-      <p class="mobile-eyebrow">Sprawdź dostępność</p>
+      <p class="mobile-eyebrow">{{ ustawienia?.widgetTitle }}</p>
 
       <div class="glass-card">
 
@@ -89,7 +87,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 
           <!-- Check-in -->
           <div class="date-field" @click="openPicker(checkInInput)">
-            <span class="field-label">Przyjazd</span>
+            <span class="field-label">{{ ustawienia?.widgetArrival }}</span>
             <input type="date" v-model="checkIn" ref="checkInInput" class="date-input-hidden" />
             <div class="date-display" :class="{ active: checkIn }">
               <template v-if="checkInFormatted">
@@ -100,7 +98,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
                 </div>
               </template>
               <template v-else>
-                <span class="date-placeholder">Wybierz datę</span>
+                <span class="date-placeholder">{{ ustawienia?.widgetPickDate }}</span>
               </template>
             </div>
           </div>
@@ -115,7 +113,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 
           <!-- Check-out -->
           <div class="date-field" @click="openPicker(checkOutInput)">
-            <span class="field-label">Wyjazd</span>
+            <span class="field-label">{{ ustawienia?.widgetDeparture }}</span>
             <input type="date" v-model="checkOut" ref="checkOutInput" class="date-input-hidden" />
             <div class="date-display" :class="{ active: checkOut }">
               <template v-if="checkOutFormatted">
@@ -126,7 +124,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
                 </div>
               </template>
               <template v-else>
-                <span class="date-placeholder">Wybierz datę</span>
+                <span class="date-placeholder">{{ ustawienia?.widgetPickDate }}</span>
               </template>
             </div>
           </div>
@@ -138,13 +136,13 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 
         <!-- Guests row -->
         <div class="guests-row">
-          <span class="field-label">Goście</span>
+          <span class="field-label">{{ ustawienia?.widgetGuests }}</span>
           <div class="stepper">
-            <button @click="guests = String(Math.max(1, Number(guests) - 1))" class="stepper-btn" aria-label="Mniej">
+            <button @click="guests = String(Math.max(1, Number(guests) - 1))" class="stepper-btn" :aria-label="ustawienia?.widgetLess">
               <svg width="10" height="2" viewBox="0 0 10 2"><line x1="0" y1="1" x2="10" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </button>
             <span class="stepper-num">{{ guests }}</span>
-            <button @click="guests = String(Math.min(10, Number(guests) + 1))" class="stepper-btn" aria-label="Więcej">
+            <button @click="guests = String(Math.min(10, Number(guests) + 1))" class="stepper-btn" :aria-label="ustawienia?.widgetMore">
               <svg width="10" height="10" viewBox="0 0 10 10"><line x1="5" y1="0" x2="5" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </button>
           </div>
@@ -154,7 +152,7 @@ const checkOutFormatted = computed(() => formatDate(checkOut.value))
 
       <!-- CTA -->
       <button @click="book" class="mobile-cta">
-        Rezerwuj teraz
+        {{ ustawienia?.widgetReserveNow }}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

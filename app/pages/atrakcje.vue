@@ -4,7 +4,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/content'),
 ])
 
-const nav = useNav()
+const nav = await useNav()
 const openBoat = ref<string | null>(null)
 </script>
 
@@ -233,9 +233,9 @@ const openBoat = ref<string | null>(null)
     <ContactCta
       :tag="data.groups.tag"
       :title="data.groups.title"
-      :cta="data.contact"
+      :dzial="data.contact"
     />
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>

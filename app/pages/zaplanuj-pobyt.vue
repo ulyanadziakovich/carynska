@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: content } = await useFetch('/api/content')
-const nav = useNav()
+const nav = await useNav()
 
 const linkClass = 'text-gold underline decoration-gold/40 underline-offset-4 hover:decoration-gold transition-colors'
 
@@ -207,6 +207,6 @@ const objects = [
       </div>
     </div>
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>

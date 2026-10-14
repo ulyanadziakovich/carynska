@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: content } = await useFetch('/api/content')
-const nav = useNav()
+const nav = await useNav()
 </script>
 
 <template>
@@ -12,6 +12,6 @@ const nav = useNav()
     <KuchniaSection :data="content.kuchnia" />
     <ReviewsSection :reviews="content.reviews" />
     <FacebookSection />
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>

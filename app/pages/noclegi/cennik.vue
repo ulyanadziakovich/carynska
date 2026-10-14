@@ -3,7 +3,7 @@ const [{ data }, { data: content }] = await Promise.all([
   useFetch('/api/noclegi'),
   useFetch('/api/content'),
 ])
-const nav = useNav()
+const nav = await useNav()
 </script>
 
 <template>
@@ -90,6 +90,6 @@ const nav = useNav()
 
     </div>
 
-    <KontaktSection :data="content.kontakt" />
+    <KontaktSection />
   </main>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const nav = useNav()
+const nav = await useNav()
 
 const photos = [
   { src: '/images/galeria-przystan-lotu-ptaka.png', alt: 'Przystań Caryńska z lotu ptaka', label: 'Przystań z lotu ptaka', cat: 'przystan' },
