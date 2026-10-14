@@ -47,3 +47,6 @@ export const telHref = (phone?: string | null) => (phone ? `tel:${phone.replace(
 
 /** Wstawia bieżący rok w miejsce {rok}. */
 export const withYear = (s?: string | null) => (s ?? '').replace('{rok}', String(new Date().getFullYear()))
+
+/** Wstawia liczbę w miejsce {liczba}, np. „max {liczba} os.” → „max 4 os.”. */
+export const fill = (s: string | null | undefined, n: number | string) => (s ?? '').replace('{liczba}', String(n))

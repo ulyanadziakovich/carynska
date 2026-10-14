@@ -1,9 +1,20 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/jacht'),
-  useFetch('/api/content'),
-])
+const { data: p } = await useCmsSingle('noclegi-jacht')
+const { ustawienia, kontakt } = await useSite()
 const nav = await useNav()
+
+// Pola formularza „Hotel na wodzie” w kształcie używanym przez szablon.
+const data = computed(() => p.value && {
+  intro: p.value.intro,
+  includes: lines(p.value.includes),
+  note: p.value.note,
+  // E-mail działu, a gdy go brak — główny e-mail.
+  contact: { phone: p.value.dzial?.phone ?? '', email: p.value.dzial?.email || kontakt.value?.email || '' },
+  yachts: (p.value.yachts ?? []).map((y: any, i: number) => {
+    const gallery = (y.gallery ?? []).map(cmsImg).filter(Boolean) as string[]
+    return { ...y, id: i, gallery, image: gallery[0], features: lines(y.features), specs: y.specs ?? [], pricing: y.pricing ?? [] }
+  }),
+})
 
 type Yacht = NonNullable<typeof data.value>['yachts'][number]
 const selectedYacht = ref<Yacht | null>(null)
@@ -12,8 +23,7 @@ let touchStartX = 0
 
 const gallery = computed<string[]>(() => {
   if (!selectedYacht.value) return []
-  const imgs = (selectedYacht.value as any).gallery as string[] | undefined
-  return imgs?.length ? imgs : [selectedYacht.value.image]
+  return selectedYacht.value.gallery
 })
 
 function openYacht(y: Yacht) {
@@ -44,10 +54,10 @@ onUnmounted(() => { document.body.style.overflow = '' })
 </script>
 
 <template>
-  <main v-if="data && content" class="bg-forest min-h-screen">
+  <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
 
     <!-- Content area -->
     <div class="bg-forest-wash">
@@ -55,15 +65,15 @@ onUnmounted(() => { document.body.style.overflow = '' })
       <!-- Breadcrumb -->
       <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-8">
         <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/35">
-          <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">Noclegi</NuxtLink>
+          <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">{{ p.crumbParent }}</NuxtLink>
           <span>/</span>
-          <span class="text-white/55">Hotel na wodzie</span>
+          <span class="text-white/55">{{ p.crumbCurrent }}</span>
         </div>
       </div>
 
       <!-- Intro -->
       <div class="max-w-2xl mx-auto px-8 py-10 text-center">
-        <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-4">Unikalne doświadczenie</p>
+        <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-4">{{ p.kicker }}</p>
         <p class="font-display italic text-white/75 text-lg leading-relaxed">{{ data.intro }}</p>
         <div class="w-8 h-px bg-gold mx-auto mt-6" />
       </div>
@@ -86,11 +96,11 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 />
                 <div class="photo-tint" />
                 <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
-                  <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">max {{ yacht.capacity }} os.</span>
+                  <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">{{ fill(ustawienia?.maxPersons, yacht.capacity) }}</span>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-forest/20">
                   <div class="bg-forest/80 backdrop-blur-sm border border-gold/40 px-5 py-2.5 text-gold text-[10px] tracking-[0.2em] uppercase font-sans">
-                    Zobacz szczegóły
+                    {{ p.seeDetails }}
                   </div>
                 </div>
               </div>
@@ -108,7 +118,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 </div>
                 <div class="mt-auto pt-4 border-t border-white/8 flex items-center justify-between">
                   <span class="text-gold font-display text-xl font-light">{{ yacht.price }}</span>
-                  <span class="text-white/40 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">Szczegóły →</span>
+                  <span class="text-white/40 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">{{ p.detailsLink }}</span>
                 </div>
               </div>
             </div>
@@ -120,7 +130,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
       <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-16">
         <div class="card-elevated border border-gold/15 p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 items-start bg-forest-void">
           <div>
-            <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-6">Co zawiera nocleg</p>
+            <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-6">{{ p.includesTitle }}</p>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-10">
               <li
                 v-for="item in data.includes"
@@ -179,7 +189,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               <button
                 class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center bg-white/90 text-forest hover:bg-white transition-colors rounded-full shadow"
                 @click="closeYacht"
-                aria-label="Zamknij"
+                :aria-label="ustawienia?.close"
               >
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                   <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -190,14 +200,14 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 <button
                   class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
                   @click.stop="prevPhoto"
-                  aria-label="Poprzednie zdjęcie"
+                  :aria-label="ustawienia?.prevPhoto"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <button
                   class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
                   @click.stop="nextPhoto"
-                  aria-label="Następne zdjęcie"
+                  :aria-label="ustawienia?.nextPhoto"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -209,7 +219,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
                     @click.stop="activePhoto = i"
                     class="rounded-full transition-all duration-200"
                     :class="activePhoto === i ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/50 hover:bg-white/80'"
-                    :aria-label="`Zdjęcie ${i + 1}`"
+                    :aria-label="fill(ustawienia?.photoN, i + 1)"
                   />
                 </div>
               </template>
@@ -238,14 +248,14 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
               <p class="text-forest/60 font-sans text-sm leading-relaxed mb-7">{{ selectedYacht.desc }}</p>
 
-              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Na pokładzie</p>
+              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">{{ p.onBoard }}</p>
               <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 mb-7">
                 <li v-for="feat in selectedYacht.features" :key="feat" class="flex items-center gap-3 text-forest/65 font-sans text-sm">
                   <span class="w-3 h-px bg-gold shrink-0" />{{ feat }}
                 </li>
               </ul>
 
-              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">Cennik sezonowy</p>
+              <p class="text-forest/55 text-[9px] tracking-[0.3em] uppercase font-sans mb-3">{{ p.seasonPricing }}</p>
               <div class="border border-forest/10 mb-7">
                 <div
                   v-for="row in (selectedYacht as any).pricing"
@@ -261,7 +271,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 :href="`tel:${data!.contact.phone.replace(/\s/g,'')}`"
                 class="flex items-center justify-center gap-3 bg-gold hover:bg-gold/80 text-forest py-4 text-[11px] tracking-[0.2em] uppercase font-sans font-semibold transition-colors"
               >
-                Zadzwoń i zarezerwuj
+                {{ p.callCta }}
               </a>
             </div>
 

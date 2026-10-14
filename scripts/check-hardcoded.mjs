@@ -15,8 +15,20 @@ for (const f of files) {
   const found = new Set()
   const tpl = (src.match(/<template>([\s\S]*)<\/template>/) ?? [, ''])[1].replace(/<!--[\s\S]*?-->/g, '')
   // Wyrażenia JS w szablonie (np. „a >= b && c”) to kod, nie tekst.
-  for (const m of tpl.matchAll(/>([^<>{}]+)</g)) { const t = m[1].replace(/\s+/g, ' ').trim(); if (LETTERS.test(t) && !/&&|\|\||=>|===?/.test(t)) found.add(t) }
+  // Tekst między znacznikami, po wycięciu wyrażeń {{ … }} (np. „max {{ n }} os.”).
+  for (const m of tpl.matchAll(/>([^<>]+)</g)) {
+    const t = m[1].replace(/\{\{[\s\S]*?\}\}/g, ' ').replace(/\s+/g, ' ').trim()
+    if (LETTERS.test(t) && !/&&|\|\||=>|===?|[{}]/.test(t)) found.add(t)
+  }
+  // Teksty w cudzysłowach wewnątrz wyrażeń, np. {{ n === 1 ? 'Gość' : 'Gości' }}.
+  for (const m of tpl.matchAll(/\{\{([\s\S]*?)\}\}/g))
+    for (const q of m[1].matchAll(/'([^']*[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]{2,}[^']*)'/g)) found.add('{{' + q[1])
   for (const m of tpl.matchAll(/\s(?:alt|title|aria-label|placeholder|label)="([^"]+)"/g)) if (LETTERS.test(m[1])) found.add('@' + m[1])
+  // Napisy w backtickach w atrybutach, np. :aria-label="`Zdjęcie ${i + 1}`".
+  for (const m of tpl.matchAll(/`([^`]*)`/g)) {
+    const t = m[1].replace(/\$\{[^}]*\}/g, ' ').replace(/\s+/g, ' ').trim()
+    if (LETTERS.test(t) && !/^(tel|mailto|https?|url)\b|[\/.#]\w|^[a-z-]+$|^[a-z-]+:\s/.test(t)) found.add('`' + t)
+  }
   const script = f.endsWith('.ts') ? src : (src.match(/<script[^>]*>([\s\S]*?)<\/script>/) ?? [, ''])[1]
   for (const m of script.replace(/^\s*\/\/.*$/gm, '').matchAll(/'([^'\n]*)'/g)) {
     const t = m[1]

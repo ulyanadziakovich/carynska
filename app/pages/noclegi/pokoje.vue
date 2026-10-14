@@ -1,9 +1,16 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/noclegi'),
-  useFetch('/api/content'),
-])
+const { data: p } = await useCmsSingle('noclegi-pokoje')
+const { ustawienia } = await useSite()
 const nav = await useNav()
+
+// Pola formularza „Pokoje i apartamenty” w kształcie używanym przez szablon.
+const data = computed(() => p.value && {
+  intro: paragraphs(p.value.intro),
+  rooms: (p.value.rooms ?? []).map((r: any) => {
+    const images = (r.images ?? []).map(cmsImg).filter(Boolean) as string[]
+    return { ...r, amenities: lines(r.amenities), images, image: images[0] }
+  }),
+})
 
 type Room = NonNullable<typeof data.value>['rooms'][number]
 const selectedRoom = ref<Room | null>(null)
@@ -11,8 +18,7 @@ const selectedRoom = ref<Room | null>(null)
 const galleryIndex = ref(0)
 const galleryImages = computed(() => {
   if (!selectedRoom.value) return []
-  const imgs = (selectedRoom.value as any).images as string[] | undefined
-  return imgs?.length ? imgs : [selectedRoom.value.image]
+  return selectedRoom.value.images
 })
 
 function openRoom(room: Room) {
@@ -36,17 +42,17 @@ onUnmounted(() => { document.body.style.overflow = '' })
 </script>
 
 <template>
-  <main v-if="data && content" class="bg-forest min-h-screen">
+  <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero tag="Zakwaterowanie" title="Pokoje & Apartamenty" :image="data.hero.image" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
 
     <!-- Breadcrumb -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-8">
       <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/25">
-        <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">Noclegi</NuxtLink>
+        <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">{{ p.crumbParent }}</NuxtLink>
         <span>/</span>
-        <span class="text-white/45">Pokoje & Apartamenty</span>
+        <span class="text-white/45">{{ p.crumbCurrent }}</span>
       </div>
     </div>
 
@@ -77,12 +83,12 @@ onUnmounted(() => { document.body.style.overflow = '' })
               />
               <div class="photo-tint" />
               <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
-                <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">max {{ room.occupancy }} os.</span>
+                <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">{{ fill(ustawienia?.maxPersons, room.occupancy) }}</span>
               </div>
               <!-- Hover hint -->
               <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div class="bg-forest/70 backdrop-blur-sm border border-gold/40 px-5 py-2.5 text-gold text-[10px] tracking-[0.2em] uppercase font-sans">
-                  Szczegóły
+                  {{ ustawienia?.details }}
                 </div>
               </div>
             </div>
@@ -96,8 +102,8 @@ onUnmounted(() => { document.body.style.overflow = '' })
               </div>
               <p class="text-white/50 font-sans text-sm leading-relaxed line-clamp-2">{{ room.desc }}</p>
               <div class="mt-auto pt-4 border-t border-white/8 flex items-center justify-between">
-                <span class="text-white/25 font-sans text-xs tracking-wide">{{ room.amenities.length }} udogodnień</span>
-                <span class="text-gold/60 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">Zobacz →</span>
+                <span class="text-white/25 font-sans text-xs tracking-wide">{{ fill(p.amenitiesCount, room.amenities.length) }}</span>
+                <span class="text-gold/60 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">{{ ustawienia?.seeMore }}</span>
               </div>
             </div>
           </div>
@@ -107,16 +113,16 @@ onUnmounted(() => { document.body.style.overflow = '' })
       <!-- CTA -->
       <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gold/15 pt-10">
         <div>
-          <p class="text-white/50 font-sans text-sm">Masz pytania o pokoje lub dostępność?</p>
-          <a href="tel:+48691944266" class="text-gold font-sans text-lg tracking-wide">+48 691 944 266</a>
+          <p class="text-white/50 font-sans text-sm">{{ p.questions }}</p>
+          <a v-if="p.dzial?.phone" :href="telHref(p.dzial.phone)" class="text-gold font-sans text-lg tracking-wide">{{ p.dzial.phone }}</a>
         </div>
         <a
-          href="https://www.booking.com/hotel/pl/przystan-carynska.pl.html"
+          :href="p.ctaHref"
           target="_blank"
           rel="noopener"
           class="border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-sans"
         >
-          Sprawdź dostępność
+          {{ p.cta }}
         </a>
       </div>
     </div>
@@ -139,7 +145,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               <button
                 class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white hover:border-white/40 transition-all"
                 @click="closeRoom"
-                aria-label="Zamknij"
+                :aria-label="ustawienia?.close"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
@@ -150,14 +156,14 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 <button
                   class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
                   @click="prevImage"
-                  aria-label="Poprzednie zdjęcie"
+                  :aria-label="ustawienia?.prevPhoto"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <button
                   class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
                   @click="nextImage"
-                  aria-label="Następne zdjęcie"
+                  :aria-label="ustawienia?.nextPhoto"
                 >
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -167,7 +173,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
                     :key="img"
                     class="w-1.5 h-1.5 rounded-full transition-colors"
                     :class="i === galleryIndex ? 'bg-gold' : 'bg-white/30 hover:bg-white/50'"
-                    :aria-label="`Zdjęcie ${i + 1}`"
+                    :aria-label="fill(ustawienia?.photoN, i + 1)"
                     @click="galleryIndex = i"
                   />
                 </div>
@@ -179,12 +185,12 @@ onUnmounted(() => { document.body.style.overflow = '' })
               <!-- Meta -->
               <div class="flex gap-6 mb-6 pb-6 border-b border-white/8">
                 <div>
-                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">Powierzchnia</span>
+                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">{{ p.labelSize }}</span>
                   <span class="text-white font-sans text-sm">{{ selectedRoom.size }}</span>
                 </div>
                 <div>
-                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">Maksymalnie</span>
-                  <span class="text-white font-sans text-sm">{{ selectedRoom.occupancy }} osoby</span>
+                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">{{ p.labelMax }}</span>
+                  <span class="text-white font-sans text-sm">{{ fill(p.occupancyValue, selectedRoom.occupancy) }}</span>
                 </div>
               </div>
 
@@ -192,7 +198,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
               <p class="text-white/55 font-sans text-sm leading-relaxed mb-8">{{ selectedRoom.desc }}</p>
 
               <!-- Amenities -->
-              <p class="text-white/25 text-[10px] tracking-[0.3em] uppercase font-sans mb-4">Wyposażenie</p>
+              <p class="text-white/25 text-[10px] tracking-[0.3em] uppercase font-sans mb-4">{{ p.labelAmenities }}</p>
               <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-6 mb-10">
                 <li
                   v-for="amenity in selectedRoom.amenities"
@@ -206,12 +212,12 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
               <!-- CTA -->
               <a
-                href="https://www.booking.com/hotel/pl/przystan-carynska.pl.html"
+                :href="p.ctaHref"
                 target="_blank"
                 rel="noopener"
                 class="flex items-center justify-center gap-3 border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 py-4 text-[11px] tracking-[0.2em] uppercase font-sans"
               >
-                Sprawdź dostępność
+                {{ p.cta }}
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
               </a>
             </div>
