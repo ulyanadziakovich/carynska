@@ -158,6 +158,11 @@ export default defineEventHandler(async (event) => {
     if (value) setResponseHeader(event, header, value)
   }
 
+  // Uploaded files land on this site's origin, so an SVG or HTML file must not
+  // be able to run script here: no sniffing, and a sandbox with no permissions.
+  setResponseHeader(event, 'x-content-type-options', 'nosniff')
+  setResponseHeader(event, 'content-security-policy', "default-src 'none'; sandbox")
+
   // Only a successful response is safe to cache for a year.
   setResponseHeader(event, 'cache-control', UPLOAD_CACHE_CONTROL)
 
