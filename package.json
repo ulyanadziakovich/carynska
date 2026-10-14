@@ -10,11 +10,13 @@
     "postinstall": "nuxt prepare",
     "parity:snapshot": "node scripts/parity/snapshot.mjs",
     "parity": "node scripts/parity/compare.mjs",
-    "check:hardcoded": "node scripts/check-hardcoded.mjs"
+    "check:hardcoded": "node scripts/check-hardcoded.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "nuxt": "^4.4.6",
     "page-flip": "^2.0.7",
+    "sanitize-html": "^2.18.0",
     "vue": "^3.5.34",
     "vue-router": "^5.0.7"
   },

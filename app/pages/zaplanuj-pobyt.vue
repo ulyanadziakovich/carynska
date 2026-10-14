@@ -24,7 +24,7 @@ const nav = await useNav()
       <!-- Description -->
       <div class="max-w-3xl mx-auto px-8 py-14 text-center">
         <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-6">{{ p.aboutTitle }}</p>
-        <!-- Treść z edytora CMS (pisze ją tylko administrator panelu). -->
+        <!-- Treść z edytora CMS — HTML oczyszczony w proxy (server/utils/cmsHtml.ts). -->
         <div class="about-body space-y-6 text-white/70 font-sans text-base leading-relaxed" v-html="p.aboutBody" />
         <div class="w-8 h-px bg-gold mx-auto mt-10" />
       </div>

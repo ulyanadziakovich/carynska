@@ -76,6 +76,20 @@ function writeStale(key: string, body: string): void {
   }
 }
 
+/**
+ * HTML z pól edytora czyszczony przed wysłaniem do strony (Pruvious go nie
+ * czyści). Robione tu, bo przez proxy przechodzi każdy odczyt — render na
+ * serwerze i nawigacja w przeglądarce — a do cache trafia już wersja czysta.
+ */
+function cleanEditorHtml(path: string, body: string): string {
+  const collection = path.split('/')[1] ?? ''
+  try {
+    return JSON.stringify(sanitizeEditorFields(collection, JSON.parse(body)))
+  } catch {
+    return body
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, 'path') ?? ''
   const config = useRuntimeConfig()
@@ -104,7 +118,7 @@ export default defineEventHandler(async (event) => {
         redirect: 'error',
       })
 
-      body = upstream._data ?? ''
+      body = cleanEditorHtml(path, upstream._data ?? '')
     } catch (error) {
       // Timeout, ECONNREFUSED, 5xx, or the 404 a restarting Pruvious serves:
       // all of them mean "the CMS is not answering right now", never "this
