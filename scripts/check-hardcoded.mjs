@@ -22,7 +22,9 @@ for (const f of files) {
   }
   // Teksty w cudzysłowach wewnątrz wyrażeń, np. {{ n === 1 ? 'Gość' : 'Gości' }}.
   for (const m of tpl.matchAll(/\{\{([\s\S]*?)\}\}/g))
-    for (const q of m[1].matchAll(/'([^']*[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]{2,}[^']*)'/g)) found.add('{{' + q[1])
+    for (const q of m[1].matchAll(/'([^']*[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]{2,}[^']*)'/g))
+      // Identyfikatory techniczne ('project', 'text-gold') to nie tekst — tekst ma wielką literę, polskie znaki albo spację.
+      if (/[ĄąĆćĘęŁłŃńÓóŚśŹźŻż ]|^[A-ZŁŚŻ]/.test(q[1])) found.add('{{' + q[1])
   for (const m of tpl.matchAll(/\s(?:alt|title|aria-label|placeholder|label)="([^"]+)"/g)) if (LETTERS.test(m[1])) found.add('@' + m[1])
   // Napisy w backtickach w atrybutach, np. :aria-label="`Zdjęcie ${i + 1}`".
   for (const m of tpl.matchAll(/`([^`]*)`/g)) {

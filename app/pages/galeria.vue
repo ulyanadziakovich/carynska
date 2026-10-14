@@ -1,51 +1,23 @@
 <script setup lang="ts">
 const nav = await useNav()
 
-const photos = [
-  { src: '/images/galeria-przystan-lotu-ptaka.png', alt: 'Przystań Caryńska z lotu ptaka', label: 'Przystań z lotu ptaka', cat: 'przystan' },
-  { src: '/images/przystan-drone-2.jpg', alt: 'Poranna mgła nad Jeziorem Solińskim', label: 'Poranek nad jeziorem', cat: 'przystan' },
-  { src: '/images/przystan-drone-3.jpg', alt: 'Zatoka i marina z lotu ptaka', label: 'Zatoka i marina', cat: 'przystan' },
-  { src: '/images/solina1.avif', alt: 'Jezioro Solina z lotu ptaka', label: 'Jezioro Solina', cat: 'przystan' },
-  { src: '/images/solina3.avif', alt: 'Panorama Jeziora Solińskiego', label: 'Panorama', cat: 'przystan' },
-  { src: '/images/solina4.avif', alt: 'Widok na Bieszczady', label: 'Bieszczady', cat: 'przystan' },
-  { src: '/images/galeria-jezioro-zmierzch.png', alt: 'Jezioro Solina o zmierzchu z lotu ptaka', label: 'Zmierzch nad jeziorem', cat: 'przystan' },
-  { src: '/images/galeria-panorama.png', alt: 'Panorama zatoki i przystani z lotu ptaka', label: 'Panorama zatoki', cat: 'przystan' },
-  { src: '/images/gondola-solina.jpg', alt: 'Kolejka gondolowa Solina', label: 'Kolejka gondolowa', cat: 'przystan' },
+const { data: p } = await useCmsSingle('galeria')
+const { ustawienia } = await useSite()
 
-  { src: '/images/hotel.png', alt: 'Hotel Przystań Caryńska', label: 'Nasz obiekt', cat: 'noclegi' },
-  { src: '/images/galeria-budynek.png', alt: 'Budynek hotelu Przystań Caryńska', label: 'Budynek', cat: 'noclegi' },
-
-  { src: '/images/galeria-pstrag.png', alt: 'Pstrąg z frytkami i surówką', label: 'Pstrąg z Tawerny', cat: 'tawerna' },
-  { src: '/images/galeria-pizza.png', alt: 'Pizza z pieca', label: 'Pizza z pieca', cat: 'tawerna' },
-  { src: '/images/galeria-sniadanie.png', alt: 'Bufet śniadaniowy', label: 'Śniadania', cat: 'tawerna' },
-
-  { src: '/images/galeria-basen.png', alt: 'Basen z fontanną przy przystani', label: 'Baseny', cat: 'baseny' },
-  { src: '/images/galeria-marina-baseny.png', alt: 'Marina i baseny przy przystani', label: 'Marina i baseny', cat: 'baseny' },
-  { src: '/images/aquapark-baseny.jpg', alt: 'Mini-aquapark przy przystani', label: 'Mini-aquapark', cat: 'baseny' },
-
-  { src: '/images/solina2.avif', alt: 'Żaglówka na jeziorze Solina', label: 'Żaglówki', cat: 'wypozyczalnia' },
-  { src: '/images/kajaki-sprzet-wodny.jpg', alt: 'Kajaki i żaglówki na jeziorze Solińskim', label: 'Kajaki', cat: 'wypozyczalnia' },
-  { src: '/images/galeria-sup.png', alt: 'Osoba na desce SUP przy żaglówce', label: 'SUP na jeziorze', cat: 'wypozyczalnia' },
-  { src: '/images/galeria-lodki-motorowe.png', alt: 'Zacumowane łodzie motorowe', label: 'Łodzie motorowe', cat: 'wypozyczalnia' },
-  { src: '/images/galeria-dzieci-lodka.png', alt: 'Dzieci na łodzi pontonowej', label: 'Rejs dla najmłodszych', cat: 'wypozyczalnia' },
-
-  { src: '/images/organizacja-imprez.jpg', alt: 'Dekoracja na imprezę okolicznościową', label: 'Imprezy okolicznościowe', cat: 'eventy' },
-  { src: '/images/plac-zabaw.jpg', alt: 'Plac zabaw nad mariną', label: 'Plac zabaw', cat: 'eventy' },
-]
-
-const categories = [
-  { id: 'all', label: 'Wszystkie' },
-  { id: 'noclegi', label: 'Noclegi' },
-  { id: 'tawerna', label: 'Tawerna' },
-  { id: 'baseny', label: 'Baseny' },
-  { id: 'wypozyczalnia', label: 'Wypożyczalnia' },
-  { id: 'eventy', label: 'Eventy & grupy' },
-  { id: 'przystan', label: 'Przystań & okolica' },
-]
+// Kategorie z CMS = przyciski filtra; podpis zdjęcia = jego opis w galerii.
+const categories = computed(() => [
+  { id: 'all', label: p.value?.allLabel ?? '' },
+  ...(p.value?.categories ?? []).map((c: any, i: number) => ({ id: String(i), label: c.label })),
+])
+const photos = computed(() =>
+  (p.value?.categories ?? []).flatMap((c: any, i: number) =>
+    (c.photos ?? []).map((ph: CmsImage) => ({ src: cmsImg(ph)!, alt: ph.alt ?? '', label: ph.alt ?? '', cat: String(i) })),
+  ),
+)
 
 const selected = ref('all')
 const filtered = computed(() =>
-  selected.value === 'all' ? photos : photos.filter(p => p.cat === selected.value),
+  selected.value === 'all' ? photos.value : photos.value.filter(ph => ph.cat === selected.value),
 )
 function selectCategory(id: string) {
   selected.value = id
@@ -90,10 +62,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   <main class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero tag="Galeria" :title="'Przystań\nCaryńska'" image="/images/solina1.avif" />
+    <PageHero v-if="p" :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
 
     <div class="max-w-7xl mx-auto px-8 lg:px-16 py-16">
-      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">Zdjęcia</p>
+      <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">{{ p?.photosKicker }}</p>
 
       <!-- Category filter -->
       <div class="flex flex-wrap gap-2.5 mb-10">
@@ -132,7 +104,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
       </div>
 
       <p class="text-white/25 font-sans text-xs text-center mt-16 tracking-wider">
-        Więcej zdjęć wkrótce
+        {{ p?.emptyText }}
       </p>
     </div>
 
@@ -158,14 +130,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
         <button
           @click.stop="prevPhoto"
-          aria-label="Poprzednie zdjęcie"
+          :aria-label="ustawienia?.prevPhoto"
           class="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm items-center justify-center text-white/70 hover:text-white hover:border-gold/60 transition-all"
         >
           <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8 1L1 8l7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button
           @click.stop="nextPhoto"
-          aria-label="Następne zdjęcie"
+          :aria-label="ustawienia?.nextPhoto"
           class="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm items-center justify-center text-white/70 hover:text-white hover:border-gold/60 transition-all"
         >
           <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M2 1l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

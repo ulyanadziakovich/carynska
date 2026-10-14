@@ -1,9 +1,14 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/projekty'),
-  useFetch('/api/content'),
-])
+const { data: page } = await useCmsSingle('projekty')
+const { ustawienia } = await useSite()
 const nav = await useNav()
+
+// Pola formularza „Projekty i fundusze” w kształcie używanym przez szablon.
+const data = computed(() => page.value && {
+  project: { title: page.value.projectTitle, contract: page.value.contract, body: paragraphs(page.value.projectBody), finance: page.value.finance ?? [] },
+  funds: { title: page.value.fundsTitle, body: paragraphs(page.value.fundsBody), links: page.value.fundsLinks ?? [] },
+  timeline: { title: page.value.timelineTitle, subtitle: page.value.timelineSubtitle, milestones: page.value.milestones ?? [] },
+})
 
 const openSection = ref<string | null>('project')
 function toggleSection(key: string) {
@@ -12,10 +17,10 @@ function toggleSection(key: string) {
 </script>
 
 <template>
-  <main v-if="data && content" class="bg-forest min-h-screen">
+  <main v-if="data && page" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="data.hero.tag" :title="data.hero.title" :image="data.hero.image" />
+    <PageHero :tag="page.heroTag" :title="page.heroTitle" :image="cmsImg(page.heroImage) ?? ''" />
 
     <div class="projekty-light">
       <div class="max-w-3xl mx-auto px-8 lg:px-0 pt-10">
@@ -23,9 +28,9 @@ function toggleSection(key: string) {
         <!-- Breadcrumb -->
         <div class="flex items-center gap-2 label text-stone mb-8">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" class="shrink-0"><path d="M2 7.5L8 2l6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 6.5V13.5a.5.5 0 00.5.5h3v-4h2v4h3a.5.5 0 00.5-.5V6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <NuxtLink to="/" class="hover:text-gold transition-colors">Start</NuxtLink>
+          <NuxtLink to="/" class="hover:text-gold transition-colors">{{ ustawienia?.breadcrumbHome }}</NuxtLink>
           <span>/</span>
-          <span>Fundusze i projekty</span>
+          <span>{{ page.heroTag }}</span>
         </div>
 
         <div class="flex flex-col gap-4 pb-4">
@@ -35,10 +40,10 @@ function toggleSection(key: string) {
             <button type="button" class="accordion-header" @click="toggleSection('project')">
               <span class="toggle-icon">{{ openSection === 'project' ? '−' : '+' }}</span>
               <div class="flex-1">
-                <p class="label text-gold mb-3">Rozwój Przedsiębiorczości i Innowacje</p>
+                <p class="label text-gold mb-3">{{ page.programName }}</p>
                 <h1 class="font-display text-ink font-light leading-snug" style="font-size: clamp(1.3rem, 2vw, 1.6rem)">{{ data.project.title }}</h1>
               </div>
-              <span v-if="openSection !== 'project'" class="read-more">Czytaj więcej</span>
+              <span v-if="openSection !== 'project'" class="read-more">{{ page.readMore }}</span>
             </button>
 
             <div v-if="openSection === 'project'" class="accordion-body">
@@ -67,10 +72,10 @@ function toggleSection(key: string) {
             <button type="button" class="accordion-header" @click="toggleSection('funds')">
               <span class="toggle-icon">{{ openSection === 'funds' ? '−' : '+' }}</span>
               <div class="flex-1">
-                <p class="label text-gold mb-3">Fundusze EOG i Fundusze Norweskie</p>
+                <p class="label text-gold mb-3">{{ page.fundsKicker }}</p>
                 <h2 class="font-display text-ink font-light leading-snug" style="font-size: clamp(1.3rem, 2vw, 1.6rem)">{{ data.funds.title }}</h2>
               </div>
-              <span v-if="openSection !== 'funds'" class="read-more">Czytaj więcej</span>
+              <span v-if="openSection !== 'funds'" class="read-more">{{ page.readMore }}</span>
             </button>
 
             <div v-if="openSection === 'funds'" class="accordion-body">
@@ -100,10 +105,10 @@ function toggleSection(key: string) {
             <button type="button" class="accordion-header" @click="toggleSection('timeline')">
               <span class="toggle-icon">{{ openSection === 'timeline' ? '−' : '+' }}</span>
               <div class="flex-1">
-                <p class="label text-gold mb-3">Realizacja projektu</p>
+                <p class="label text-gold mb-3">{{ page.timelineKicker }}</p>
                 <h2 class="font-display text-ink font-light leading-snug" style="font-size: clamp(1.3rem, 2vw, 1.6rem)">{{ data.timeline.title }}</h2>
               </div>
-              <span v-if="openSection !== 'timeline'" class="read-more">Czytaj więcej</span>
+              <span v-if="openSection !== 'timeline'" class="read-more">{{ page.readMore }}</span>
             </button>
 
             <div v-if="openSection === 'timeline'" class="accordion-body">
@@ -127,11 +132,11 @@ function toggleSection(key: string) {
       <!-- Logos -->
       <div class="logos-strip py-16 px-8">
         <div class="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
-          <div class="logo-slot"><img src="/images/logo-parp.png" alt="PARP Grupa PFR" class="max-h-full max-w-[190px] w-auto object-contain" /></div>
-          <div class="logo-slot"><img src="/images/logo-norway-grants.png" alt="Norway Grants" class="max-h-full max-w-[130px] w-auto object-contain" /></div>
-          <div class="logo-slot"><img src="/images/certyfikat-dobrych-praktyk.png" alt="Certyfikat Dobrych Praktyk" class="max-h-full max-w-[130px] w-auto object-contain" /></div>
-          <div class="logo-slot"><img src="/images/certyfikat-dobrych-praktyk-bon-turystyczny.jpg" alt="Certyfikat Dobrych Praktyk - Bon Turystyczny" class="max-h-full max-w-[130px] w-auto object-contain" /></div>
-          <div class="logo-slot"><img src="/images/badge-dogs-cats-friendly.png" alt="Dogs/cats friendly" class="max-h-full max-w-[130px] w-auto object-contain" /></div>
+          <div v-for="b in ustawienia?.badges" :key="b.alt" class="logo-slot">
+            <component :is="b.href ? 'a' : 'span'" :href="b.href || undefined" target="_blank" rel="noopener" class="contents">
+              <img :src="cmsImg(b.image)" :alt="b.alt" class="max-h-full max-w-[190px] w-auto object-contain" />
+            </component>
+          </div>
         </div>
       </div>
 

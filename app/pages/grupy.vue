@@ -1,10 +1,27 @@
 <script setup lang="ts">
-const [{ data }, { data: content }] = await Promise.all([
-  useFetch('/api/noclegi'),
-  useFetch('/api/content'),
-])
+const { data: p } = await useCmsSingle('grupy')
+const { kontakt } = await useSite()
 const nav = await useNav()
-const g = computed(() => data.value?.grupy)
+
+// Pola formularza „Grupy i eventy” w kształcie używanym przez szablon.
+const g = computed(() => p.value && {
+  sections: p.value.sections ?? [],
+  pricing: {
+    tag: p.value.pricingTag, minPersons: p.value.minPersons, bonuses: p.value.bonuses ?? [],
+    cols: lines(p.value.cols), rows: (p.value.rows ?? []).map((r: any) => ({ type: r.type, values: lines(r.values) })),
+    includes: { hb: lines(p.value.includesHb), fb: lines(p.value.includesFb), footnote: p.value.footnote },
+    notes: lines(p.value.notes), extras: p.value.extras ?? [], legal: p.value.legal,
+  },
+  capacity: { rooms: p.value.capacityRooms ?? [], halls: p.value.halls ?? [] },
+})
+const heroTitle = computed(() => lines(p.value?.heroTitle))
+const totals = computed(() => [
+  [p.value?.totalRoomsLabel, p.value?.totalRooms, 'text-white'],
+  [p.value?.bedsLabel, p.value?.beds, 'text-white'],
+  [p.value?.maxOccupancyLabel, p.value?.maxOccupancy, 'text-gold'],
+])
+// E-mail działu, a gdy go brak — główny e-mail.
+const inquiryEmail = computed(() => p.value?.dzial?.email || kontakt.value?.email)
 
 const sectionsScroll = ref<HTMLElement | null>(null)
 const activeSectionDot = ref(0)
@@ -13,28 +30,21 @@ function onSectionsScroll() {
   activeSectionDot.value = Math.round(sectionsScroll.value.scrollLeft / sectionsScroll.value.clientWidth)
 }
 
-function extraIcon(category: string) {
-  if (category.includes('Wyżywienie')) return 'utensils'
-  if (category.includes('objazdowe')) return 'bus'
-  if (category.includes('Ogniska')) return 'flame'
-  if (category.includes('Rozrywka')) return 'music'
-  return 'star'
-}
 </script>
 
 <template>
-  <main v-if="data && content && g" class="bg-forest min-h-screen">
+  <main v-if="p && g" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
     <!-- ── Hero ── -->
     <div class="relative h-[70vh] min-h-[520px] overflow-hidden">
-      <img src="/images/tawerna-bar.jpg" alt="Grupy i eventy" class="absolute inset-0 w-full h-full object-cover scale-105" />
+      <img v-if="p.heroImage" :src="cmsImg(p.heroImage)" :alt="p.heroTag" class="absolute inset-0 w-full h-full object-cover scale-105" />
       <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(14,22,14,0.82) 0%, rgba(14,22,14,0.45) 60%, rgba(14,22,14,0.75) 100%)" />
       <div class="relative h-full flex flex-col items-center justify-center text-center px-10 lg:px-20 max-w-7xl mx-auto">
-        <p class="text-gold text-[10px] tracking-[0.5em] uppercase font-sans mb-5">Grupy & Eventy</p>
+        <p class="text-gold text-[10px] tracking-[0.5em] uppercase font-sans mb-5">{{ p.heroTag }}</p>
         <h1 class="font-display text-cream/90 font-light leading-none mb-6" style="font-size: clamp(3rem, 7vw, 5.5rem); letter-spacing: 0.04em">
-          Idealne miejsce<br>
-          <em>na Twój event</em>
+          {{ heroTitle[0] }}<br>
+          <em>{{ heroTitle[1] }}</em>
         </h1>
         <div class="w-10 h-px bg-gold" />
       </div>
@@ -44,21 +54,9 @@ function extraIcon(category: string) {
     <div class="bg-forest-void border-b border-gold/15">
       <div class="max-w-7xl mx-auto px-8 lg:px-16">
         <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-gold/10">
-          <div class="py-10 px-8 flex flex-col gap-1">
-            <span class="font-display text-gold text-5xl font-light">73</span>
-            <span class="text-white/35 font-sans text-xs tracking-[0.2em] uppercase">miejsca noclegowe</span>
-          </div>
-          <div class="py-10 px-8 flex flex-col gap-1">
-            <span class="font-display text-gold text-5xl font-light">110</span>
-            <span class="text-white/35 font-sans text-xs tracking-[0.2em] uppercase">os. w restauracji</span>
-          </div>
-          <div class="py-10 px-8 flex flex-col gap-1">
-            <span class="font-display text-gold text-5xl font-light">2</span>
-            <span class="text-white/35 font-sans text-xs tracking-[0.2em] uppercase">sale (rest. + konf.)</span>
-          </div>
-          <div class="py-10 px-8 flex flex-col gap-1">
-            <span class="font-display text-gold text-5xl font-light">25+</span>
-            <span class="text-white/35 font-sans text-xs tracking-[0.2em] uppercase">min. osób w grupie</span>
+          <div v-for="stat in p.stats" :key="stat.label" class="py-10 px-8 flex flex-col gap-1">
+            <span class="font-display text-gold text-5xl font-light">{{ stat.value }}</span>
+            <span class="text-white/35 font-sans text-xs tracking-[0.2em] uppercase">{{ stat.label }}</span>
           </div>
         </div>
       </div>
@@ -67,7 +65,7 @@ function extraIcon(category: string) {
     <!-- ── Occasions ── -->
     <div class="bg-forest-wash border-t border-gold/15">
       <div class="max-w-7xl mx-auto px-8 lg:px-16 py-20">
-        <p class="text-gold/60 text-[10px] tracking-[0.45em] uppercase font-sans mb-14">Organizujemy</p>
+        <p class="text-gold/60 text-[10px] tracking-[0.45em] uppercase font-sans mb-14">{{ p.offerKicker }}</p>
         <div
           ref="sectionsScroll"
           class="flex md:grid md:grid-cols-3 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-2"
@@ -102,7 +100,7 @@ function extraIcon(category: string) {
         <div class="flex flex-wrap items-start justify-between gap-10 mb-14">
           <div>
             <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-3">{{ g.pricing.tag }}</p>
-            <p class="text-white/30 font-sans text-sm">Min. {{ g.pricing.minPersons }} osób</p>
+            <p class="text-white/30 font-sans text-sm">{{ fill(p.minPersonsLabel, g.pricing.minPersons) }}</p>
           </div>
           <!-- Bonuses -->
           <div class="flex gap-4 flex-wrap">
@@ -117,8 +115,8 @@ function extraIcon(category: string) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
           <div class="bg-gold/8 border border-gold/30 p-10">
             <div class="flex items-baseline gap-3 mb-6">
-              <span class="font-display text-gold text-5xl font-light">HB</span>
-              <span class="text-white/30 font-sans text-xs tracking-[0.15em] uppercase">half board</span>
+              <span class="font-display text-gold text-5xl font-light">{{ p.hbCode }}</span>
+              <span class="text-white/30 font-sans text-xs tracking-[0.15em] uppercase">{{ p.hbLabel }}</span>
             </div>
             <ul class="space-y-3 mb-8">
               <li v-for="item in g.pricing.includes.hb" :key="item" class="flex items-start gap-3 text-cream/90 font-sans text-sm">
@@ -128,8 +126,8 @@ function extraIcon(category: string) {
           </div>
           <div class="bg-gold/8 border border-gold/30 p-10">
             <div class="flex items-baseline gap-3 mb-6">
-              <span class="font-display text-gold text-5xl font-light">FB</span>
-              <span class="text-white/30 font-sans text-xs tracking-[0.15em] uppercase">full board</span>
+              <span class="font-display text-gold text-5xl font-light">{{ p.fbCode }}</span>
+              <span class="text-white/30 font-sans text-xs tracking-[0.15em] uppercase">{{ p.fbLabel }}</span>
             </div>
             <ul class="space-y-3 mb-8">
               <li v-for="item in g.pricing.includes.fb" :key="item" class="flex items-start gap-3 text-cream/90 font-sans text-sm">
@@ -146,7 +144,7 @@ function extraIcon(category: string) {
           <table class="w-full font-sans border-collapse text-sm">
             <thead>
               <tr class="border-b border-gold/20">
-                <th class="text-left text-white/30 text-[10px] tracking-[0.2em] uppercase py-3 pr-8 font-normal whitespace-nowrap">Stawka</th>
+                <th class="text-left text-white/30 text-[10px] tracking-[0.2em] uppercase py-3 pr-8 font-normal whitespace-nowrap">{{ p.colRate }}</th>
                 <th v-for="col in g.pricing.cols" :key="col" class="text-center text-white/25 text-[9px] tracking-[0.1em] uppercase py-3 px-4 font-normal" style="min-width: 110px">{{ col }}</th>
               </tr>
             </thead>
@@ -154,14 +152,14 @@ function extraIcon(category: string) {
               <tr v-for="row in g.pricing.rows" :key="row.type" class="border-b border-white/5 hover:bg-white/2 transition-colors">
                 <td class="text-white/60 py-4 pr-8 font-light">{{ row.type }}</td>
                 <td v-for="(val, vi) in row.values" :key="vi" class="text-center py-4 px-4"
-                  :class="val === '—' ? 'text-white/15' : val === 'indywidualnie' ? 'text-white/25 italic text-xs' : 'text-gold'">{{ val }}</td>
+                  :class="val === '—' ? 'text-white/15' : !/\d/.test(val) ? 'text-white/25 italic text-xs' : 'text-gold'">{{ val }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="bg-gold/8 border border-gold/30 p-6 md:p-8 mb-4">
-          <p class="text-gold text-[10px] tracking-[0.35em] uppercase font-sans mb-4">Ważne informacje</p>
+          <p class="text-gold text-[10px] tracking-[0.35em] uppercase font-sans mb-4">{{ p.notesTitle }}</p>
           <div class="space-y-3">
             <p v-for="note in g.pricing.notes" :key="note" class="flex items-start gap-3 text-cream/90 font-sans text-sm leading-relaxed">
               <span class="text-gold shrink-0">★</span>{{ note }}
@@ -174,7 +172,7 @@ function extraIcon(category: string) {
     <!-- ── Options: icon tiles ── -->
     <div class="bg-forest-wash border-t border-gold/15">
       <div class="max-w-6xl mx-auto px-8 lg:px-12 py-20">
-        <p class="text-gold/60 text-[10px] tracking-[0.45em] uppercase font-sans mb-16">Opcje dodatkowe</p>
+        <p class="text-gold/60 text-[10px] tracking-[0.45em] uppercase font-sans mb-16">{{ p.extrasTitle }}</p>
 
         <div class="flex flex-col gap-6">
           <div
@@ -184,21 +182,21 @@ function extraIcon(category: string) {
           >
             <div class="flex items-center gap-4 mb-8">
               <div class="w-10 h-10 rounded-full border border-gold/25 bg-gold/5 flex items-center justify-center text-gold shrink-0">
-                <svg v-if="extraIcon(cat.category) === 'utensils'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg v-if="cat.icon === 'utensils'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 2v7a2 2 0 002 2h2a2 2 0 002-2V2" />
                   <path d="M7 2v20" />
                   <path d="M21 15V2a5 5 0 00-5 5v6a2 2 0 002 2h3zm0 0v7" />
                 </svg>
-                <svg v-else-if="extraIcon(cat.category) === 'bus'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg v-else-if="cat.icon === 'bus'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 16V7a2 2 0 012-2h14a2 2 0 012 2v9" />
                   <path d="M3 16h18" />
                   <path d="M7 16v3M17 16v3" />
                   <path d="M3 11h18" />
                 </svg>
-                <svg v-else-if="extraIcon(cat.category) === 'flame'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg v-else-if="cat.icon === 'flame'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
                 </svg>
-                <svg v-else-if="extraIcon(cat.category) === 'music'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg v-else-if="cat.icon === 'music'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M9 18V5l12-2v13" />
                   <circle cx="6" cy="18" r="3" />
                   <circle cx="18" cy="16" r="3" />
@@ -209,7 +207,7 @@ function extraIcon(category: string) {
               </div>
               <h3 class="font-display text-white text-xl font-light italic">{{ cat.category }}</h3>
               <div class="flex-1 h-px bg-gold/10 hidden sm:block" />
-              <p class="text-white/25 font-sans text-[9px] tracking-[0.25em] uppercase shrink-0 hidden sm:block">{{ cat.items.length }} {{ cat.items.length === 1 ? 'pozycja' : 'pozycje' }}</p>
+              <p class="text-white/25 font-sans text-[9px] tracking-[0.25em] uppercase shrink-0 hidden sm:block">{{ cat.items.length }} {{ cat.items.length === 1 ? p.itemsOne : p.itemsMany }}</p>
             </div>
             <p v-if="(cat as any).note" class="text-white/35 font-sans text-xs mb-6 italic">{{ (cat as any).note }}</p>
 
@@ -233,7 +231,7 @@ function extraIcon(category: string) {
     <!-- ── Capacity ── -->
     <div id="capacity" class="bg-forest border-t border-gold/15 scroll-mt-20">
       <div class="max-w-7xl mx-auto px-8 lg:px-16 py-20">
-        <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-14">Baza noclegowa</p>
+        <p class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-14">{{ p.capacityTitle }}</p>
 
         <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16">
           <div>
@@ -244,7 +242,7 @@ function extraIcon(category: string) {
               </div>
             </div>
             <div class="flex gap-10">
-              <div v-for="[label, val, cls] in [['Łącznie pokoi', g.capacity.totalRooms, 'text-white'], ['Łóżek', g.capacity.beds, 'text-white'], ['Max. gości', g.capacity.maxOccupancy, 'text-gold']]" :key="label">
+              <div v-for="[label, val, cls] in totals" :key="String(label)">
                 <p class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans mb-1">{{ label }}</p>
                 <p class="font-display text-2xl font-light" :class="cls">{{ val }}</p>
               </div>
@@ -265,17 +263,17 @@ function extraIcon(category: string) {
     <div class="bg-forest-void border-t border-gold/15">
       <div class="max-w-4xl mx-auto px-8 py-16 flex flex-col sm:flex-row items-center justify-between gap-8">
         <div>
-          <p class="text-white/30 font-sans text-xs tracking-[0.2em] uppercase mb-2">Zapytaj o ofertę</p>
-          <a href="tel:+48691944266" class="font-display text-gold text-3xl font-light hover:text-gold/80 transition-colors">+48 691 944 266</a>
+          <p class="text-white/30 font-sans text-xs tracking-[0.2em] uppercase mb-2">{{ p.inquiryTitle }}</p>
+          <a v-if="p.dzial?.phone" :href="telHref(p.dzial.phone)" class="font-display text-gold text-3xl font-light hover:text-gold/80 transition-colors">{{ p.dzial.phone }}</a>
           <p class="text-white/20 font-sans text-xs mt-1">
-            <a href="mailto:przystan@carynska.pl" class="hover:text-gold/60 transition-colors">przystan@carynska.pl</a>
+            <a :href="`mailto:${inquiryEmail}`" class="hover:text-gold/60 transition-colors">{{ inquiryEmail }}</a>
           </p>
         </div>
         <a
-          href="mailto:przystan@carynska.pl"
+          :href="`mailto:${inquiryEmail}`"
           class="border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-8 py-4 text-[11px] tracking-[0.2em] uppercase font-sans whitespace-nowrap"
         >
-          Wyślij zapytanie
+          {{ p.inquiryCta }}
         </a>
       </div>
     </div>
