@@ -46,19 +46,45 @@ onUnmounted(() => { document.body.style.overflow = '' })
   <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <!-- Góra strony: tekst po lewej, zdjęcie pokoju w ramce po prawej (bez napisów na zdjęciu) -->
+    <section class="bg-forest-wash">
+      <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-10 pb-14 lg:pt-14 lg:pb-20 grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-10 lg:gap-16 items-center">
+        <div>
+          <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/40 mb-10">
+            <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">{{ p.crumbParent }}</NuxtLink>
+            <span>/</span>
+            <span class="text-white/60">{{ p.crumbCurrent }}</span>
+          </div>
+          <p class="fade-in text-gold text-[11px] tracking-[0.4em] uppercase font-sans mb-5" style="animation-delay: 0.1s">{{ p.heroTag }}</p>
+          <h1
+            class="fade-in font-display text-white font-light leading-[1.05] whitespace-pre-line"
+            style="font-size: clamp(2.6rem, 5vw, 4.4rem); animation-delay: 0.25s"
+          >{{ p.heroTitle }}</h1>
+          <div class="fade-in w-10 h-px bg-gold my-7" style="animation-delay: 0.4s" />
+          <p class="fade-in text-white/75 font-sans text-base lg:text-lg leading-relaxed max-w-md" style="animation-delay: 0.5s">{{ p.heroSubtitle }}</p>
+          <a
+            v-if="p.cta && ustawienia?.bookingUrl"
+            :href="ustawienia.bookingUrl"
+            target="_blank"
+            rel="noopener"
+            class="fade-in mt-9 inline-flex items-center gap-3 bg-gold text-forest hover:bg-gold-light transition-colors px-7 py-3.5 text-[11px] font-semibold tracking-[0.2em] uppercase font-sans"
+            style="animation-delay: 0.65s"
+          >
+            {{ p.cta }}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
 
-    <!-- Breadcrumb -->
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-8">
-      <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/25">
-        <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">{{ p.crumbParent }}</NuxtLink>
-        <span>/</span>
-        <span class="text-white/45">{{ p.crumbCurrent }}</span>
+        <div v-if="p.heroImage" class="fade-in hero-frame" style="animation-delay: 0.3s">
+          <img :src="cmsImg(p.heroImage)" :alt="p.heroImage.alt || p.heroTitle" class="w-full h-full object-cover" style="object-position: center 35%" />
+        </div>
       </div>
-    </div>
+    </section>
 
     <!-- Intro: krótki tekst + co jest na miejscu (ikonki) -->
-    <div class="max-w-5xl mx-auto px-8 pt-10 pb-14">
+    <div class="max-w-5xl mx-auto px-8 pt-14 pb-14">
       <p
         v-for="(para, i) in data.intro"
         :key="i"
@@ -243,6 +269,20 @@ onUnmounted(() => { document.body.style.overflow = '' })
 </template>
 
 <style scoped>
+.hero-frame {
+  position: relative;
+  height: clamp(320px, 42vw, 520px);
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+.hero-frame::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(223, 185, 126, 0.45);
+  pointer-events: none;
+}
 .feature-icon {
   display: inline-flex;
   align-items: center;
