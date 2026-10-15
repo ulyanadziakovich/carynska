@@ -11,7 +11,8 @@ const hero = computed(() => ({
 const noclegi = computed(() => ({
   tag: p.value?.noclegiTag, title: p.value?.noclegiTitle, body: paragraphs(p.value?.noclegiBody),
   cta: { label: p.value?.noclegiCta, href: p.value?.noclegiCtaHref },
-  image: { src: cmsImg(p.value?.noclegiImage), alt: p.value?.noclegiImageAlt },
+  features: (p.value?.noclegiFeatures ?? []).filter((f: any) => f.label),
+  cards: (p.value?.noclegiCards ?? []).map((c: any) => ({ ...c, image: cmsImg(c.image), alt: c.image?.alt ?? '' })),
 }))
 const atrakcje = computed(() => ({
   tag: p.value?.atrakcjeTag, title: p.value?.atrakcjeTitle, body: p.value?.atrakcjeBody,
