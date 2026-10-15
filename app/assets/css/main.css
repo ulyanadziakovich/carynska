@@ -2,6 +2,8 @@
 
 html, body {
   overflow-x: hidden;
+  /* „clip” nie psuje position: sticky (np. zdjęcie w sekcji Atrakcje); „hidden” to zapas dla starych przeglądarek */
+  overflow-x: clip;
 }
 
 @theme {

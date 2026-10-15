@@ -62,4 +62,22 @@ defineProps<{ name: string }>()
     <circle cx="26" cy="13" r="4" />
     <path d="M6 34 Q6 24 14 24 Q20 24 20 24 Q20 24 26 24 Q34 24 34 34" />
   </svg>
+
+  <!-- Toast / kieliszki -->
+  <svg v-else-if="name === 'impreza'" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+    <path d="M9 8 L17 10 L15 18 Q14 22 10 21 Q6 20 7 16 Z" />
+    <path d="M12.5 21 L10.5 30" /><path d="M7 29.5 L14 31" />
+    <path d="M31 8 L23 10 L25 18 Q26 22 30 21 Q34 20 33 16 Z" />
+    <path d="M27.5 21 L29.5 30" /><path d="M26 31 L33 29.5" />
+    <path d="M20 4 L20 6.5" /><path d="M16.5 5 L17.5 7" /><path d="M23.5 5 L22.5 7" />
+  </svg>
+
+  <!-- Dam / zapora -->
+  <svg v-else-if="name === 'zapora'" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+    <path d="M4 14 L36 14" />
+    <path d="M8 14 L12 32 L28 32 L32 14" />
+    <path d="M14 14 L15.5 32" /><path d="M20 14 L20 32" /><path d="M26 14 L24.5 32" />
+    <path d="M10 10 L14 10 L14 14" /><path d="M26 14 L26 10 L30 10" />
+    <path d="M4 35 Q8 33 12 35 T20 35 T28 35 T36 35" />
+  </svg>
 </template>
