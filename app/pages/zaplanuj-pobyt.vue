@@ -46,7 +46,6 @@ const nav = await useNav()
                   :alt="obj.title"
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div class="photo-tint" />
               </div>
               <div class="p-7 flex flex-col gap-3 flex-1">
                 <div>
@@ -70,7 +69,6 @@ const nav = await useNav()
             <div v-for="obj in kontakt?.sisters" :key="obj.name" class="card-elevated border border-gold/20 bg-forest-void overflow-hidden flex flex-col">
               <div v-if="obj.image" class="relative overflow-hidden" style="aspect-ratio: 16/9">
                 <img v-if="cmsImg(obj.image)" :src="cmsImg(obj.image)" :alt="obj.imageAlt" class="w-full h-full object-cover" />
-                <div class="photo-tint" />
               </div>
               <div class="p-8 flex flex-col gap-4 flex-1">
                 <div>

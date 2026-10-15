@@ -38,8 +38,8 @@ function onSectionsScroll() {
 
     <!-- ── Hero ── -->
     <div class="relative h-[70vh] min-h-[520px] overflow-hidden">
-      <img v-if="p.heroImage" :src="cmsImg(p.heroImage)" :alt="p.heroTag" class="absolute inset-0 w-full h-full object-cover scale-105" />
-      <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(14,22,14,0.82) 0%, rgba(14,22,14,0.45) 60%, rgba(14,22,14,0.75) 100%)" />
+      <img v-if="p.heroImage" :src="cmsImg(p.heroImage)" :alt="p.heroTag" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.5) 100%)" />
       <div class="relative h-full flex flex-col items-center justify-center text-center px-10 lg:px-20 max-w-7xl mx-auto">
         <p class="text-gold text-[10px] tracking-[0.5em] uppercase font-sans mb-5">{{ p.heroTag }}</p>
         <h1 class="font-display text-cream/90 font-light leading-none mb-6" style="font-size: clamp(3rem, 7vw, 5.5rem); letter-spacing: 0.04em">

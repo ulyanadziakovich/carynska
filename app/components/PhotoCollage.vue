@@ -20,7 +20,6 @@ defineProps<{
         :alt="img.alt"
         class="w-full h-full object-cover"
       />
-      <div class="photo-tint" />
     </div>
   </div>
 </template>

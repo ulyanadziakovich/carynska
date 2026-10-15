@@ -51,8 +51,7 @@ onMounted(() => {
     <!-- ── Hero image + text ── -->
     <div class="relative h-[70vh] min-h-[500px]">
       <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
-      <div class="photo-tint" />
-      <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/30 to-forest/80" />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55" />
 
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
         <p v-reveal class="text-gold text-[10px] tracking-[0.45em] uppercase font-sans mb-5">{{ data.tag }}</p>
@@ -86,7 +85,6 @@ onMounted(() => {
       >
         <!-- photo bg -->
         <img v-if="tile.image" :src="tile.image" :alt="tile.title" class="tile-photo" />
-        <div class="photo-tint" />
         <div class="tile-overlay" />
 
         <!-- text -->

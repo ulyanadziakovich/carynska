@@ -81,7 +81,6 @@ onUnmounted(() => { document.body.style.overflow = '' })
                 :alt="room.title"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div class="photo-tint" />
               <div class="absolute top-4 right-4 bg-forest/80 backdrop-blur-sm border border-gold/30 px-3 py-1.5">
                 <span class="text-gold text-[10px] tracking-[0.2em] font-sans uppercase">{{ fill(ustawienia?.maxPersons, room.occupancy) }}</span>
               </div>

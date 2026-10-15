@@ -59,12 +59,20 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
               rel="noopener"
               class="btn-gold"
             >
+              <PizzaIcon />
               {{ ustawienia?.pizzaLabel }}
             </a>
             <a v-if="data.delivery.phone" :href="telHref(data.delivery.phone)" class="btn-outline">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11a19.79 19.79 0 01-3.07-8.67A2 2 0 012.81 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
               {{ data.delivery.phone }}
             </a>
             <a v-if="data.contact.email" :href="`mailto:${data.contact.email}`" class="btn-outline">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
               {{ data.contact.email }}
             </a>
           </div>
@@ -197,8 +205,8 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
   border-top: 1px solid rgba(139, 104, 20, 0.2);
 }
 .btn-gold {
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  border: 1px solid var(--gold, #8B6814);
+  color: var(--gold, #8B6814);
   padding: 0.75rem 2.5rem;
   font-family: 'Cormorant Garamond', serif;
   font-size: 18px;
@@ -207,12 +215,14 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
   white-space: nowrap;
   transition: background 0.25s, color 0.25s;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.btn-gold:hover { background: var(--gold); color: var(--cream); }
+.btn-gold:hover { background: var(--gold, #8B6814); color: var(--cream, #F2E8D0); }
 .btn-outline {
   border: 1px solid rgba(28, 42, 28, 0.25);
-  color: var(--stone);
+  color: var(--stone, #5C6B5C);
   padding: 0.75rem 2.5rem;
   font-family: 'Raleway', sans-serif;
   font-size: 11px;
@@ -221,7 +231,9 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
   white-space: nowrap;
   transition: border-color 0.25s, color 0.25s;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-outline:hover { border-color: var(--gold, #8B6814); color: var(--gold, #8B6814); }
 </style>

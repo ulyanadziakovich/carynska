@@ -29,16 +29,14 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
       <div
         v-for="(img, i) in slides"
         :key="img"
-        class="absolute inset-0 bg-cover bg-center bg-no-repeat ken-burns transition-opacity duration-[2000ms] ease-in-out"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-[2000ms] ease-in-out"
         :class="i === current ? 'opacity-100' : 'opacity-0'"
         :style="`background-image: url('${img}')`"
       />
     </div>
 
-    <div class="photo-tint" />
-    <!-- Extra darkening -->
-    <div class="absolute inset-0 bg-black/40" />
-    <div class="absolute inset-0 bg-gradient-to-b from-forest/60 via-black/40 to-forest/95" />
+    <!-- Neutralne przyciemnienie (bez zielonego) — tylko tyle, by napisy były czytelne -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/60" />
 
     <div class="absolute bottom-20 inset-x-0 pointer-events-none opacity-20">
       <svg viewBox="0 0 1440 100" preserveAspectRatio="none" class="w-full h-20">
@@ -50,7 +48,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
     </div>
 
     <div class="relative flex-1 flex flex-col items-center justify-center text-center px-6">
-      <p class="fade-in text-gold text-[11px] tracking-[0.45em] uppercase mb-6 font-sans" style="animation-delay: 0.3s">
+      <p class="fade-in text-gold text-[11px] tracking-[0.45em] uppercase mb-6 font-sans" style="animation-delay: 0.3s; text-shadow: 0 1px 12px rgba(0,0,0,0.8)">
         {{ hero.subtitle }}
       </p>
       <h1
@@ -70,6 +68,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
           rel="noopener"
           class="hero-pizza-btn"
         >
+          <PizzaIcon />
           {{ ustawienia.pizzaLabel }}
         </a>
       </div>

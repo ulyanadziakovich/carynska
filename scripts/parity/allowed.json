@@ -1,12 +1,16 @@
 {
   "*": [
     "Grupy & Biuro",
-    "Biuro"
+    "Biuro",
+    "Booking now",
+    "Zarezerwuj"
   ],
   "index": [
     "Bądź na",
     "bieżąco",
-    "Bądź na bieżąco"
+    "Bądź na bieżąco",
+    "🍕 Zamów pizzę",
+    "Zamów pizzę"
   ],
   "galeria": [
     "@alt: Basen z fontanną przy przystani",
@@ -116,5 +120,9 @@
     "28.",
     "29.",
     "30."
+  ],
+  "tawerna": [
+    "🍕 Zamów pizzę",
+    "Zamów pizzę"
   ]
 }

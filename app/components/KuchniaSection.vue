@@ -16,7 +16,6 @@ defineProps<{
 
       <div class="relative overflow-hidden" style="min-height: min(55vw, 480px)">
         <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
-        <div class="photo-tint" />
       </div>
 
       <div class="bg-forest-void flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-12 lg:py-24 relative">

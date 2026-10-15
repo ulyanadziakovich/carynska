@@ -52,7 +52,6 @@ defineProps<{
         <div v-reveal="{ delay: 150 }" class="relative flex flex-1 items-center justify-center p-8">
           <div class="room-frame">
             <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
-            <div class="photo-tint" />
           </div>
         </div>
       </div>

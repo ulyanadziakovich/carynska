@@ -128,7 +128,7 @@ function toggleDropdown(label: string) {
         <Transition name="menu-fade">
           <div v-if="menuOpen" class="menu-overlay md:hidden">
 
-            <!-- Background: ken-burns photo -->
+            <!-- Tło: zdjęcie z CMS (bez powiększania — ostre) -->
             <div class="menu-bg" :style="ustawienia?.menuBackground ? { backgroundImage: `url('${cmsImg(ustawienia.menuBackground)}')` } : undefined" />
             <!-- Vignette: tylko krawędzie dla głębi, bez zabijania zdjęcia -->
             <div class="menu-vignette" />
@@ -260,8 +260,14 @@ function toggleDropdown(label: string) {
           :href="nav.cta.href"
           target="_blank"
           rel="noopener"
-          class="border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-5 py-2 text-[11px] tracking-[0.18em] uppercase font-sans"
+          class="inline-flex items-center gap-2.5 border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 px-5 py-2 text-[11px] tracking-[0.18em] uppercase font-sans"
         >
+          <!-- Kalendarz z zaznaczonym dniem -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
+            <path d="M16 2.5v4M8 2.5v4M3 10h18" />
+            <path d="m9 15.5 2 2 4-4" />
+          </svg>
           {{ nav.cta.label }}
         </a>
       </div>
@@ -291,14 +297,9 @@ function toggleDropdown(label: string) {
   inset: 0;
   background-size: cover;
   background-position: center 30%;
-  animation: menu-kb 20s ease-in-out infinite alternate;
   will-change: transform;
 }
 
-@keyframes menu-kb {
-  0%   { transform: scale(1.0) translate(0%, 0%); }
-  100% { transform: scale(1.14) translate(-3%, -2%); }
-}
 
 /* Subtelna wineta — ciemne krawędzie, środek otwarty */
 .menu-vignette {
