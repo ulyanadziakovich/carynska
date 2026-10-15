@@ -79,53 +79,46 @@ onUnmounted(() => stopCover())
 <template>
   <section class="atr relative bg-forest-void">
 
-    <!-- Róża wiatrów na styku z poprzednią sekcją — łączy Noclegi z Atrakcjami -->
+    <!-- Żaglówka na falach (złoty line-art) na styku z poprzednią sekcją — łączy Noclegi z Atrakcjami -->
     <div v-reveal="{ variant: 'scale' }" class="atr-emblem" aria-hidden="true">
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round">
-        <circle cx="24" cy="24" r="22" opacity="0.5" />
-        <circle cx="24" cy="24" r="16.5" stroke-dasharray="1.2 2.2" opacity="0.7" />
-        <path d="M24 4 L26.6 21.4 L24 24 L21.4 21.4 Z" />
-        <path d="M24 44 L26.6 26.6 L24 24 L21.4 26.6 Z" />
-        <path d="M44 24 L26.6 26.6 L24 24 L26.6 21.4 Z" />
-        <path d="M4 24 L21.4 21.4 L24 24 L21.4 26.6 Z" />
-        <path d="M24 24 L32 16 M24 24 L16 32 M24 24 L32 32 M24 24 L16 16" opacity="0.45" />
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 5v28" />
+        <path d="M24 7 L11 31 H24" />
+        <path d="M24 11 C30 16 34 23 35 31 H24" />
+        <path d="M21 9 L19 6.5 L22.5 7.5" opacity="0.7" />
+        <path d="M8 33 H40 L36 38 H12 Z" />
+        <path d="M4 42 Q8 40 12 42 T20 42 T28 42 T36 42 T44 42" opacity="0.7" />
+        <path d="M10 45.5 Q13 44 16 45.5 T22 45.5 T28 45.5 T34 45.5 T38 45.5" opacity="0.45" />
       </svg>
     </div>
 
     <!-- ── Zdjęcie + tekst (niskie); przy przewijaniu kafelki najeżdżają na jego dół ── -->
+    <!-- Czyste zdjęcie; tekst po prawej, na ciemnej wodzie jeziora — czytelny bez nakładek.
+         Przy przewijaniu kafelki najeżdżają na dół zdjęcia. -->
     <div ref="photoEl" class="atr-photo">
-      <div class="atr-photo__inner">
-        <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="w-full h-full object-cover" />
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55" />
-      <div class="atr-photo__shade" />
+      <img v-if="data.image.src" :src="data.image.src" :alt="data.image.alt" class="atr-photo__img" />
 
-      <!-- Grafika: zarys gór i fale na dole zdjęcia -->
-      <svg class="absolute bottom-0 inset-x-0 w-full h-28 lg:h-36 text-gold pointer-events-none" viewBox="0 0 1440 160" preserveAspectRatio="none" fill="none" aria-hidden="true">
-        <path d="M0 120 L120 70 L210 95 L340 40 L470 88 L590 30 L700 78 L820 22 L950 70 L1080 38 L1200 84 L1320 50 L1440 80" stroke="currentColor" stroke-width="1.2" opacity="0.45" />
-        <path d="M0 140 Q60 130 120 140 T240 140 T360 140 T480 140 T600 140 T720 140 T840 140 T960 140 T1080 140 T1200 140 T1320 140 T1440 140" stroke="currentColor" stroke-width="1" opacity="0.35" />
-        <path d="M0 152 Q60 144 120 152 T240 152 T360 152 T480 152 T600 152 T720 152 T840 152 T960 152 T1080 152 T1200 152 T1320 152 T1440 152" stroke="currentColor" stroke-width="1" opacity="0.2" />
-      </svg>
-
-      <div class="atr-photo__content absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <p v-reveal class="text-gold text-[11px] tracking-[0.45em] uppercase font-sans mb-3" style="text-shadow: 0 1px 10px rgba(0,0,0,0.8)">{{ data.tag }}</p>
-        <h2
-          v-reveal="{ delay: 100 }"
-          class="font-display text-white font-light tracking-[0.15em] leading-none whitespace-pre-line"
-          style="font-size: clamp(2.3rem, 4.5vw, 4rem); text-shadow: 0 2px 30px rgba(0,0,0,0.45)"
-        >{{ data.title }}</h2>
-        <div v-reveal="{ delay: 200 }" class="w-8 h-px bg-gold my-5" />
-        <p v-reveal="{ delay: 280 }" class="text-white/90 font-sans text-sm lg:text-base max-w-md leading-relaxed" style="text-shadow: 0 1px 12px rgba(0,0,0,0.85)">{{ data.body }}</p>
-        <NuxtLink
-          v-reveal="{ delay: 380 }"
-          :to="data.cta.href"
-          class="mt-6 inline-flex items-center gap-3 bg-gold text-forest hover:bg-gold-light transition-colors duration-300 px-7 py-3.5 text-[11px] font-semibold tracking-[0.2em] uppercase font-sans shadow-[0_4px_20px_rgba(0,0,0,0.35)]"
-        >
-          {{ data.cta.label }}
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </NuxtLink>
+      <div class="atr-photo__content">
+        <div class="atr-text">
+          <p v-reveal class="text-gold-light text-[11px] tracking-[0.45em] uppercase font-sans mb-4">{{ data.tag }}</p>
+          <h2
+            v-reveal="{ delay: 100 }"
+            class="font-display text-white font-light tracking-[0.12em] leading-none whitespace-pre-line"
+            style="font-size: clamp(2.3rem, 3.6vw, 3.4rem)"
+          >{{ data.title }}</h2>
+          <div v-reveal="{ delay: 200 }" class="w-8 h-px bg-gold my-6" />
+          <p v-reveal="{ delay: 280 }" class="text-white/90 font-sans text-sm lg:text-base max-w-sm leading-relaxed">{{ data.body }}</p>
+          <NuxtLink
+            v-reveal="{ delay: 380 }"
+            :to="data.cta.href"
+            class="mt-7 inline-flex items-center gap-3 bg-gold text-forest hover:bg-gold-light transition-colors duration-300 px-7 py-3.5 text-[11px] font-semibold tracking-[0.2em] uppercase font-sans"
+          >
+            {{ data.cta.label }}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </NuxtLink>
+        </div>
       </div>
     </div>
 
@@ -212,8 +205,8 @@ onUnmounted(() => stopCover())
 /* ── Zdjęcie: niskie (--h); kafelki zachodzą na jego dół o --d.
    Na starcie kafelki są przesunięte w dół o --d, a przy przewijaniu (--cover 0→1) dojeżdżają
    na miejsce — szybciej niż strona, więc „najeżdżają” na zdjęcie. ── */
-.atr { --h: 580px; --d: 200px; }
-@media (max-width: 640px) { .atr { --h: 600px; --d: 150px; } }
+.atr { --h: 600px; --d: 150px; }
+@media (max-width: 640px) { .atr { --h: 560px; --d: 90px; } }
 
 .atr-photo {
   --cover: 0;
@@ -222,16 +215,21 @@ onUnmounted(() => stopCover())
   height: var(--h);
   overflow: hidden;
 }
-.atr-photo__content { padding-bottom: var(--d); padding-top: 72px; } /* miejsce na różę wiatrów */
-.atr-photo__inner {
+/* Tekst w prawej części zdjęcia (na wodzie); u góry miejsce na żaglówkę, u dołu na kafelki */
+.atr-photo__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.atr-photo__content {
   position: absolute; inset: 0;
-  /* bez skalowania — zdjęcie zostaje ostre; głębię daje samo przyciemnienie */
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 70px 4% var(--d) 6%;
 }
-.atr-photo__shade {
-  position: absolute; inset: 0;
-  background: #000;
-  opacity: calc(var(--cover) * 0.4);
-  pointer-events: none;
+.atr-text {
+  width: min(370px, 30%);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+@media (max-width: 640px) {
+  .atr-photo__img { object-position: 100% center; }
+  .atr-photo__content { justify-content: center; padding: 60px 22px var(--d); }
+  .atr-text { width: 100%; }
 }
 .atr-tiles {
   --cover: 0;
@@ -243,7 +241,7 @@ onUnmounted(() => stopCover())
   .atr-tiles { transform: none; }
 }
 
-/* ── Róża wiatrów: sam złoty rysunek (line-art), w połowie nad poprzednią sekcją ── */
+/* ── Żaglówka: sam złoty rysunek (line-art), w połowie nad poprzednią sekcją ── */
 .atr-emblem {
   position: absolute;
   top: 0; left: 50%;

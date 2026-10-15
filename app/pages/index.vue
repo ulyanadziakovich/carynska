@@ -34,6 +34,8 @@ const kuchnia = computed(() => ({
 const reviews = computed(() => ({
   tag: p.value?.reviewsTag, title: p.value?.reviewsTitle, allLabel: p.value?.reviewsAll,
   googleUrl: p.value?.googleUrl, items: p.value?.reviews ?? [],
+  rating: p.value?.reviewsRating, ratingNote: p.value?.reviewsRatingNote,
+  moreLabel: p.value?.reviewsMore, lessLabel: p.value?.reviewsLess,
 }))
 const facebook = computed(() => ({
   tag: p.value?.fbTag, title: p.value?.fbTitle, body: p.value?.fbBody,

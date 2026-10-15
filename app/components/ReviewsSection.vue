@@ -3,8 +3,27 @@ const props = defineProps<{
   reviews: {
     googleUrl: string
     items: { name: string; badge: string | null; date: string; stars: number; text: string }[]
+    rating?: string
+    ratingNote?: string
+    moreLabel?: string
+    lessLabel?: string
   }
 }>()
+
+// Długie opinie: ucięte do kilku linijek; „Czytaj całość” tylko tam, gdzie tekst się nie mieści.
+const expanded = ref<Record<number, boolean>>({})
+const clipped = ref<Record<number, boolean>>({})
+const textEls = ref<HTMLElement[]>([])
+function measure() {
+  textEls.value.forEach((el, i) => {
+    if (el && !expanded.value[i]) clipped.value[i] = el.scrollHeight > el.clientHeight + 2
+  })
+}
+onMounted(() => {
+  nextTick(measure)
+  window.addEventListener('resize', measure, { passive: true })
+})
+onUnmounted(() => window.removeEventListener('resize', measure))
 
 const scrollEl = ref<HTMLElement | null>(null)
 const activeDot = ref(0)
@@ -20,10 +39,34 @@ function onScroll() {
 
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
-        <div>
-          <p class="text-gold/70 text-[10px] tracking-[0.4em] uppercase font-sans mb-3">{{ reviews.tag }}</p>
-          <h2 class="font-display text-white font-light" style="font-size: clamp(1.8rem, 3vw, 2.6rem)">{{ reviews.title }}</h2>
+        <div class="flex items-start gap-5">
+          <!-- Złoty cudzysłów — duży, cienki, jak róża wiatrów i talerz w innych sekcjach -->
+          <span v-reveal class="quote-mark" aria-hidden="true">&ldquo;</span>
+          <div>
+            <p v-reveal class="text-gold/70 text-[10px] tracking-[0.4em] uppercase font-sans mb-3">{{ reviews.tag }}</p>
+            <h2 v-reveal="{ delay: 100 }" class="font-display text-white font-light" style="font-size: clamp(1.8rem, 3vw, 2.6rem)">{{ reviews.title }}</h2>
+          </div>
         </div>
+
+        <!-- Ogólna ocena — tylko gdy wpisana w panelu -->
+        <a
+          v-if="reviews.rating"
+          v-reveal="{ delay: 200 }"
+          :href="reviews.googleUrl"
+          target="_blank"
+          rel="noopener"
+          class="rating-badge"
+        >
+          <span class="font-display text-3xl text-white leading-none">{{ reviews.rating }}</span>
+          <span class="flex flex-col gap-1">
+            <span class="flex gap-0.5 text-[#FBBC05]">
+              <svg v-for="i in 5" :key="i" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </span>
+            <span class="text-white/50 font-sans text-[11px]">{{ reviews.ratingNote }}</span>
+          </span>
+        </a>
       </div>
 
       <!-- Cards -->
@@ -34,9 +77,10 @@ function onScroll() {
         @scroll="onScroll"
       >
         <div
-          v-for="review in reviews.items"
+          v-for="(review, i) in reviews.items"
           :key="review.name"
-          class="card-elevated bg-forest p-7 flex flex-col gap-4 hover:bg-forest-mid transition-colors duration-300 shrink-0 w-[80vw] md:w-auto snap-center"
+          v-reveal="{ delay: i * 120 }"
+          class="review-card card-elevated bg-forest p-7 flex flex-col gap-4 hover:bg-forest-mid transition-colors duration-300 shrink-0 w-[80vw] md:w-auto snap-center"
         >
           <!-- Stars + Google icon -->
           <div class="flex items-center justify-between">
@@ -54,7 +98,19 @@ function onScroll() {
           </div>
 
           <!-- Text -->
-          <p class="text-white/65 font-sans text-sm leading-relaxed flex-1">„{{ review.text }}"</p>
+          <div class="flex-1">
+            <p
+              :ref="(el) => { if (el) textEls[i] = el as HTMLElement }"
+              class="text-white/65 font-sans text-sm leading-relaxed"
+              :class="{ 'review-text--clamp': !expanded[i] }"
+            >„{{ review.text }}"</p>
+            <button
+              v-if="clipped[i] || expanded[i]"
+              type="button"
+              class="mt-2 text-gold text-[11px] tracking-[0.15em] uppercase font-sans hover:text-gold-light transition-colors"
+              @click="expanded[i] = !expanded[i]"
+            >{{ expanded[i] ? reviews.lessLabel : reviews.moreLabel }}</button>
+          </div>
 
           <!-- Author -->
           <div class="flex items-center gap-3 pt-3 border-t border-white/8">
@@ -88,7 +144,7 @@ function onScroll() {
           :href="reviews.googleUrl"
           target="_blank"
           rel="noopener"
-          class="flex items-center gap-3 border border-gold/25 hover:border-gold/60 text-white/50 hover:text-gold px-7 py-3 font-sans text-[11px] tracking-[0.18em] uppercase transition-all duration-200"
+          class="flex items-center justify-center gap-3 text-center border border-gold/40 hover:border-gold hover:bg-gold/10 text-white/70 hover:text-gold px-5 sm:px-7 py-3.5 font-sans text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase transition-all duration-200"
         >
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -103,3 +159,39 @@ function onScroll() {
     </div>
   </section>
 </template>
+
+<style scoped>
+.review-text--clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Duży, delikatny cudzysłów w tle karty */
+.review-card { position: relative; overflow: hidden; }
+.review-card::after {
+  content: '\201D';
+  position: absolute;
+  right: 16px; top: 36px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 9rem; line-height: 1;
+  color: rgba(201, 169, 110, 0.07);
+  pointer-events: none;
+}
+.quote-mark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 6rem; line-height: 0.75;
+  color: #C9A96E;
+  font-weight: 300;
+  margin-top: 4px;
+}
+.rating-badge {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 12px 18px;
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  transition: border-color 0.3s;
+  align-self: flex-start;
+}
+.rating-badge:hover { border-color: rgba(201, 169, 110, 0.7); }
+@media (min-width: 640px) { .rating-badge { align-self: auto; } }
+</style>
