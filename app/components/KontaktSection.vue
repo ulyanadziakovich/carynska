@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { kontakt, ustawienia, dzialy } = await useSite()
+const { kontakt, ustawienia } = await useSite()
 // Linki w stopce mają nazwy dokumentów z CMS.
 const docs = await Promise.all(
   (['regulamin', 'regulamin-wypozyczalni', 'wzor-umowy-jachtu'] as const).map(async (name) => {
@@ -34,10 +34,10 @@ async function submitForm() {
       />
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 lg:px-16 py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-10">
+    <div class="max-w-7xl mx-auto px-6 lg:px-16 py-12 lg:py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
 
       <!-- 1. Marka: logo, adres, główny e-mail, social -->
-      <div class="lg:col-span-3 flex flex-col gap-6">
+      <div class="lg:col-span-3 flex flex-col gap-5">
         <img
           v-if="ustawienia?.footerLogo"
           :src="cmsImg(ustawienia.footerLogo)"
@@ -74,48 +74,8 @@ async function submitForm() {
         </div>
       </div>
 
-      <!-- 2. Działy z telefonami -->
-      <div class="lg:col-span-4">
-        <h3 class="foot-heading">{{ kontakt?.title }}</h3>
-        <ul class="flex flex-col divide-y divide-white/8">
-          <li v-for="dept in dzialy" :key="dept.id" class="py-4 first:pt-0">
-            <p class="text-gold/70 text-[10px] tracking-[0.25em] uppercase font-sans mb-1">{{ dept.tag }}</p>
-            <p class="font-display text-white text-xl font-light mb-1.5">{{ dept.name }}</p>
-            <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-sans">
-              <a v-if="dept.phone" :href="telHref(dept.phone)" class="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
-                <span class="text-gold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11a19.79 19.79 0 01-3.07-8.67A2 2 0 012.81 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>{{ dept.phone }}
-              </a>
-              <a v-if="dept.email" :href="`mailto:${dept.email}`" class="flex items-center gap-2 text-white/55 hover:text-gold transition-colors">
-                <span class="text-gold/70"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>{{ dept.email }}
-              </a>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <!-- 3. Formularz -->
-      <div class="md:col-span-2 lg:col-span-5">
-        <h3 class="foot-heading">{{ kontakt?.formTitle }}</h3>
-        <div v-if="sent" class="flex flex-col gap-3 py-6 px-6 border border-gold/25">
-          <div class="w-8 h-px bg-gold" />
-          <p class="font-display text-white text-2xl font-light">{{ kontakt?.formThanks }}</p>
-          <p class="text-white/60 font-sans text-sm">{{ kontakt?.formThanksText }}</p>
-        </div>
-        <form v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3" @submit.prevent="submitForm">
-          <input v-model="form.name" type="text" :placeholder="kontakt?.formName" :aria-label="kontakt?.formName" required class="foot-input sm:col-span-2" />
-          <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" :aria-label="kontakt?.formEmail" required class="foot-input" />
-          <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" :aria-label="kontakt?.formPhone" class="foot-input" />
-          <textarea v-model="form.message" :placeholder="kontakt?.formMessage" :aria-label="kontakt?.formMessage" rows="4" required class="foot-input resize-none sm:col-span-2" />
-          <button type="submit" :disabled="sending" class="foot-btn sm:col-span-2">
-            {{ sending ? kontakt?.formSending : kontakt?.formSubmit }}
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Rezerwacje online + dane do przelewu + nasze obiekty -->
-    <div class="border-t border-white/8">
-      <div class="max-w-7xl mx-auto px-6 lg:px-16 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <!-- 2. Rezerwacje online i dane do przelewu -->
+      <div class="lg:col-span-4 flex flex-col gap-10">
         <div>
           <h3 class="foot-heading">{{ kontakt?.reservationsTitle }}</h3>
           <div class="flex flex-wrap gap-2">
@@ -139,24 +99,45 @@ async function submitForm() {
           </dl>
         </div>
 
-        <div v-if="kontakt?.sisters?.length">
-          <h3 class="foot-heading">{{ kontakt.sisterTitle }}</h3>
-          <div class="flex flex-col gap-4">
-            <a
-              v-for="obj in kontakt.sisters"
-              :key="obj.name"
-              :href="obj.href"
-              target="_blank"
-              rel="noopener"
-              class="group flex items-baseline justify-between gap-4"
-            >
-              <span>
-                <span class="block text-white/40 text-[10px] tracking-[0.25em] uppercase font-sans">{{ obj.location }}</span>
-                <span class="font-display text-white text-lg font-light group-hover:text-gold transition-colors">{{ obj.name }}</span>
-              </span>
-              <span class="text-white/60 font-sans text-sm whitespace-nowrap">{{ obj.phone }}</span>
-            </a>
-          </div>
+      </div>
+
+      <!-- 3. Formularz -->
+      <div class="md:col-span-2 lg:col-span-5">
+        <h3 class="foot-heading">{{ kontakt?.formTitle }}</h3>
+        <div v-if="sent" class="flex flex-col gap-3 py-6 px-6 border border-gold/25">
+          <div class="w-8 h-px bg-gold" />
+          <p class="font-display text-white text-2xl font-light">{{ kontakt?.formThanks }}</p>
+          <p class="text-white/60 font-sans text-sm">{{ kontakt?.formThanksText }}</p>
+        </div>
+        <form v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3" @submit.prevent="submitForm">
+          <input v-model="form.name" type="text" :placeholder="kontakt?.formName" :aria-label="kontakt?.formName" required class="foot-input sm:col-span-2" />
+          <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" :aria-label="kontakt?.formEmail" required class="foot-input" />
+          <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" :aria-label="kontakt?.formPhone" class="foot-input" />
+          <textarea v-model="form.message" :placeholder="kontakt?.formMessage" :aria-label="kontakt?.formMessage" rows="3" required class="foot-input resize-none sm:col-span-2" />
+          <button type="submit" :disabled="sending" class="foot-btn sm:col-span-2">
+            {{ sending ? kontakt?.formSending : kontakt?.formSubmit }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Nasze obiekty — jedna cienka linia -->
+    <div v-if="kontakt?.sisters?.length" class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto px-6 lg:px-16 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8">
+        <p class="text-gold text-[10px] tracking-[0.3em] uppercase font-sans shrink-0">{{ kontakt.sisterTitle }}</p>
+        <div class="flex flex-wrap gap-x-8 gap-y-2">
+          <a
+            v-for="obj in kontakt.sisters"
+            :key="obj.name"
+            :href="obj.href"
+            target="_blank"
+            rel="noopener"
+            class="group flex items-baseline gap-3 font-sans text-sm"
+          >
+            <span class="font-display text-white text-base group-hover:text-gold transition-colors">{{ obj.name }}</span>
+            <span class="text-white/45">{{ obj.location }}</span>
+            <span class="text-white/65">{{ obj.phone }}</span>
+          </a>
         </div>
       </div>
     </div>
@@ -181,8 +162,8 @@ async function submitForm() {
 </template>
 
 <style scoped>
-.map-strip { height: 220px; }
-@media (min-width: 768px) { .map-strip { height: 320px; } }
+.map-strip { height: 200px; }
+@media (min-width: 768px) { .map-strip { height: 260px; } }
 
 .foot-heading {
   font-family: 'Raleway', sans-serif;
