@@ -154,6 +154,13 @@ onUnmounted(() => stopCover())
         <div class="tile-content">
           <p class="tile-tag">{{ tile.tag }}</p>
           <h3 class="tile-title">{{ tile.title }}</h3>
+          <!-- Komputer: po najechaniu kafelek ciemnieje i pokazuje opis — bez klikania -->
+          <div class="tile-more" aria-hidden="true">
+            <p class="tile-more__text">{{ tile.modalBody[0] }}</p>
+            <div v-if="tile.highlights.length" class="tile-more__chips">
+              <span v-for="h in tile.highlights.slice(0, 3)" :key="h" class="tile-more__chip">{{ h }}</span>
+            </div>
+          </div>
           <div class="tile-hint">
             <span>{{ data.hint }}</span>
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="tile-hint-arrow">
@@ -332,6 +339,43 @@ onUnmounted(() => stopCover())
 .tile:hover .tile-hint { color: #DFB97E; }
 .tile-hint-arrow { transition: transform 0.3s ease; }
 .tile:hover .tile-hint-arrow { transform: translateX(4px); }
+
+/* Opis po najechaniu — tylko na urządzeniach z myszką (na telefonie kafelek otwiera okienko) */
+.tile-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+.tile-more > * { overflow: hidden; }
+.tile-more__text {
+  margin-top: 12px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px; line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical;
+}
+.tile-more__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tile-more__chip {
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #DFB97E;
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  padding: 4px 8px;
+}
+@media (hover: hover) and (min-width: 1024px) {
+  .tile-overlay { transition: background 0.5s ease; }
+  .tile:hover .tile-overlay { background: rgba(8, 12, 8, 0.82); }
+  .tile:hover .tile-more { grid-template-rows: 1fr; opacity: 1; }
+  .tile-more { display: grid; }
+  .tile-more > div, .tile-more > p { min-height: 0; }
+  /* Klikanie niepotrzebne — napis „Kliknij…” tylko na telefonie */
+  .tile-hint { display: none; }
+  .tile:hover .tile-art { opacity: 0.12; }
+}
+@media not ((hover: hover) and (min-width: 1024px)) {
+  .tile-more { display: none; }
+}
 
 @media (max-width: 640px) {
   .tile { height: 280px; }

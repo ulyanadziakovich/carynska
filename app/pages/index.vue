@@ -25,8 +25,11 @@ const atrakcje = computed(() => ({
 }))
 const kuchnia = computed(() => ({
   tag: p.value?.kuchniaTag, title: p.value?.kuchniaTitle, body: paragraphs(p.value?.kuchniaBody),
+  features: (p.value?.kuchniaFeatures ?? []).filter((f: any) => f.label),
   cta: { label: p.value?.kuchniaCta, href: p.value?.kuchniaCtaHref },
-  image: { src: cmsImg(p.value?.kuchniaImage), alt: p.value?.kuchniaImageAlt },
+  images: (p.value?.kuchniaImages ?? [])
+    .map((img: any) => ({ src: cmsImg(img), alt: img?.alt ?? '' }))
+    .filter((img: { src?: string }) => img.src),
 }))
 const reviews = computed(() => ({
   tag: p.value?.reviewsTag, title: p.value?.reviewsTitle, allLabel: p.value?.reviewsAll,

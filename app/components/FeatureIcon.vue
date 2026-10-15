@@ -30,6 +30,19 @@ defineProps<{ name?: string }>()
       <circle cx="5.5" cy="11" r="1.8" /><circle cx="9.5" cy="6.5" r="1.8" /><circle cx="14.5" cy="6.5" r="1.8" /><circle cx="18.5" cy="11" r="1.8" />
       <path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.5 1.5 2.5 3 2l2.5-.8 2.5.8c1.5.5 3-.5 3-2 0-2.5-2.5-6-5.5-6z" />
     </template>
+    <template v-else-if="name === 'obiad'">
+      <circle cx="12" cy="13" r="6.5" /><circle cx="12" cy="13" r="3.5" opacity="0.6" /><path d="M2.5 4v5a1.5 1.5 0 0 0 3 0V4M4 9.5V20" /><path d="M21.5 4c-1.5 0-2.5 2-2.5 5h2.5M21.5 4v16" />
+    </template>
+    <template v-else-if="name === 'pizza'">
+      <path d="M12 3 3 20.5h18L12 3z" /><path d="M5.2 16.5c4.5-1.2 9-1.2 13.6 0" /><circle cx="11" cy="12" r="1" /><circle cx="14" cy="15.5" r="1" /><circle cx="9.5" cy="16.8" r="0.8" />
+    </template>
+    <template v-else-if="name === 'impreza'">
+      <path d="M6 3h6l-.6 5.5a2.4 2.4 0 0 1-4.8 0L6 3z" /><path d="M9 11v8M6.5 19.5h5" />
+      <path d="M14 5h5.5l-.5 4.6a2.25 2.25 0 0 1-4.5 0L14 5z" /><path d="M16.75 12.5V19M14.5 19.5h4.5" />
+    </template>
+    <template v-else-if="name === 'ryba'">
+      <path d="M2.5 12c3-4.5 8-6 12.5-4 2 1 3.5 2.5 4.5 4-1 1.5-2.5 3-4.5 4-4.5 2-9.5.5-12.5-4z" /><path d="M19.5 12 22 8.5v7L19.5 12z" /><circle cx="7" cy="11.2" r="0.7" fill="currentColor" />
+    </template>
     <template v-else>
       <path d="M20 6 9 17l-5-5" />
     </template>
