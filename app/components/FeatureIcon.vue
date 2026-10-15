@@ -43,6 +43,15 @@ defineProps<{ name?: string }>()
     <template v-else-if="name === 'ryba'">
       <path d="M2.5 12c3-4.5 8-6 12.5-4 2 1 3.5 2.5 4.5 4-1 1.5-2.5 3-4.5 4-4.5 2-9.5.5-12.5-4z" /><path d="M19.5 12 22 8.5v7L19.5 12z" /><circle cx="7" cy="11.2" r="0.7" fill="currentColor" />
     </template>
+    <template v-else-if="name === 'ognisko'">
+      <path d="M12 3c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.8 2.5 2 3-.5-2.5 0-5 0-7z" /><path d="M4 21l16-3M20 21 4 18" />
+    </template>
+    <template v-else-if="name === 'gry'">
+      <circle cx="8.5" cy="9" r="5" /><path d="M12 12.5 19 19.5" /><path d="m17.5 18 2 2 1.5-1.5-2-2" /><circle cx="18" cy="6" r="2" />
+    </template>
+    <template v-else-if="name === 'sala'">
+      <rect x="3" y="4" width="18" height="11" rx="1" /><path d="M12 15v3M8 21l4-3 4 3" /><path d="m7 11 3-3 2 2 4-4" />
+    </template>
     <template v-else>
       <path d="M20 6 9 17l-5-5" />
     </template>

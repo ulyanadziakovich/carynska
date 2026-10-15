@@ -6,6 +6,7 @@ const nav = await useNav()
 // Pola formularza „Pokoje i apartamenty” w kształcie używanym przez szablon.
 const data = computed(() => p.value && {
   intro: paragraphs(p.value.intro),
+  features: (p.value.introFeatures ?? []).filter((f: any) => f.label),
   rooms: (p.value.rooms ?? []).map((r: any) => {
     const images = (r.images ?? []).map(cmsImg).filter(Boolean) as string[]
     return { ...r, amenities: lines(r.amenities), images, image: images[0] }
@@ -56,13 +57,26 @@ onUnmounted(() => { document.body.style.overflow = '' })
       </div>
     </div>
 
-    <!-- Intro -->
-    <div class="max-w-3xl mx-auto px-8 py-10 text-center">
+    <!-- Intro: krótki tekst + co jest na miejscu (ikonki) -->
+    <div class="max-w-5xl mx-auto px-8 pt-10 pb-14">
       <p
-        v-for="(p, i) in data.intro"
+        v-for="(para, i) in data.intro"
         :key="i"
-        class="text-white/50 font-sans text-sm leading-relaxed mb-4 last:mb-0"
-      >{{ p }}</p>
+        v-reveal
+        class="max-w-3xl mx-auto text-center text-white/75 font-sans text-base lg:text-lg leading-relaxed mb-4 last:mb-0"
+      >{{ para }}</p>
+
+      <ul v-if="data.features.length" class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-5 mt-10">
+        <li
+          v-for="(f, i) in data.features"
+          :key="i"
+          v-reveal="{ delay: i * 60 }"
+          class="flex items-center gap-3 text-white/75 font-sans text-sm"
+        >
+          <span class="feature-icon"><FeatureIcon :name="f.icon" /></span>
+          {{ f.label }}
+        </li>
+      </ul>
     </div>
 
     <!-- Room grid -->
@@ -229,6 +243,17 @@ onUnmounted(() => { document.body.style.overflow = '' })
 </template>
 
 <style scoped>
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 50%;
+  color: #C9A96E;
+}
 .modal-backdrop {
   position: fixed;
   inset: 0;
