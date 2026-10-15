@@ -1,6 +1,4 @@
 <script setup lang="ts">
-defineProps<{ naturalMapColors?: boolean }>()
-
 const { kontakt, ustawienia, dzialy } = await useSite()
 // Linki w stopce mają nazwy dokumentów z CMS.
 const docs = await Promise.all(
@@ -25,41 +23,46 @@ async function submitForm() {
 <template>
   <footer id="contact" class="bg-forest">
 
-    <!-- Map — full width, generous height -->
-    <div class="w-full map-strip" style="position:relative;">
+    <!-- Mapa — naturalne kolory, bez filtrów -->
+    <div class="map-strip relative">
       <iframe
         :src="`https://maps.google.com/maps?q=${encodeURIComponent(kontakt?.mapQuery ?? '')}&t=&z=15&ie=UTF8&iwloc=&output=embed`"
-        class="w-full h-full"
-        :style="naturalMapColors ? 'border:0' : 'border:0;filter:grayscale(90%) invert(10%) sepia(20%) saturate(400%) brightness(80%)'"
+        class="w-full h-full border-0"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
+        :title="kontakt?.address"
       />
-      <!-- Gold overlay bar at bottom -->
-      <div class="absolute bottom-0 left-0 right-0 h-px bg-gold/40" />
     </div>
 
-    <!-- Identity strip: logo + tagline full width -->
-    <div class="border-b border-white/8">
-      <div class="max-w-7xl mx-auto px-5 lg:px-16 py-5 md:py-6 flex flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-6">
-          <img
-            v-if="ustawienia?.footerLogo"
-            :src="cmsImg(ustawienia.footerLogo)"
-            :alt="ustawienia.siteName"
-            class="w-32 md:w-44"
-            style="filter:brightness(0) invert(1) sepia(0.8) saturate(1.4) hue-rotate(5deg) opacity(0.9)"
-          />
-          <div class="w-px h-10 bg-gold/20 hidden md:block" />
-          <p class="font-display italic text-white/30 text-lg hidden md:block">{{ kontakt?.kicker }}</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-16 py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-10">
+
+      <!-- 1. Marka: logo, adres, główny e-mail, social -->
+      <div class="lg:col-span-3 flex flex-col gap-6">
+        <img
+          v-if="ustawienia?.footerLogo"
+          :src="cmsImg(ustawienia.footerLogo)"
+          :alt="ustawienia.siteName"
+          class="w-44"
+          style="filter:brightness(0) invert(1) sepia(0.8) saturate(1.4) hue-rotate(5deg) opacity(0.9)"
+        />
+        <p class="font-display italic text-white/50 text-lg">{{ kontakt?.kicker }}</p>
+        <div class="flex flex-col gap-3 text-sm font-sans">
+          <p v-if="kontakt?.address" class="flex items-start gap-3 text-white/70">
+            <span class="text-gold"><svg class="w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-7-7.75-7-13a7 7 0 0 1 14 0c0 5.25-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></svg></span>{{ kontakt.address }}
+          </p>
+          <a v-if="kontakt?.email" :href="`mailto:${kontakt.email}`" class="flex items-center gap-3 text-white/70 hover:text-gold transition-colors">
+            <span class="text-gold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>{{ kontakt.email }}
+          </a>
         </div>
-        <div class="flex gap-2">
+        <div v-if="kontakt?.social?.length" class="flex gap-2.5">
           <a
             v-for="s in kontakt?.social"
             :key="s.label"
             :href="s.href"
             target="_blank"
+            rel="noopener"
             :aria-label="s.label"
-            class="w-8 h-8 border border-white/10 hover:border-gold flex items-center justify-center text-white/30 hover:text-gold transition-all"
+            class="w-10 h-10 rounded-full border border-gold/30 hover:border-gold hover:bg-gold hover:text-forest flex items-center justify-center text-gold transition-all"
           >
             <svg v-if="s.icon === 'facebook'" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -70,154 +73,155 @@ async function submitForm() {
           </a>
         </div>
       </div>
-    </div>
 
-    <!-- Main info grid -->
-    <div class="max-w-7xl mx-auto px-5 lg:px-16 py-0 grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5">
-
-      <!-- Departments -->
-      <div class="bg-forest p-5 md:p-6 flex flex-col gap-4 md:gap-5">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.title }}</p>
-        <!-- Mobile: compact horizontal grid; Desktop: vertical list -->
-        <div class="grid grid-cols-2 gap-x-5 gap-y-4 md:flex md:flex-col md:gap-4">
-          <div v-for="dept in dzialy" :key="dept.id">
-            <p class="text-white/25 text-[9px] tracking-[0.3em] uppercase font-sans mb-0.5">{{ dept.tag }}</p>
-            <p class="font-display text-white text-base md:text-lg font-light leading-snug">{{ dept.name }}</p>
-            <a v-if="dept.phone" :href="telHref(dept.phone)" class="text-white/50 hover:text-gold font-sans text-sm tracking-wider transition-colors block mt-0.5">{{ dept.phone }}</a>
-            <a v-if="dept.email" :href="`mailto:${dept.email}`" class="text-white/25 hover:text-gold/60 font-sans text-xs transition-colors block">{{ dept.email }}</a>
-          </div>
-        </div>
-        <div class="pt-3 border-t border-white/8">
-          <p class="text-white/25 font-sans text-xs leading-relaxed">{{ kontakt?.address }}</p>
-          <a v-if="kontakt?.email" :href="`mailto:${kontakt.email}`" class="text-gold/50 hover:text-gold font-sans text-xs transition-colors block mt-1">{{ kontakt.email }}</a>
-        </div>
+      <!-- 2. Działy z telefonami -->
+      <div class="lg:col-span-4">
+        <h3 class="foot-heading">{{ kontakt?.title }}</h3>
+        <ul class="flex flex-col divide-y divide-white/8">
+          <li v-for="dept in dzialy" :key="dept.id" class="py-4 first:pt-0">
+            <p class="text-gold/70 text-[10px] tracking-[0.25em] uppercase font-sans mb-1">{{ dept.tag }}</p>
+            <p class="font-display text-white text-xl font-light mb-1.5">{{ dept.name }}</p>
+            <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-sans">
+              <a v-if="dept.phone" :href="telHref(dept.phone)" class="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
+                <span class="text-gold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11a19.79 19.79 0 01-3.07-8.67A2 2 0 012.81 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>{{ dept.phone }}
+              </a>
+              <a v-if="dept.email" :href="`mailto:${dept.email}`" class="flex items-center gap-2 text-white/55 hover:text-gold transition-colors">
+                <span class="text-gold/70"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>{{ dept.email }}
+              </a>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <!-- Rezerwacje + dane bankowe -->
-      <div class="bg-forest p-5 md:p-6 flex flex-col gap-4 md:gap-5">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.reservationsTitle }}</p>
-        <div class="flex flex-wrap gap-x-6 gap-y-2 md:flex-col md:gap-3">
-          <a
-            v-for="p in kontakt?.platforms"
-            :key="p.label"
-            :href="p.href"
-            target="_blank"
-            rel="noopener"
-            class="group flex items-center gap-3 text-white/40 hover:text-white transition-colors"
-          >
-            <span class="w-5 h-px bg-gold/30 group-hover:w-8 group-hover:bg-gold transition-all duration-300 shrink-0" />
-            <span class="font-sans text-sm tracking-[0.1em]">{{ p.label }}</span>
-          </a>
-        </div>
-        <div v-if="kontakt?.account" class="pt-3 border-t border-white/8 flex flex-col gap-2.5">
-          <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt.bankTitle }}</p>
-          <div class="grid grid-cols-1 gap-2">
-            <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.bankLabel }}</p>
-              <p class="text-white/55 font-sans text-xs mt-0.5">{{ kontakt.bankName }}</p>
-            </div>
-            <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.accountLabel }}</p>
-              <p class="text-gold/60 font-sans text-xs tracking-wider mt-0.5 leading-relaxed break-all">{{ kontakt.account }}</p>
-            </div>
-            <div>
-              <p class="text-white/20 text-[9px] tracking-widest uppercase font-sans">{{ kontakt.swiftLabel }}</p>
-              <p class="text-white/40 font-sans text-xs tracking-widest mt-0.5">{{ kontakt.swift }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Formularz -->
-      <div class="bg-forest p-5 md:p-6 flex flex-col gap-3">
-        <p class="text-gold text-[9px] tracking-[0.5em] uppercase font-sans">{{ kontakt?.formTitle }}</p>
-        <div v-if="sent" class="flex flex-col gap-3 py-4">
+      <!-- 3. Formularz -->
+      <div class="md:col-span-2 lg:col-span-5">
+        <h3 class="foot-heading">{{ kontakt?.formTitle }}</h3>
+        <div v-if="sent" class="flex flex-col gap-3 py-6 px-6 border border-gold/25">
           <div class="w-8 h-px bg-gold" />
-          <p class="font-display text-white text-xl font-light">{{ kontakt?.formThanks }}</p>
-          <p class="text-white/40 font-sans text-sm">{{ kontakt?.formThanksText }}</p>
+          <p class="font-display text-white text-2xl font-light">{{ kontakt?.formThanks }}</p>
+          <p class="text-white/60 font-sans text-sm">{{ kontakt?.formThanksText }}</p>
         </div>
-        <form v-else class="flex flex-col gap-2 flex-1" @submit.prevent="submitForm">
-          <input v-model="form.name" type="text" :placeholder="kontakt?.formName" required class="foot-input" />
-          <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" required class="foot-input" />
-          <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" class="foot-input" />
-          <textarea v-model="form.message" :placeholder="kontakt?.formMessage" rows="3" required class="foot-input resize-none" />
-          <button type="submit" :disabled="sending" class="foot-btn mt-1">
+        <form v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3" @submit.prevent="submitForm">
+          <input v-model="form.name" type="text" :placeholder="kontakt?.formName" :aria-label="kontakt?.formName" required class="foot-input sm:col-span-2" />
+          <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" :aria-label="kontakt?.formEmail" required class="foot-input" />
+          <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" :aria-label="kontakt?.formPhone" class="foot-input" />
+          <textarea v-model="form.message" :placeholder="kontakt?.formMessage" :aria-label="kontakt?.formMessage" rows="4" required class="foot-input resize-none sm:col-span-2" />
+          <button type="submit" :disabled="sending" class="foot-btn sm:col-span-2">
             {{ sending ? kontakt?.formSending : kontakt?.formSubmit }}
           </button>
         </form>
       </div>
-
     </div>
 
-    <!-- Siostrzane obiekty -->
-    <div v-if="kontakt?.sisters?.length" class="border-t border-white/8 px-5 lg:px-16 py-5">
-      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row gap-4 sm:gap-12 items-start">
-        <p class="text-gold/40 text-[9px] tracking-[0.5em] uppercase font-sans shrink-0 mt-0.5">{{ kontakt.sisterTitle }}</p>
-        <div class="flex flex-wrap gap-x-10 gap-y-4">
-          <a
-            v-for="obj in kontakt.sisters"
-            :key="obj.name"
-            :href="obj.href"
-            target="_blank"
-            rel="noopener"
-            class="group flex flex-col gap-0.5"
-          >
-            <p class="text-white/20 text-[9px] tracking-[0.3em] uppercase font-sans">{{ obj.location }}</p>
-            <h4 class="font-display text-white/60 text-base font-light group-hover:text-gold transition-colors">{{ obj.name }}</h4>
-            <p class="text-white/25 font-sans text-xs">{{ obj.phone }}</p>
-          </a>
+    <!-- Rezerwacje online + dane do przelewu + nasze obiekty -->
+    <div class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto px-6 lg:px-16 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <h3 class="foot-heading">{{ kontakt?.reservationsTitle }}</h3>
+          <div class="flex flex-wrap gap-2">
+            <a
+              v-for="p in kontakt?.platforms"
+              :key="p.label"
+              :href="p.href"
+              target="_blank"
+              rel="noopener"
+              class="px-3.5 py-2 border border-white/12 text-white/70 hover:border-gold hover:text-gold font-sans text-xs tracking-wide transition-colors"
+            >{{ p.label }}</a>
+          </div>
+        </div>
+
+        <div v-if="kontakt?.account">
+          <h3 class="foot-heading">{{ kontakt.bankTitle }}</h3>
+          <dl class="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 font-sans text-sm">
+            <dt class="text-white/40">{{ kontakt.bankLabel }}</dt><dd class="text-white/80">{{ kontakt.bankName }}</dd>
+            <dt class="text-white/40">{{ kontakt.accountLabel }}</dt><dd class="text-gold tracking-wide break-all">{{ kontakt.account }}</dd>
+            <dt class="text-white/40">{{ kontakt.swiftLabel }}</dt><dd class="text-white/80 tracking-widest">{{ kontakt.swift }}</dd>
+          </dl>
+        </div>
+
+        <div v-if="kontakt?.sisters?.length">
+          <h3 class="foot-heading">{{ kontakt.sisterTitle }}</h3>
+          <div class="flex flex-col gap-4">
+            <a
+              v-for="obj in kontakt.sisters"
+              :key="obj.name"
+              :href="obj.href"
+              target="_blank"
+              rel="noopener"
+              class="group flex items-baseline justify-between gap-4"
+            >
+              <span>
+                <span class="block text-white/40 text-[10px] tracking-[0.25em] uppercase font-sans">{{ obj.location }}</span>
+                <span class="font-display text-white text-lg font-light group-hover:text-gold transition-colors">{{ obj.name }}</span>
+              </span>
+              <span class="text-white/60 font-sans text-sm whitespace-nowrap">{{ obj.phone }}</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Copyright -->
-    <div class="border-t border-white/8 py-4 px-5 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p class="text-white/20 text-[10px] font-sans tracking-[0.3em] uppercase">{{ withYear(ustawienia?.copyright) }}</p>
-      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <template v-for="(doc, i) in docs" :key="doc.href">
-          <span v-if="i" class="text-white/10">·</span>
-          <NuxtLink :to="doc.href" class="text-white/25 hover:text-gold font-sans text-[10px] tracking-[0.2em] uppercase transition-colors">{{ doc.data.value?.title }}</NuxtLink>
-        </template>
+    <!-- Copyright i dokumenty -->
+    <div class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto py-6 px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-between gap-4 text-center">
+        <p class="text-white/40 text-[11px] font-sans tracking-[0.2em] uppercase">{{ withYear(ustawienia?.copyright) }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          <NuxtLink
+            v-for="doc in docs"
+            :key="doc.href"
+            :to="doc.href"
+            class="text-white/55 hover:text-gold font-sans text-[11px] tracking-[0.15em] uppercase transition-colors"
+          >{{ doc.data.value?.title }}</NuxtLink>
+        </div>
+        <p class="text-white/35 font-sans text-[11px] tracking-widest uppercase">{{ ustawienia?.regionLine }}</p>
       </div>
-      <p class="text-white/10 font-sans text-[10px] tracking-widest uppercase">{{ ustawienia?.regionLine }}</p>
     </div>
 
   </footer>
 </template>
 
 <style scoped>
-.map-strip { height: 140px; }
-@media (min-width: 768px) { .map-strip { height: 240px; } }
+.map-strip { height: 220px; }
+@media (min-width: 768px) { .map-strip { height: 320px; } }
+
+.foot-heading {
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+}
 
 .foot-input {
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.75);
-  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.9);
+  padding: 0.8rem 1rem;
   font-family: 'Raleway', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.03em;
+  font-size: 13px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
   width: 100%;
 }
-.foot-input::placeholder { color: rgba(255,255,255,0.18); }
-.foot-input:focus { border-color: rgba(201,169,110,0.45); }
+.foot-input::placeholder { color: rgba(255,255,255,0.4); }
+.foot-input:focus { border-color: rgba(201,169,110,0.7); background: rgba(255,255,255,0.06); }
 
 .foot-btn {
   background: #C9A96E;
   color: #162016;
   border: none;
-  padding: 0.7rem 1.5rem;
+  padding: 0.95rem 1.5rem;
   font-family: 'Raleway', sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s;
-  align-self: flex-start;
 }
-.foot-btn:hover:not(:disabled) { background: #b8914f; }
+.foot-btn:hover:not(:disabled) { background: #DFB97E; }
 .foot-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>

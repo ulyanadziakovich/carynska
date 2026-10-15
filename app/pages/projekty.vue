@@ -142,7 +142,7 @@ function toggleSection(key: string) {
 
     </div><!-- end light content area -->
 
-    <KontaktSection :natural-map-colors="true" />
+    <KontaktSection />
   </main>
 </template>
 

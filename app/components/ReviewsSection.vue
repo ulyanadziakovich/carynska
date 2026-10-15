@@ -35,13 +35,13 @@ function onScroll() {
 
 <template>
   <section class="bg-forest-void">
-    <div class="max-w-7xl mx-auto px-8 lg:px-16 py-20">
+    <div class="relative max-w-7xl mx-auto px-8 lg:px-16 py-20">
 
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
         <div class="flex items-start gap-5">
           <!-- Złoty cudzysłów — duży, cienki, jak róża wiatrów i talerz w innych sekcjach -->
-          <span v-reveal class="quote-mark" aria-hidden="true">&ldquo;</span>
+          <span v-reveal class="quote-mark" aria-hidden="true" />
           <div>
             <p v-reveal class="text-gold/70 text-[10px] tracking-[0.4em] uppercase font-sans mb-3">{{ reviews.tag }}</p>
             <h2 v-reveal="{ delay: 100 }" class="font-display text-white font-light" style="font-size: clamp(1.8rem, 3vw, 2.6rem)">{{ reviews.title }}</h2>
@@ -178,6 +178,7 @@ function onScroll() {
   color: rgba(201, 169, 110, 0.07);
   pointer-events: none;
 }
+.quote-mark::before { content: '\201C'; }
 .quote-mark {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 6rem; line-height: 0.75;

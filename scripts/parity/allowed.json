@@ -3,7 +3,16 @@
     "Grupy & Biuro",
     "Biuro",
     "Booking now",
-    "Zarezerwuj"
+    "Zarezerwuj",
+    "@aria-label: Imię i nazwisko",
+    "@aria-label: Email",
+    "@aria-label: Telefon",
+    "@aria-label: Wiadomość",
+    "Polańczyk, ul. Równa 19",
+    "przystan@carynska.pl",
+    "Napisz do nas",
+    "Wyślij wiadomość",
+    "·"
   ],
   "index": [
     "Bądź na",
@@ -55,8 +64,7 @@
     "Obiady i kolacje",
     "Pizza z pieca",
     "Imprezy okolicznościowe",
-    "@alt: Przystań nad Jeziorem Solińskim z lotu ptaka",
-    "“"
+    "@alt: Przystań nad Jeziorem Solińskim z lotu ptaka"
   ],
   "galeria": [
     "@alt: Basen z fontanną przy przystani",
