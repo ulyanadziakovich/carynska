@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Tylko na serwerze: sekret, z którym formularz kontaktowy zapisuje wiadomości w CMS.
+    // Z NUXT_CONTACT_SECRET (.env, poza repo) — ta sama wartość co w ../carynska-cms/.env.
+    contactSecret: '',
     public: {
       // Panel treści (repo ../carynska-cms). Na produkcji nadpisz NUXT_PUBLIC_CMS_URL.
       cmsUrl: 'http://localhost:4322',
@@ -27,6 +30,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      // Favicon, Google Analytics i język strony: app.vue (z CMS, Ustawienia → „Google i wyszukiwarki”).
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
@@ -34,10 +38,6 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap',
         },
-      ],
-      script: [
-        { src: 'https://www.googletagmanager.com/gtag/js?id=G-KSRW79Y4C6', async: true },
-        { innerHTML: "window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-KSRW79Y4C6');" },
       ],
     },
   },

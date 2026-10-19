@@ -1,4 +1,31 @@
 <script setup lang="ts">
+// Wspólne dla całej strony, z Ustawień → „Google i wyszukiwarki”: ikona, statystyki, końcówka tytułu.
+const { ustawienia } = await useSite()
+const img = useCmsImg()
+const favicon = computed(() => img(ustawienia.value?.favicon))
+// Identyfikator trafia do skryptu — przepuszczamy tylko format Google (np. G-KSRW79Y4C6).
+const gaId = computed(() => {
+  const id = ustawienia.value?.gaId?.trim()
+  return id && /^[A-Z]{1,3}-[A-Z0-9-]+$/i.test(id) ? id : undefined
+})
+
+useHead({
+  htmlAttrs: { lang: 'pl' },
+  titleTemplate: (t) => {
+    const name = ustawienia.value?.siteName
+    // Bez dublowania, gdy tytuł strony to sama nazwa obiektu (np. „PRZYSTAŃ CARYŃSKA” na głównej).
+    return t && t.toLowerCase() !== name?.toLowerCase() ? [t, name].filter(Boolean).join(' · ') : name ?? null
+  },
+  link: () => (favicon.value ? [
+    { rel: 'icon', type: 'image/png', href: favicon.value },
+    { rel: 'apple-touch-icon', href: favicon.value },
+  ] : []),
+  script: () => (gaId.value ? [
+    { src: `https://www.googletagmanager.com/gtag/js?id=${gaId.value}`, async: true },
+    { innerHTML: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId.value}');` },
+  ] : []),
+})
+
 const scrolled = ref(false)
 
 function onScroll() {

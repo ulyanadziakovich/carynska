@@ -39,12 +39,26 @@ export async function useCmsCollection<T = Record<string, any>>(name: string, op
   }))
 }
 
-/** Adres zdjęcia z CMS dla <img src>; undefined, gdy pole puste (zdjęcie usunięte). */
-export function cmsImg(img: CmsImage | string | null | undefined) {
+function imgUrl(img: CmsImage | string | null | undefined, cmsUrl: string) {
   const path = typeof img === 'string' ? img : img?.src
   if (!path) return undefined
   if (/^https?:\/\//.test(path)) return path
-  return `${useRuntimeConfig().public.cmsUrl}${path}`
+  return `${cmsUrl}${path}`
+}
+
+/** Adres zdjęcia z CMS dla <img src>; undefined, gdy pole puste (zdjęcie usunięte). */
+export function cmsImg(img: CmsImage | string | null | undefined) {
+  return imgUrl(img, useRuntimeConfig().public.cmsUrl)
+}
+
+/**
+ * To samo co cmsImg, ale adres CMS odczytany od razu, w setupie. Do computed
+ * czytanych później poza kontekstem Nuxta (np. przez useHead/useSeoMeta),
+ * gdzie useRuntimeConfig() w środku cmsImg rzuciłby błąd.
+ */
+export function useCmsImg() {
+  const cmsUrl = useRuntimeConfig().public.cmsUrl
+  return (img: CmsImage | string | null | undefined) => imgUrl(img, cmsUrl)
 }
 
 /** Pole „jedna pozycja w linii” → lista. */

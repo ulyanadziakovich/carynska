@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { kontakt, ustawienia } = await useSite()
-// Linki w stopce mają nazwy dokumentów z CMS.
+// Dokumenty z CMS — w stopce te z zaznaczonym „Link w stopce”, z tytułem z formularza.
 const docs = await Promise.all(
   (['regulamin', 'regulamin-wypozyczalni', 'wzor-umowy-jachtu'] as const).map(async (name) => {
     const { data } = await useCmsSingle(name)
@@ -8,15 +8,24 @@ const docs = await Promise.all(
   }),
 )
 
-const form = reactive({ name: '', email: '', phone: '', message: '' })
+// „website” to pułapka na boty — ukryte pole, człowiek go nie wypełni (server/api/contact.post.ts).
+const form = reactive({ name: '', email: '', phone: '', message: '', website: '' })
 const sent = ref(false)
 const sending = ref(false)
+const failed = ref(false)
 
 async function submitForm() {
   sending.value = true
-  await $fetch('/api/contact', { method: 'POST', body: form }).catch(() => {})
-  sent.value = true
-  sending.value = false
+  failed.value = false
+  try {
+    await $fetch('/api/contact', { method: 'POST', body: form })
+    sent.value = true
+  } catch {
+    // Wiadomość nie dotarła do skrzynki — treść zostaje w polach, gość może spróbować ponownie.
+    failed.value = true
+  } finally {
+    sending.value = false
+  }
 }
 </script>
 
@@ -114,6 +123,9 @@ async function submitForm() {
           <input v-model="form.email" type="email" :placeholder="kontakt?.formEmail" :aria-label="kontakt?.formEmail" required class="foot-input" />
           <input v-model="form.phone" type="tel" :placeholder="kontakt?.formPhone" :aria-label="kontakt?.formPhone" class="foot-input" />
           <textarea v-model="form.message" :placeholder="kontakt?.formMessage" :aria-label="kontakt?.formMessage" rows="3" required class="foot-input resize-none sm:col-span-2" />
+          <!-- Pułapka na boty: niewidoczne dla ludzi i czytników ekranu, poza kolejnością tabulatora. -->
+          <input v-model="form.website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px] w-px h-px opacity-0" />
+          <p v-if="failed" role="alert" class="sm:col-span-2 text-[#E8A598] font-sans text-sm leading-relaxed">{{ kontakt?.formError }}</p>
           <button type="submit" :disabled="sending" class="foot-btn sm:col-span-2">
             {{ sending ? kontakt?.formSending : kontakt?.formSubmit }}
           </button>
@@ -148,7 +160,7 @@ async function submitForm() {
         <p class="text-white/40 text-[11px] font-sans tracking-[0.2em] uppercase">{{ withYear(ustawienia?.copyright) }}</p>
         <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
           <NuxtLink
-            v-for="doc in docs"
+            v-for="doc in docs.filter((d) => d.data.value?.showInFooter)"
             :key="doc.href"
             :to="doc.href"
             class="text-white/55 hover:text-gold font-sans text-[11px] tracking-[0.15em] uppercase transition-colors"

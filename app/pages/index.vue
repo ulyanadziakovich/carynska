@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('strona-glowna')
+useCmsSeo(p)
 const nav = await useNav()
 
 // Pola formularza „Strona główna” w kształcie, jakiego oczekują sekcje.
