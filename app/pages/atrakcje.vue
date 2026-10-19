@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('atrakcje')
+useCmsSeo(p)
 const { ustawienia } = await useSite()
 const imgs = (list?: CmsImage[]) => (list ?? []).filter((i) => i?.src).map((i) => ({ src: cmsImg(i)!, alt: i.alt ?? '' }))
 
@@ -27,7 +28,7 @@ const openBoat = ref<string | null>(null)
   <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <!-- Intro -->
     <div class="max-w-3xl mx-auto px-8 py-14 text-center">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('tawerna')
+useCmsSeo(p)
 const { ustawienia, kontakt } = await useSite()
 const nav = await useNav()
 
@@ -29,7 +30,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
     <!-- Dark hero area -->
     <div class="bg-forest">
       <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
-      <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+      <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
     </div>
 
     <!-- Light content area -->

@@ -1,20 +1,30 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('grupy')
+useCmsSeo(p)
 const { kontakt } = await useSite()
 const nav = await useNav()
 
 // Pola formularza „Grupy i eventy” w kształcie używanym przez szablon.
-const g = computed(() => p.value && {
-  sections: p.value.sections ?? [],
-  pricing: {
-    tag: p.value.pricingTag, minPersons: p.value.minPersons, bonuses: p.value.bonuses ?? [],
-    cols: lines(p.value.cols), rows: (p.value.rows ?? []).map((r: any) => ({ type: r.type, values: lines(r.values) })),
-    includes: { hb: lines(p.value.includesHb), fb: lines(p.value.includesFb), footnote: p.value.footnote },
-    notes: lines(p.value.notes), extras: p.value.extras ?? [], legal: p.value.legal,
-  },
-  capacity: { rooms: p.value.capacityRooms ?? [], halls: p.value.halls ?? [] },
+// Cennik w panelu to tabelka „okres | HB | FB” (jeden wiersz na okres); na stronie okresy są kolumnami.
+const texts = (list?: { text?: string }[]) => (list ?? []).map((i) => i.text?.trim()).filter(Boolean) as string[]
+const g = computed(() => {
+  if (!p.value) return null
+  const seasons: { period?: string; hb?: string; fb?: string }[] = (p.value.seasons ?? []).filter((s: any) => s.period?.trim())
+  return {
+    sections: p.value.sections ?? [],
+    pricing: {
+      tag: p.value.pricingTag, minPersons: p.value.minPersons, bonuses: p.value.bonuses ?? [],
+      cols: seasons.map((s) => s.period),
+      rows: [
+        { type: p.value.priceHbLabel, values: seasons.map((s) => s.hb?.trim() || '—') },
+        { type: p.value.priceFbLabel, values: seasons.map((s) => s.fb?.trim() || '—') },
+      ],
+      includes: { hb: texts(p.value.includesHbList), fb: texts(p.value.includesFbList), footnote: p.value.footnote },
+      notes: texts(p.value.notesList), extras: p.value.extras ?? [], legal: p.value.legal,
+    },
+    capacity: { rooms: p.value.capacityRooms ?? [], halls: p.value.halls ?? [] },
+  }
 })
-const heroTitle = computed(() => lines(p.value?.heroTitle))
 const totals = computed(() => [
   [p.value?.totalRoomsLabel, p.value?.totalRooms, 'text-white'],
   [p.value?.bedsLabel, p.value?.beds, 'text-white'],
@@ -36,19 +46,7 @@ function onSectionsScroll() {
   <main v-if="p && g" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <!-- ── Hero ── -->
-    <div class="relative h-[70vh] min-h-[520px] overflow-hidden">
-      <img v-if="p.heroImage" :src="cmsImg(p.heroImage)" :alt="p.heroTag" class="absolute inset-0 w-full h-full object-cover" />
-      <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.5) 100%)" />
-      <div class="relative h-full flex flex-col items-center justify-center text-center px-10 lg:px-20 max-w-7xl mx-auto">
-        <p class="text-gold text-[10px] tracking-[0.5em] uppercase font-sans mb-5">{{ p.heroTag }}</p>
-        <h1 class="font-display text-cream/90 font-light leading-none mb-6" style="font-size: clamp(3rem, 7vw, 5.5rem); letter-spacing: 0.04em">
-          {{ heroTitle[0] }}<br>
-          <em>{{ heroTitle[1] }}</em>
-        </h1>
-        <div class="w-10 h-px bg-gold" />
-      </div>
-    </div>
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <!-- ── Key numbers ── -->
     <div class="bg-forest-void border-b border-gold/15">

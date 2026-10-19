@@ -2,6 +2,7 @@
 const props = defineProps<{ name: 'regulamin' | 'regulamin-wypozyczalni' | 'wzor-umowy-jachtu' }>()
 
 const { data: p } = await useCmsSingle(props.name)
+useCmsSeo(p)
 const nav = await useNav()
 const pdfUrl = computed(() => (p.value?.pdf?.filename ? cmsImg(`/uploads/${p.value.pdf.directory}${p.value.pdf.filename}`) : undefined))
 </script>
@@ -10,10 +11,9 @@ const pdfUrl = computed(() => (p.value?.pdf?.filename ? cmsImg(`/uploads/${p.val
   <main v-if="p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.kicker" :title="p.title" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero :tag="p.kicker" :title="p.title" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.lead" />
 
     <div class="max-w-3xl mx-auto px-8 lg:px-0 py-16 lg:py-20">
-      <p v-if="p.lead" class="text-white/40 font-sans text-sm leading-relaxed mb-8">{{ p.lead }}</p>
 
       <div v-if="!p.buttonsAtEnd" class="mb-14">
         <DocumentButtons :pdf-url="pdfUrl" :pdf-label="p.pdfLabel" :cta="p.cta" :cta-href="p.ctaHref" />

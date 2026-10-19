@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('noclegi-jacht')
+useCmsSeo(p)
 const { ustawienia, kontakt } = await useSite()
 const nav = await useNav()
 
@@ -57,7 +58,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
   <main v-if="data && p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <!-- Content area -->
     <div class="bg-forest-wash">

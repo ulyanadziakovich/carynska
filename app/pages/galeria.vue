@@ -2,6 +2,7 @@
 const nav = await useNav()
 
 const { data: p } = await useCmsSingle('galeria')
+useCmsSeo(p)
 const { ustawienia } = await useSite()
 
 // Kategorie z CMS = przyciski filtra; podpis zdjęcia = jego opis w galerii.
@@ -62,7 +63,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   <main class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero v-if="p" :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero v-if="p" :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <div class="max-w-7xl mx-auto px-8 lg:px-16 py-16">
       <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-8">{{ p?.photosKicker }}</p>

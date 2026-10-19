@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('zaplanuj-pobyt')
+useCmsSeo(p)
 const { ustawienia, kontakt } = await useSite()
 const nav = await useNav()
 </script>
@@ -8,7 +9,7 @@ const nav = await useNav()
   <main v-if="p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <div class="bg-forest-wash">
 

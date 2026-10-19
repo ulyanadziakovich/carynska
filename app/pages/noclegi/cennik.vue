@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: p } = await useCmsSingle('noclegi-cennik')
+useCmsSeo(p)
 const nav = await useNav()
 
 /** Puste pole w CMS = brak ceny (pokazujemy kreskę, jak dotąd). */
@@ -10,7 +11,7 @@ const price = (v?: string) => v?.trim() || '—'
   <main v-if="p" class="bg-forest min-h-screen">
     <TheNavbar :nav="nav" :always-show-logo="true" :overlay="false" />
 
-    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" />
+    <PageHero :tag="p.heroTag" :title="p.heroTitle" :image="cmsImg(p.heroImage) ?? ''" :subtitle="p.heroSubtitle" />
 
     <div class="max-w-4xl mx-auto px-8 lg:px-12 py-20">
 

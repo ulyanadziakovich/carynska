@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { NuxtLink } from '#components'
+
 const { data: p } = await useCmsSingle('noclegi-pokoje')
+useCmsSeo(p)
 const { ustawienia } = await useSite()
 const nav = await useNav()
 
@@ -14,32 +17,15 @@ const data = computed(() => p.value && {
 })
 
 type Room = NonNullable<typeof data.value>['rooms'][number]
+
+// Filtr nad kafelkami: przyciski z pola „Kategoria” kafelków, w kolejności pierwszego wystąpienia.
+const categories = computed(() => [...new Set((data.value?.rooms ?? []).map((r: Room) => r.category?.trim()).filter(Boolean))] as string[])
+const activeCategory = ref<string | null>(null)
+const visibleRooms = computed(() => (data.value?.rooms ?? []).filter((r: Room) => !activeCategory.value || r.category?.trim() === activeCategory.value))
+// Szczegóły kafelka: components/noclegi/RoomModal.vue (galeria, blokada przewijania, Esc i strzałki).
 const selectedRoom = ref<Room | null>(null)
-
-const galleryIndex = ref(0)
-const galleryImages = computed(() => {
-  if (!selectedRoom.value) return []
-  return selectedRoom.value.images
-})
-
-function openRoom(room: Room) {
-  selectedRoom.value = room
-  galleryIndex.value = 0
-  document.body.style.overflow = 'hidden'
-}
-function closeRoom() {
-  selectedRoom.value = null
-  document.body.style.overflow = ''
-}
-function nextImage() {
-  galleryIndex.value = (galleryIndex.value + 1) % galleryImages.value.length
-}
-function prevImage() {
-  galleryIndex.value = (galleryIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length
-}
-
-
-onUnmounted(() => { document.body.style.overflow = '' })
+function openRoom(room: Room) { selectedRoom.value = room }
+function closeRoom() { selectedRoom.value = null }
 </script>
 
 <template>
@@ -48,26 +34,26 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
     <!-- Góra strony: tekst po lewej, zdjęcie pokoju w ramce po prawej (bez napisów na zdjęciu) -->
     <section class="bg-forest-wash">
-      <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-10 pb-14 lg:pt-14 lg:pb-20 grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-10 lg:gap-16 items-center">
+      <div class="max-w-7xl mx-auto px-8 lg:px-16 pt-6 pb-10 lg:pt-8 lg:pb-12 grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-10 lg:gap-16 items-center">
         <div>
-          <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/40 mb-10">
+          <div class="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-sans text-white/40 mb-6">
             <NuxtLink to="/noclegi/pokoje" class="hover:text-gold transition-colors">{{ p.crumbParent }}</NuxtLink>
             <span>/</span>
             <span class="text-white/60">{{ p.crumbCurrent }}</span>
           </div>
-          <p class="fade-in text-gold text-[11px] tracking-[0.4em] uppercase font-sans mb-5" style="animation-delay: 0.1s">{{ p.heroTag }}</p>
+          <p class="fade-in text-gold text-[11px] tracking-[0.4em] uppercase font-sans mb-3" style="animation-delay: 0.1s">{{ p.heroTag }}</p>
           <h1
             class="fade-in font-display text-white font-light leading-[1.05] whitespace-pre-line"
-            style="font-size: clamp(2.6rem, 5vw, 4.4rem); animation-delay: 0.25s"
+            style="font-size: clamp(2.2rem, 3.6vw, 3.4rem); animation-delay: 0.25s"
           >{{ p.heroTitle }}</h1>
-          <div class="fade-in w-10 h-px bg-gold my-7" style="animation-delay: 0.4s" />
+          <div class="fade-in w-10 h-px bg-gold my-5" style="animation-delay: 0.4s" />
           <p class="fade-in text-white/75 font-sans text-base lg:text-lg leading-relaxed max-w-md" style="animation-delay: 0.5s">{{ p.heroSubtitle }}</p>
           <a
             v-if="p.cta && ustawienia?.bookingUrl"
             :href="ustawienia.bookingUrl"
             target="_blank"
             rel="noopener"
-            class="fade-in mt-9 inline-flex items-center gap-3 bg-gold text-forest hover:bg-gold-light transition-colors px-7 py-3.5 text-[11px] font-semibold tracking-[0.2em] uppercase font-sans"
+            class="fade-in mt-7 inline-flex items-center gap-3 bg-gold text-forest hover:bg-gold-light transition-colors px-7 py-3.5 text-[11px] font-semibold tracking-[0.2em] uppercase font-sans"
             style="animation-delay: 0.65s"
           >
             {{ p.cta }}
@@ -105,16 +91,40 @@ onUnmounted(() => { document.body.style.overflow = '' })
       </ul>
     </div>
 
-    <!-- Room grid -->
+    <!-- Kafelki (pokoje, apartamenty, domki): białe karty na ciemnym tle strony — kolejność i nowe kafelki: panel → Pokoje i apartamenty → Kafelki -->
     <div class="max-w-7xl mx-auto px-8 lg:px-16 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Filtr: tylko gdy są co najmniej dwie kategorie -->
+      <div v-if="categories.length > 1" class="flex flex-wrap justify-center gap-2.5 mb-10" role="group" :aria-label="p.filterLabel">
         <button
-          v-for="room in data.rooms"
-          :key="room.slug"
-          class="card-elevated text-left group cursor-pointer overflow-hidden"
-          @click="openRoom(room)"
+          type="button"
+          class="filter-pill"
+          :class="{ 'filter-pill--active': !activeCategory }"
+          :aria-pressed="!activeCategory"
+          @click="activeCategory = null"
+        >{{ p.filterAll }}</button>
+        <button
+          v-for="c in categories"
+          :key="c"
+          type="button"
+          class="filter-pill"
+          :class="{ 'filter-pill--active': activeCategory === c }"
+          :aria-pressed="activeCategory === c"
+          @click="activeCategory = c"
+        >{{ c }}</button>
+      </div>
+
+      <TransitionGroup tag="div" name="tile" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Kafelek z polem „Link” (np. jachty) prowadzi na podstronę; bez niego otwiera okno ze szczegółami. -->
+        <component
+          :is="room.link ? NuxtLink : 'button'"
+          v-for="(room, i) in visibleRooms"
+          :key="room.slug || i"
+          :to="room.link || undefined"
+          :type="room.link ? undefined : 'button'"
+          class="room-card block text-left group cursor-pointer overflow-hidden"
+          @click="!room.link && openRoom(room)"
         >
-          <div class="bg-forest-void h-full flex flex-col">
+          <div class="h-full flex flex-col">
             <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
               <img v-if="room.image"
                 :src="room.image"
@@ -133,21 +143,21 @@ onUnmounted(() => { document.body.style.overflow = '' })
             </div>
             <div class="p-8 flex flex-col gap-4 flex-1">
               <div>
-                <p class="text-gold text-[10px] tracking-[0.35em] uppercase font-sans mb-2">{{ room.tag }}</p>
+                <p class="room-gold text-[10px] tracking-[0.35em] uppercase font-sans mb-2">{{ room.tag }}</p>
                 <div class="flex items-baseline gap-3">
-                  <h2 class="font-display text-white text-2xl font-light">{{ room.title }}</h2>
-                  <span class="text-white/30 text-xs font-sans">{{ room.size }}</span>
+                  <h2 class="font-display room-ink text-2xl font-light">{{ room.title }}</h2>
+                  <span class="room-stone text-xs font-sans">{{ room.size }}</span>
                 </div>
               </div>
-              <p class="text-white/50 font-sans text-sm leading-relaxed line-clamp-2">{{ room.desc }}</p>
-              <div class="mt-auto pt-4 border-t border-white/8 flex items-center justify-between">
-                <span class="text-white/25 font-sans text-xs tracking-wide">{{ fill(p.amenitiesCount, room.amenities.length) }}</span>
-                <span class="text-gold/60 font-sans text-[10px] tracking-[0.15em] uppercase group-hover:text-gold transition-colors">{{ ustawienia?.seeMore }}</span>
+              <p class="room-stone font-sans text-sm leading-relaxed line-clamp-2">{{ room.desc }}</p>
+              <div class="room-divider mt-auto pt-4 flex items-center justify-between">
+                <span class="room-stone font-sans text-xs tracking-wide">{{ room.amenities.length ? fill(p.amenitiesCount, room.amenities.length) : '' }}</span>
+                <span class="room-gold font-sans text-[10px] tracking-[0.15em] uppercase group-hover:underline underline-offset-4">{{ ustawienia?.seeMore }}</span>
               </div>
             </div>
           </div>
-        </button>
-      </div>
+        </component>
+      </TransitionGroup>
 
       <!-- CTA -->
       <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gold/15 pt-10">
@@ -168,101 +178,10 @@ onUnmounted(() => { document.body.style.overflow = '' })
 
     <KontaktSection />
 
-    <!-- Room modal -->
+    <!-- Szczegóły kafelka -->
     <Teleport to="body">
       <Transition name="modal">
-        <div v-if="selectedRoom" class="modal-backdrop" @click.self="closeRoom">
-          <div class="modal-panel">
-
-            <!-- Image gallery -->
-            <div class="relative h-64 md:h-80 overflow-hidden shrink-0">
-              <img v-if="galleryImages[galleryIndex]" :src="galleryImages[galleryIndex]" :alt="selectedRoom.title" class="w-full h-full object-cover" />
-              <div class="absolute bottom-6 left-8">
-                <p class="text-gold text-[10px] tracking-[0.4em] uppercase font-sans mb-1">{{ selectedRoom.tag }}</p>
-                <h2 class="font-display text-white text-3xl font-light">{{ selectedRoom.title }}</h2>
-              </div>
-              <button
-                class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white hover:border-white/40 transition-all"
-                @click="closeRoom"
-                :aria-label="ustawienia?.close"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
-              </button>
-
-              <template v-if="galleryImages.length > 1">
-                <button
-                  class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
-                  @click="prevImage"
-                  :aria-label="ustawienia?.prevPhoto"
-                >
-                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button
-                  class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-forest/70 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white hover:border-gold/50 transition-all"
-                  @click="nextImage"
-                  :aria-label="ustawienia?.nextPhoto"
-                >
-                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <div class="absolute bottom-6 right-8 flex gap-1.5">
-                  <button
-                    v-for="(img, i) in galleryImages"
-                    :key="img"
-                    class="w-1.5 h-1.5 rounded-full transition-colors"
-                    :class="i === galleryIndex ? 'bg-gold' : 'bg-white/30 hover:bg-white/50'"
-                    :aria-label="fill(ustawienia?.photoN, i + 1)"
-                    @click="galleryIndex = i"
-                  />
-                </div>
-              </template>
-            </div>
-
-            <!-- Content -->
-            <div class="overflow-y-auto flex-1 p-8">
-              <!-- Meta -->
-              <div class="flex gap-6 mb-6 pb-6 border-b border-white/8">
-                <div>
-                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">{{ p.labelSize }}</span>
-                  <span class="text-white font-sans text-sm">{{ selectedRoom.size }}</span>
-                </div>
-                <div>
-                  <span class="text-white/25 text-[10px] tracking-[0.2em] uppercase font-sans block mb-1">{{ p.labelMax }}</span>
-                  <span class="text-white font-sans text-sm">{{ fill(p.occupancyValue, selectedRoom.occupancy) }}</span>
-                </div>
-              </div>
-
-              <!-- Description -->
-              <p class="text-white/55 font-sans text-sm leading-relaxed mb-8">{{ selectedRoom.desc }}</p>
-
-              <!-- Amenities -->
-              <p class="text-white/25 text-[10px] tracking-[0.3em] uppercase font-sans mb-4">{{ p.labelAmenities }}</p>
-              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-6 mb-10">
-                <li
-                  v-for="amenity in selectedRoom.amenities"
-                  :key="amenity"
-                  class="flex items-center gap-3 text-white/55 font-sans text-sm"
-                >
-                  <span class="w-4 h-px bg-gold/50 shrink-0" />
-                  {{ amenity }}
-                </li>
-              </ul>
-
-              <!-- CTA -->
-              <a
-                :href="p.ctaHref"
-                target="_blank"
-                rel="noopener"
-                class="flex items-center justify-center gap-3 border border-gold text-gold hover:bg-gold hover:text-forest transition-all duration-300 py-4 text-[11px] tracking-[0.2em] uppercase font-sans"
-              >
-                {{ p.cta }}
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-              </a>
-            </div>
-
-          </div>
-        </div>
+        <NoclegiRoomModal v-if="selectedRoom" :room="selectedRoom" :labels="p" @close="closeRoom" />
       </Transition>
     </Teleport>
   </main>
@@ -271,7 +190,7 @@ onUnmounted(() => { document.body.style.overflow = '' })
 <style scoped>
 .hero-frame {
   position: relative;
-  height: clamp(320px, 42vw, 520px);
+  height: clamp(260px, 30vw, 380px);
   overflow: hidden;
   border: 1px solid rgba(201, 169, 110, 0.25);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
@@ -294,37 +213,46 @@ onUnmounted(() => { document.body.style.overflow = '' })
   border-radius: 50%;
   color: #C9A96E;
 }
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(10, 16, 10, 0.75);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+/* ── Białe kafelki na ciemnym tle strony — tekst w odcieniach jasnej strony Projekty (kontrast WCAG AA na bieli) ── */
+.room-ink   { color: #1E2B1E; }
+.room-stone { color: #4C594B; }
+.room-gold  { color: #7A5C1E; }
+.room-divider { border-top: 1px solid rgba(30, 43, 30, 0.1); }
+
+.room-card {
+  position: relative;
+  background-color: #FFFFFF;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 3px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-.modal-panel {
-  background: #162216;
-  border: 1px solid rgba(201, 169, 110, 0.2);
-  width: 100%;
-  max-width: 640px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+/* ── Filtr nad kafelkami ── */
+.filter-pill {
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.filter-pill:hover { color: #C9A96E; border-color: #C9A96E; }
+.filter-pill--active,
+.filter-pill--active:hover {
+  background-color: #C9A96E;
+  border-color: #C9A96E;
+  color: #162016;
 }
 
-.modal-enter-active { transition: opacity 0.3s ease; }
-.modal-leave-active { transition: opacity 0.2s ease; }
-.modal-enter-from, .modal-leave-to { opacity: 0; }
+/* Kafelki pojawiają się/znikają łagodnie przy zmianie filtra. */
+.tile-enter-active { transition: opacity 0.35s ease, transform 0.35s ease; }
+.tile-enter-from { opacity: 0; transform: translateY(10px); }
+.tile-leave-active { display: none; }
 
-.modal-enter-active .modal-panel { animation: modal-in 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
-@keyframes modal-in {
-  from { transform: translateY(20px) scale(0.98); opacity: 0; }
-  to   { transform: translateY(0) scale(1); opacity: 1; }
-}
 </style>
